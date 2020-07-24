@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">    
+    <link rel="stylesheet" href="css/framework.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/login.js" type="module"></script>  
+    <title>Salesforce Package Boundaries</title>
+</head>
+
+<body>
+
+  <template id="warning-template">
+      <div id="warning-template-text">
+      </div>
+  </template>
+
+  <main class="grid">
+
+    <section class="login">
+      <div class="login-inner">
+        <h1>Salesforce Package Boundaries</h1>
+        <div class="base-x-line"></div>
+        <div class="env-selection">
+            <label for="environment">Environment  </label>
+
+            <select id="environment">
+            <option value="test">Sandbox</option>
+            <option value="login">Production</option>
+          </select>
+        </div> 
+        <button id="login-button" >Login with OAuth   <i class="fa fa-sign-in"></i></button>
+    </div>
+    <footer>
+        <p>This application uses the Tooling REST API to query your org's metadata. All the API calls
+          are made on the fly and we do not store your metadata. We will also not query or update your org's 
+          data in anyway. For your own security and peace of mind however, <strong>we strongly recommend
+            using this application with a sandbox environment.
+          </strong>
+        </p>
+      </footer>
+    </section>
+    
+
+    <section class="info">
+      <div class="info-inner ">
+        <div class="taglines">
+          <p><i class="fa fa-check"></i>  Discover package boundaries</p>
+          <p><i class="fa fa-check"></i>  Generate package.xml files based on those boundaries</p>
+          <p><i class="fa fa-check"></i>  View metadata-specific dependencies</p>
+        </div>
+          <div class="video">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/exZ3TICOzd8" 
+            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen></iframe>
+        </div>
+    </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/framework.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/autocomplete.css">
+
+    <script src="js/main.js" type="module"></script>
+    <title>Salesforce Package Boundaries</title>
+    <!-- endbuild -->
+</head>
+
+<body style="width: 1300px;margin:auto">
+
+    <main class="gr2id">
+
+    <header>
+        <h3>Salesforce Package Boundaries</h3>
+        <nav>
+            <p id="identity"></p>
+            <a href="">Docs</a>
+            <a href="" id="logout-button">Logout</a>
+        </nav>
+    </header>
+    <div class="form">
+        <div class="inner-form">
+            <select id="md-type-select">
+                <option value="" disabled selected hidden>Select a metadata type</option>
+                <option value="ApexClass">ApexClass</option>
+                <option value="ApexTrigger">ApexTrigger</option>
+                <option value="ApexPage">ApexPage</option>
+                <option value="ApexComponent">ApexComponent</option>
+                <option value="Layout">Layout</option>
+                <option value="WebLink">WebLink</option>
+                <option value="CustomField">CustomField</option>
+                <option value="Flow">Flow</option>
+            </select>
+            <div class="autocomplete">
+                <input class="base-input disabled-input" type="text" id="input-field" readonly>
+            </div>
+            <button id="find-button" class="disabled-button" disabled>Find References</button>
+    </div>
+    </div>
+    <div class="controls base-flex-start">
+        <button id="expand-button" title="Expand All">Expand all <i class="fa fa-expand"></i></button>
+        <button id="collapse-button" title="Collapse All">Collapse all <i class="fa fa-compress"></i></button>
+        <button id="package-button" class="generate-package">Generate package.xml     <i class="fa fa-download"> </i></button>
+    </div>
+</main>
+    <section class="dependencies">
+        <template id="warning-template">
+            <div id="warning-template-text">
+            </div>
+        </template>
+        <div>
+        <div class="loader"></div>
+        <ul>
+            <p id="ref-help">This is the metadata <span style="font-weight: bold">referenced by / called from </span><span id="ref-help-name"></span> and 
+                <span style="font-weight: bold">all its descendants</span>. This represents the package boundary.</p>
+            <li id="tree">
+               
+            </li>
+        </ul>
+    </div>
+
+    
+
+    </section>  
+</body>
+
+</html>
