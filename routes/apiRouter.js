@@ -34,9 +34,9 @@ apiRouter.route('/dependencies/:metadataId')
         try {
 
             let cacheKey = `deps-${req.params.metadataId}`;
+            let cachedData = req.session.cache[cacheKey];
 
-            if(req.session.cache[cacheKey]){
-                let cachedData = req.session.cache[cacheKey];
+            if(cachedData){
                 res.status(202).json(cachedData);
             }
             else{
@@ -45,12 +45,11 @@ apiRouter.route('/dependencies/:metadataId')
 
                 let api = dependencyApi(connection,req.params.metadataId);
                 let response = await api.getDependencies();
+
                 req.session.cache[cacheKey] = response;
+
                 res.status(200).json(response);   
             }
-
-            
-
         } catch (error) {
             next(error);
         }     
@@ -75,20 +74,21 @@ apiRouter.route('/metadata')
         try{
 
             let cacheKey = `list-${req.query.mdtype}`;
+            let cachedData = req.session.cache[cacheKey];
 
-            if(req.session.cache[cacheKey]){
+            if(cachedData){
                 console.log('retrieving metadata list from cache');
-                let cachedData = req.session.cache[cacheKey];
                 res.status(202).json(cachedData);
             }
             else{
                 let mdapi = metadataApi(serverSessions.getConnection(req.session));
+
                 let results = await mdapi.listMetadata(req.query.mdtype);
                 req.session.cache[cacheKey] = results;
+
                 res.status(202).json(results);
             }       
         }catch(error){
-            console.log('oops',error);
             next(error);
         }
     }
