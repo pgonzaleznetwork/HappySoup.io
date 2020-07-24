@@ -94,4 +94,15 @@ apiRouter.route('/metadata')
     }
 );
 
+apiRouter.route('/clearcache')
+
+.get(
+    cors(corsOptions),
+    serverSessions.validateSessions,
+    async (req,res,next) => {
+        req.session.cache = {};
+        res.sendStatus(200);
+    }
+);
+
 module.exports = apiRouter;
