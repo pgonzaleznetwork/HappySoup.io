@@ -82,10 +82,8 @@ apiRouter.route('/metadata')
             }
             else{
                 let mdapi = metadataApi(serverSessions.getConnection(req.session));
-
                 let results = await mdapi.listMetadata(req.query.mdtype);
                 req.session.cache[cacheKey] = results;
-
                 res.status(202).json(results);
             }       
         }catch(error){
@@ -94,12 +92,13 @@ apiRouter.route('/metadata')
     }
 );
 
-apiRouter.route('/clearcache')
+apiRouter.route('/cache')
 
-.get(
+.delete(
     cors(corsOptions),
     serverSessions.validateSessions,
     async (req,res,next) => {
+        //NEED TO READ ABOUT GC
         req.session.cache = {};
         res.sendStatus(200);
     }

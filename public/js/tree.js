@@ -10,7 +10,7 @@ function createDependencyTree(tree) {
       //here we create the icon and name for the top node
       let topMetadataName = document.createTextNode(` ${topKey}`);
   
-      topNode.appendChild(foldersApi.createFolderIcon());
+      topNode.appendChild(foldersApi.createFolderIcon(true));
       topNode.appendChild(topMetadataName);
   
       let treeBody = tree[topKey];
@@ -26,6 +26,7 @@ function createDependencyTree(tree) {
 function createTreeNodes(refs,parentNode){
 
     let childNodes = document.createElement('ul');
+    
     parentNode.appendChild(childNodes);
   
     for(let mdType in refs){
@@ -46,6 +47,7 @@ function createTreeNodes(refs,parentNode){
   function createMemberNode(metadataTypeNode,type,member){
   
     let memberNames = document.createElement('ul');
+    memberNames.style.display = 'none';
     let memberNodeName = document.createElement('li');
   
     let memberName = document.createElement('a');

@@ -8,6 +8,7 @@ class ErrorHandler extends Error{
 }
 
 function handleError(err,res){
+    
     const {statusCode,message} = err;
 
     //this specific error needs to be handled here

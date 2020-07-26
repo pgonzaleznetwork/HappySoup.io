@@ -72,29 +72,6 @@ const SFDM = function(){
             if(json.error){
                 handleError(json);
             }
-
-            //the response should be cached using localStorage
-
-            /*let json;
-
-            if(!localStorage.getItem(cacheKey)){
-
-                let res = await fetch(`/api/metadata?mdtype=${event.target.value}`);
-                json = await res.json();
-
-                if(json.error){
-                    handleError(json);
-                }
-                else{
-                    localStorage.setItem(cacheKey,JSON.stringify(json));
-                }
-            }            
-
-            else{
-   
-                json = JSON.parse(localStorage.getItem(cacheKey));
-                console.log('retrieved from cache');   
-            }        */
             
             let members = json.map(r => r.fullName);
             json.forEach(r => memberIdsByName.set(r.fullName,r.id));

@@ -3,10 +3,11 @@ import {utils} from './utils.js'
 const OPEN_FOLDER_CLASS = 'fa-folder-open';
 const CLOSED_FOLDER_CLASS = 'fa-folder';
 
-function createFolderIcon(){
+function createFolderIcon(open=false){
 
     let folderIcon = document.createElement('i');
-    folderIcon.classList.add('fa','fa-folder-open');
+    let folderClass = (open? OPEN_FOLDER_CLASS : CLOSED_FOLDER_CLASS)
+    folderIcon.classList.add('fa',folderClass);
   
     folderIcon.addEventListener('click',() => {
         expandOrCollapse(folderIcon);

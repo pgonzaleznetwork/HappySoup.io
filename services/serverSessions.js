@@ -57,8 +57,8 @@ async function logout(session){
     let connection = getConnection(session);
     await soapApi(connection).logout();
     session.destroy();
-
 }
+
 
 module.exports = {
     validateSessions,
