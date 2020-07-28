@@ -59,8 +59,6 @@ const SFDM = function(){
 
         document.getElementById('md-type-select').addEventListener('change', async event => {
 
-            let cacheKey = `list-${event.target.value}`;
-
             inputField.value = 'Loading...';
             utils.disableInputField(inputField);
             utils.disableButton(findButton);
