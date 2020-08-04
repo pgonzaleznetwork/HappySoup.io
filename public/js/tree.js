@@ -1,24 +1,22 @@
 import {foldersApi} from './folders.js';
 
 
-function createDependencyTree(tree) {
+function createDependencyTree(tree,targetElement) {
 
     for (let topKey in tree) {
-  
-      let topNode = document.getElementById("tree");
-  
+    
       //here we create the icon and name for the top node
       let topMetadataName = document.createTextNode(` ${topKey}`);
   
-      topNode.appendChild(foldersApi.createFolderIcon(true));
-      topNode.appendChild(topMetadataName);
+      targetElement.appendChild(foldersApi.createFolderIcon(true));
+      targetElement.appendChild(topMetadataName);
   
       let treeBody = tree[topKey];
   
       //if the metadata has dependencies/references, we create
       //a node for each
       if (treeBody.references) {
-        createTreeNodes(treeBody.references, topNode);
+        createTreeNodes(treeBody.references, targetElement);
       }
     }
 }

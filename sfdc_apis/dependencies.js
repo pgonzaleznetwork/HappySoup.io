@@ -4,7 +4,7 @@ require('dotenv').config();
 let packagexml = require('../services/packagexml');
 let stats = require('../services/stats');
 let utils = require('../services/utils');
-const { set } = require('../app');
+
 
 function dependencyApi(connection,metadataId){
 

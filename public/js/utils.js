@@ -23,14 +23,20 @@ function hideLoader(){
     loader.style.display = 'none';
 }
 
-function enableInputField(el){
-    el.readOnly = false;
-    el.classList.remove('disabled-input');
+function enableInputField(inputField){
+
+    inputField.value = '';
+    inputField.setAttribute('placeholder','Start typing');
+    inputField.focus();
+    inputField.readOnly = false;
+    inputField.classList.remove('disabled-input');
 }
 
-function disableInputField(el){
-    el.readOnly = true;
-    el.classList.add('disabled-input');
+function disableInputField(inputField){
+    
+    inputField.value = 'Loading...';
+    inputField.readOnly = true;
+    inputField.classList.add('disabled-input');
 }
 
 function createWarning(text){

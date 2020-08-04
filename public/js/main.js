@@ -5,64 +5,78 @@ import {treeApi} from './tree.js';
 import {utils} from './utils.js'
 import {handleError} from './errors.js';
 
-
 const SFDM = function(){
 
     function addEvents(){
 
-        //variables shared among some of the functions below
-        let inputField = document.getElementById("input-field");
-        let findButton = document.getElementById('find-button');
+        let inputField = byId("input-field");
+        let findButton = byId('find-button');
+        let logoutButton = byId('logout-button');
+        let collapseButon = byId('collapse-button');
+        let expandButton = byId('expand-button');
+        let mdDropDown = byId('md-type-select');
+        let packageButton = byId('package-button');
         let memberIdsByName = new Map();
         let dependenciesResponse;
 
-        window.onload = async () => {
+        document.addEventListener('DOMContentLoaded', getIdentityInfo);
+        logoutButton.onclick = logout;
+        collapseButon.onclick = collapseFolders;
+        expandButton.onclick = expandFolders;
+        mdDropDown.onchange = getMetadataMembers;
+        packageButton.onclick = downloadPackageXml;
+        findButton.onclick = findDependencies;
+        inputField.onkeyup = clickFindButton;
 
-            let response = await fetch('http://localhost:3000/identity');
-            let json = await response.json();
+        async function getIdentityInfo(){
+
+            try {
+                let response = await fetch('/identity');
+                let json = await response.json();
             
-            document.getElementById('identity').innerText = `${json.name} (${json.username}) - ${json.env}`;
+                byId('identity').innerText = `${json.name} (${json.username}) - ${json.env}`;
+
+            } catch {
+                //no error handling required because this is not critical to the app functionality
+            }
         }
 
-        document.getElementById('logout-button').addEventListener('click', async (event) => {
+        async function logout(event){
 
             event.preventDefault();
 
             await fetch('/oauth2/logout');
             window.location = '/';
+        }
 
-        })
-        
-        document.getElementById('collapse-button').addEventListener('click',() => {
-    
+        function collapseFolders(){
+
             document.querySelectorAll('.'+foldersApi.OPEN_FOLDER_CLASS).forEach(folder => {
                 foldersApi.collapseFolder(folder);
             });
-        });
-    
-        document.getElementById('expand-button').addEventListener('click',()=> {
-    
+        }
+
+        function expandFolders(){
+
             document.querySelectorAll('.'+foldersApi.CLOSED_FOLDER_CLASS).forEach(folder => {
                 foldersApi.expandFolder(folder);
             });
-        });
-    
-        inputField.addEventListener('keyup',event => {
-            
+        }
+
+        function clickFindButton(event){
+
             let enterKey = 13;
     
             if (event.keyCode == enterKey) {
                 event.preventDefault();
                 findButton.click();
             }
-        });
+        }
 
-        document.getElementById('md-type-select').addEventListener('change', async event => {
+        async function getMetadataMembers(event){
 
-            inputField.value = 'Loading...';
             utils.disableInputField(inputField);
             utils.disableButton(findButton);
-
 
             let res = await fetch(`/api/metadata?mdtype=${event.target.value}`);
             let json = await res.json();
@@ -73,16 +87,14 @@ const SFDM = function(){
             
             let members = json.map(r => r.fullName);
             json.forEach(r => memberIdsByName.set(r.fullName,r.id));
+
             autocompleteApi.autocomplete(inputField, members);
 
             utils.enableInputField(inputField);
-            inputField.value = '';
-            inputField.setAttribute('placeholder','Start typing');
-            inputField.focus();
-        });
+            
+        }
 
-        
-        findButton.addEventListener('click',async event => {
+        async function findDependencies(event){
 
             if(inputField.value == ''){
                 window.alert('Please select a metadata member');
@@ -90,9 +102,10 @@ const SFDM = function(){
             }
 
             //clear the contents every time a new request is madee
-            document.getElementById("tree").innerHTML = "";
+            let tree = byId('tree');
+            tree.innerHTML = "";
+
             utils.hideHelpText();
-            
             utils.disableButton(findButton);
             utils.showLoader();
 
@@ -112,19 +125,19 @@ const SFDM = function(){
                 
                 //if the response contains results
                 if(!isEmpty){
-                    treeApi.createDependencyTree(dependenciesResponse.dependencyTree);
+                    treeApi.createDependencyTree(dependenciesResponse.dependencyTree,tree);
                     utils.showHelpText(selectedMember);
                 }
                 else{
-                    document.getElementById('tree').appendChild(utils.createWarning('No results. Either this metadata does not reference any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
+                    tree.appendChild(utils.createWarning('No results. Either this metadata does not reference any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
                 }
     
                 utils.enableButton(findButton);
             }
-        });
+        }
 
-        document.getElementById('package-button').addEventListener('click', () => {
-           
+        function downloadPackageXml(){
+
             let hiddenLink = document.createElement('a');
             hiddenLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(dependenciesResponse.package));
             hiddenLink.setAttribute('download', `${dependenciesResponse.entryPoint.name}-package.xml`);            
@@ -132,15 +145,20 @@ const SFDM = function(){
 
             document.body.appendChild(hiddenLink);
             hiddenLink.click();
-            document.body.removeChild(hiddenLink);              
-        })
+            document.body.removeChild(hiddenLink); 
+        }
+
+       
+        function byId(id){
+            return document.getElementById(id);
+        }
     }
 
-    return {
-        addEvents : addEvents
-    }
+    return { addEvents}
 
 
 }();
 
+
 SFDM.addEvents();
+
