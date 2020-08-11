@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "debug": "node --inspect ./bin/www"
   },
   "dependencies": {
     "connect-redis": "^4.0.4",
