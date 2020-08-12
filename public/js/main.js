@@ -84,17 +84,22 @@ const SFDM = function(){
             if(json.error){
                 handleError(json);
             }
-            
-            let members = json.map(r => r.fullName);
-            json.forEach(r => memberIdsByName.set(r.fullName,r.id));
 
+            let members = [];
+
+            json.forEach(r => {
+                let [fullName,id] = r.split(':');
+                members.push(fullName);
+                memberIdsByName.set(fullName,id);
+            })
+            
             autocompleteApi.autocomplete(inputField, members);
 
             utils.enableInputField(inputField);
             
         }
 
-        async function findDependencies(event){
+        async function findDependencies(){
 
             if(inputField.value == ''){
                 window.alert('Please select a metadata member');

@@ -6,22 +6,31 @@ let stats = require('../services/stats');
 let utils = require('../services/utils');
 
 
-function dependencyApi(connection,metadataId){
+function dependencyApi(connection,metadataId,cache){
 
     async function getDependencies(){
 
         let query = recursiveDependencyQuery();
+        console.time('recursive dep query')
         await query.exec(metadataId);
+        console.timeEnd('recursive dep query')
         let dependencies = query.getResults(); 
         let entryPoint = query.getEntryPoint();
 
+        console.time('enhance custom field data')
         dependencies = await enhanceCustomFieldData(dependencies);
+        console.timeEnd('enhance custom field data')
+
+        console.time('create unsupported dependencies')
         let unsupportedDependencies = await createUnsupportedDependencies(dependencies);
+        console.timeEnd('create unsupported dependencies')
 
         dependencies.push(...unsupportedDependencies);
 
         let package = packagexml(entryPoint,dependencies);
+        console.time('create dependency tree')
         let dependencyTree = createDependecyTree(dependencies);
+        console.timeEnd('create dependency tree')
         let statsInfo = stats(dependencies);
 
         return{
@@ -453,19 +462,62 @@ function dependencyApi(connection,metadataId){
         let customFieldsByName = new Map();
         customFields.forEach(cf => customFieldsByName.set(cf.name,cf));
 
+        let cachedFields = [];
+        let uncachedFields = [];
+
+        if(cache.readMetadataCustomFieldNames){
+
+            [...customFieldsByName.keys()].forEach(field => {
+                if(cache.readMetadataCustomFieldNames.indexOf(field) == -1){
+                    uncachedFields.push(field);
+                }
+                else{
+                    cachedFields.push(field);
+                }
+            })
+        }else{
+            cache.readMetadataCustomFieldNames = [];
+            uncachedFields = [...customFieldsByName.keys()];
+        }
+
         let mdapi = metadataAPI(connection);
-        let records = await mdapi.readMetadata('CustomField',[...customFieldsByName.keys()]);
+        console.time('Read custom field MD: unsupported dependencies')
+
+        let records = [];
+
+        if(uncachedFields.length){
+            records = await mdapi.readMetadata('CustomField',uncachedFields);
+        }
+
+        cache.readMetadataCustomFieldNames.push(...uncachedFields);
+
+        records.forEach(record => {
+            cache[`field-${record.fullName}`] = record;
+        })
+
+        console.timeEnd('Read custom field MD: unsupported dependencies')
+
+        cachedFields.forEach(field => {
+            cachedFieldData = cache[`field-${field}`];
+            if(cachedFieldData){
+                records.push(cachedFieldData);
+            }
+        })
 
         let lookupFields = records.filter(rec => rec.referenceTo);
         let pkValueSets = records.filter(rec => rec.valueSet && rec.valueSet.valueSetName);
 
         if(lookupFields.length){
+            console.time('create lookup field dependencies: unsupported dependencies');
             let lookupFieldsDependencies = await createLookupFieldDependencies(lookupFields,customFieldsByName);
+            console.timeEnd('create lookup field dependencies: unsupported dependencies');
             newDependencies.push(...lookupFieldsDependencies);
         }
 
         if(pkValueSets.length){
+            console.time('create value set dependencies: unsupported dependencies');
             let valueSetDependencies = createValueSetDependencies(pkValueSets,customFieldsByName);
+            console.timeEnd('create value set dependencies: unsupported dependencies');
             newDependencies.push(...valueSetDependencies);
         }
 
@@ -589,9 +641,8 @@ function dependencyApi(connection,metadataId){
      */
     async function getObjectNamesById(){
         
-        let mdapi = metadataAPI(connection);
-        let objectsData = await mdapi.listMetadata('CustomObject');
-    
+        let objectsData = await getCustomObjectData();
+
         let objectsById = new Map();
         
         objectsData.forEach(obj => {
@@ -609,8 +660,7 @@ function dependencyApi(connection,metadataId){
      */
     async function getObjectIdsByName(){
         
-        let mdapi = metadataAPI(connection);
-        let objectsData = await mdapi.listMetadata('CustomObject');
+        let objectsData = await getCustomObjectData();
     
         let objectsByName = new Map();
         
@@ -622,6 +672,36 @@ function dependencyApi(connection,metadataId){
     
         return objectsByName;
     
+    }
+
+    async function getCustomObjectData(){
+
+        let objectsData = [];
+
+        //used the data in cache if it already exists
+        if(cache.listMetadataCustomObject && cache.listMetadataCustomObject.length){
+            objectsData = [...cache.listMetadataCustomObject];
+            console.log('using custom object cache');
+        }
+        else{
+
+            let mdapi = metadataAPI(connection);
+
+            //call the api and cache the data for later use
+            objectsData = await mdapi.listMetadata('CustomObject');
+
+            objectsData = objectsData.map(obj => {
+                let simplified = {
+                    id:obj.id,
+                    fullName:obj.fullName
+                };
+                return simplified;
+            })
+
+            cache.listMetadataCustomObject = [...objectsData];
+        }
+
+        return objectsData;
     }
     
     /**
@@ -694,7 +774,7 @@ function dependencyApi(connection,metadataId){
 
     //api returned to the client code
     return {
-        getDependencies:getDependencies
+        getDependencies
     }
     
 }

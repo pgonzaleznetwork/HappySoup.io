@@ -43,7 +43,7 @@ apiRouter.route('/dependencies/:metadataId')
 
                 let connection = serverSessions.getConnection(req.session);
 
-                let api = dependencyApi(connection,req.params.metadataId);
+                let api = dependencyApi(connection,req.params.metadataId,req.session.cache);
                 let response = await api.getDependencies();
 
                 req.session.cache[cacheKey] = response;
@@ -83,6 +83,9 @@ apiRouter.route('/metadata')
             else{
                 let mdapi = metadataApi(serverSessions.getConnection(req.session));
                 let results = await mdapi.listMetadata(req.query.mdtype);
+
+                results = results.map(r => `${r.fullName}:${r.id}`);
+        
                 req.session.cache[cacheKey] = results;
                 res.status(202).json(results);
             }       
