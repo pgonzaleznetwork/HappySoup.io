@@ -30,6 +30,7 @@
     </header>
     <div class="form">
         <div class="inner-form">
+            <div>
             <select id="md-type-select">
                 <option value="" disabled selected hidden>Select a metadata type</option>
                 <option value="ApexClass">ApexClass</option>
@@ -41,15 +42,20 @@
                 <option value="CustomField">CustomField</option>
                 <option value="Flow">Flow</option>
             </select>
+        </div>
             <div class="autocomplete">
                 <input class="base-input disabled-input" type="text" id="input-field" readonly>
             </div>
+            <div>
             <select id="query-type">
                 <option value="" disabled selected hidden>Select a query type</option>
                 <option value="usage">Where is this used</option>
                 <option value="deps">What does it depend on</option>
             </select>
-            <button id="find-button" class="disabled-button" disabled>Find References</button>
+        </div>
+        <div>
+            <button id="find-button" class="disabled-button" disabled>Search</button>
+        </div>
     </div>
     </div>
     <div class="controls base-flex-start">

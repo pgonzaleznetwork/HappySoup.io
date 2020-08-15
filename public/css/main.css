@@ -71,6 +71,11 @@ header nav a{
     width: 600px;
 }
 
+.inner-form div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .form button{
     border: 2px solid #c8d6e5;
     background-color:#34495e;
@@ -172,10 +177,10 @@ nav{
     font-size:14px;
 }
 
-.form input{
+/*.form input{
    margin-top:10px;
    margin-bottom: 10px;
-}
+}*/
 
 .controls,.form{
     background-color:#34495e;

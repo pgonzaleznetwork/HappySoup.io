@@ -161,7 +161,6 @@ Styles input fields similar to bootstrap.
     border: 1px solid #ced4da;
     border-radius: .25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    margin:5px;
 }
 
 /*
