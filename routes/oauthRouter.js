@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config();
 let serverSessions = require('../services/serverSessions');
 let fetch = require('node-fetch');
+let caching = require('../services/caching');
 let {ErrorHandler} = require('../services/errorHandling');
 
 
@@ -40,7 +41,7 @@ oauthRouter.route('/callback')
             else{
                 req.session.oauthInfo = json;
                 req.session.oauthSuccess = true;
-                req.session.cache = {};
+                req.session.cache = caching.initCache();
                 res.redirect('/dependencies.html');
             }
         } catch (error) {

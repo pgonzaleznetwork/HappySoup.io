@@ -2,6 +2,7 @@ const express = require('express');
 const dependencyApi = require('../sfdc_apis/dependencies');
 const soapApi = require('../sfdc_apis/soap');
 const metadataApi = require('../sfdc_apis/metadata');
+const cacheApi = require('../services/caching');
 let serverSessions = require('../services/serverSessions');
 const parser = require('body-parser');
 var cors = require('cors');
@@ -33,8 +34,10 @@ apiRouter.route('/dependencies/:metadataId')
 
         try {
 
+            let cache = cacheApi(req.session.cache);
             let cacheKey = `deps-${req.params.metadataId}`;
-            let cachedData = req.session.cache[cacheKey];
+            
+            let cachedData = cache.getDependency(cacheKey);
 
             if(cachedData){
                 res.status(202).json(cachedData);
@@ -43,11 +46,10 @@ apiRouter.route('/dependencies/:metadataId')
 
                 let connection = serverSessions.getConnection(req.session);
 
-                let api = dependencyApi(connection,req.params.metadataId,req.session.cache);
+                let api = dependencyApi(connection,req.params.metadataId,cache);
                 let response = await api.getDependencies();
 
-                req.session.cache[cacheKey] = response;
-
+                cache.cacheDependency(cacheKey,response);
                 res.status(200).json(response);   
             }
         } catch (error) {
@@ -73,8 +75,10 @@ apiRouter.route('/metadata')
 
         try{
 
+            let cache = cacheApi(req.session.cache);
             let cacheKey = `list-${req.query.mdtype}`;
-            let cachedData = req.session.cache[cacheKey];
+
+            let cachedData = cache.getMetadataList(cacheKey);
 
             if(cachedData){
                 console.log('retrieving metadata list from cache');
@@ -86,7 +90,7 @@ apiRouter.route('/metadata')
 
                 results = results.map(r => `${r.fullName}:${r.id}`);
         
-                req.session.cache[cacheKey] = results;
+                cache.cacheMetadataList(cacheKey,results);
                 res.status(202).json(results);
             }       
         }catch(error){
