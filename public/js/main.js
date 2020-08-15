@@ -10,7 +10,7 @@ const SFDM = function(){
     function addEvents(){
 
         let inputField = byId("input-field");
-        let findButton = byId('find-button');
+        let searchButton = byId('search-button');
         let logoutButton = byId('logout-button');
         let collapseButon = byId('collapse-button');
         let expandButton = byId('expand-button');
@@ -25,7 +25,7 @@ const SFDM = function(){
         expandButton.onclick = expandFolders;
         mdDropDown.onchange = getMetadataMembers;
         packageButton.onclick = downloadPackageXml;
-        findButton.onclick = findDependencies;
+        searchButton.onclick = findDependencies;
         inputField.onkeyup = clickFindButton;
 
         async function getIdentityInfo(){
@@ -69,14 +69,14 @@ const SFDM = function(){
     
             if (event.keyCode == enterKey) {
                 event.preventDefault();
-                findButton.click();
+                searchButton.click();
             }
         }
 
         async function getMetadataMembers(event){
 
             utils.disableInputField(inputField);
-            utils.disableButton(findButton);
+            utils.disableButton(searchButton);
 
             let res = await fetch(`/api/metadata?mdtype=${event.target.value}`);
             let json = await res.json();
@@ -111,7 +111,7 @@ const SFDM = function(){
             tree.innerHTML = "";
 
             utils.hideHelpText();
-            utils.disableButton(findButton);
+            utils.disableButton(searchButton);
             utils.showLoader();
 
             let selectedMember = inputField.value;
@@ -137,7 +137,7 @@ const SFDM = function(){
                     tree.appendChild(utils.createWarning('No results. Either this metadata does not reference any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
                 }
     
-                utils.enableButton(findButton);
+                utils.enableButton(searchButton);
             }
         }
 
