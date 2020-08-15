@@ -11,26 +11,20 @@ function dependencyApi(connection,metadataId,cache){
     async function getDependencies(){
 
         let query = recursiveDependencyQuery();
-        console.time('recursive dep query')
+
         await query.exec(metadataId);
-        console.timeEnd('recursive dep query')
+
         let dependencies = query.getResults(); 
         let entryPoint = query.getEntryPoint();
 
-        console.time('enhance custom field data')
         dependencies = await enhanceCustomFieldData(dependencies);
-        console.timeEnd('enhance custom field data')
 
-        console.time('create unsupported dependencies')
         let unsupportedDependencies = await createUnsupportedDependencies(dependencies);
-        console.timeEnd('create unsupported dependencies')
 
         dependencies.push(...unsupportedDependencies);
 
         let package = packagexml(entryPoint,dependencies);
-        console.time('create dependency tree')
         let dependencyTree = createDependecyTree(dependencies);
-        console.timeEnd('create dependency tree')
         let statsInfo = stats(dependencies);
 
         return{
@@ -499,7 +493,9 @@ function dependencyApi(connection,metadataId,cache){
         //records array
         cachedFields.forEach(field => {
             cachedFieldData = cache.getField(field);
-            if(cachedFieldData) records.push(cachedFieldData);
+            if(cachedFieldData) {
+                records.push(cachedFieldData);
+            }
         })
 
         let lookupFields = records.filter(rec => rec.referenceTo);
@@ -689,7 +685,6 @@ function dependencyApi(connection,metadataId,cache){
                 };
                 return simplified;
             })
-
             cache.cacheCustomObjects(objectsData);
         }
 

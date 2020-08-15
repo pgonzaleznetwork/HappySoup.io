@@ -81,7 +81,6 @@ apiRouter.route('/metadata')
             let cachedData = cache.getMetadataList(cacheKey);
 
             if(cachedData){
-                console.log('retrieving metadata list from cache');
                 res.status(202).json(cachedData);
             }
             else{
