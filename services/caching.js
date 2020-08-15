@@ -74,4 +74,4 @@ function cacheApi(cache){
 
 
 
-module.exports = cacheApi;
+module.exports = {initCache,cacheApi};
