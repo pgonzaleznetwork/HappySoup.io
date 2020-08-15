@@ -8,6 +8,8 @@ let utils = require('../services/utils');
 
 function dependencyApi(connection,metadataId,cache){
 
+    let toolingApi = toolingAPI(connection);
+
     async function getDependencies(){
 
         let query = recursiveDependencyQuery();
@@ -239,7 +241,6 @@ function dependencyApi(connection,metadataId,cache){
      */
     function recursiveDependencyQuery(){
 
-        let toolingApi = toolingAPI(connection);
         let result = [];
         let idsAlreadyQueried = [];
         let executedOnce = false;
@@ -699,7 +700,7 @@ function dependencyApi(connection,metadataId,cache){
     async function getObjectIds(customFieldIds){
     
         let queryString = createCustomFieldQuery(customFieldIds);
-        let toolingApi = toolingAPI(connection);
+        
         let results = await toolingApi.query(queryString);
         let customFieldIdToEntityId = new Map();
     

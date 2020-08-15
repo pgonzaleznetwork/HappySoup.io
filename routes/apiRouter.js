@@ -1,6 +1,6 @@
 const express = require('express');
 const dependencyApi = require('../sfdc_apis/dependencies');
-const soapApi = require('../sfdc_apis/soap');
+const usageApi = require('../sfdc_apis/usage');
 const metadataApi = require('../sfdc_apis/metadata');
 const {cacheApi} = require('../services/caching');
 let serverSessions = require('../services/serverSessions');
@@ -63,6 +63,49 @@ apiRouter.route('/dependencies/:metadataId')
     (req,res,next) => {
         let metadataId = req.params.metadataId;
         res.status(403).send(`${req.method} not allowed on dependencies/${metadataId}`);
+    }
+);
+
+apiRouter.route('/usage/:metadataId')
+
+
+.get(
+    cors(corsOptions),
+    serverSessions.validateSessions,
+    async (req,res,next) => {
+
+        try {
+
+            let cache = cacheApi(req.session.cache);
+            let cacheKey = `usage-${req.params.metadataId}`;
+            console.log('here');
+            let cachedData = cache.getUsage(cacheKey);
+            console.log('here again')
+
+            if(cachedData){
+                res.status(202).json(cachedData);
+            }
+            else{
+
+                let connection = serverSessions.getConnection(req.session);
+
+                let api = usageApi(connection,req.params.metadataId,cache);
+                let response = await api.execUsageQuery();
+
+                cache.cacheUsage(cacheKey,response);
+                res.status(200).json(response);   
+            }
+        } catch (error) {
+            next(error);
+        }     
+    }
+)
+
+//any other method on usage/:metadataId is blocked
+.all(
+    (req,res,next) => {
+        let metadataId = req.params.metadataId;
+        res.status(403).send(`${req.method} not allowed on usage/${metadataId}`);
     }
 );
 

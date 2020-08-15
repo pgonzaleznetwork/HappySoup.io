@@ -106,7 +106,7 @@ const SFDM = function(){
                 return;
             }
 
-            //clear the contents every time a new request is madee
+            //clear the contents every time a new request is made
             let tree = byId('tree');
             tree.innerHTML = "";
 

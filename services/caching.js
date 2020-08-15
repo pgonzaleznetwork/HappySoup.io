@@ -12,6 +12,7 @@ function initCache(){
             customObjects:[]
         },
         dependencies:{},
+        usage:{},
         metadataList:{}
     }
 
@@ -26,6 +27,14 @@ function cacheApi(cache){
     
     function getDependency(key){
         return cache.dependencies[key];
+    }
+
+    function cacheUsage(key,value){
+        cache.usage[key] = value;
+    }
+    
+    function getUsage(key){
+        return cache.usage[key];
     }
     
     function cacheMetadataList(key,value){
@@ -68,7 +77,8 @@ function cacheApi(cache){
     }
 
     return {initCache,cacheDependency,getDependency,cacheMetadataList,getMetadataList,
-        cacheCustomObjects,getCustomObjects,isFieldCached,cacheFieldNames,getFieldNames,cacheField,getField};
+        cacheCustomObjects,getCustomObjects,isFieldCached,cacheFieldNames,getFieldNames,cacheField,getField,
+    cacheUsage,getUsage};
 
 }
 
