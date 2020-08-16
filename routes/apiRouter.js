@@ -2,7 +2,7 @@ const express = require('express');
 const dependencyApi = require('../sfdc_apis/dependencies');
 const usageApi = require('../sfdc_apis/usage');
 const metadataApi = require('../sfdc_apis/metadata');
-const {cacheApi} = require('../services/caching');
+const {cacheApi,initCache} = require('../services/caching');
 let serverSessions = require('../services/serverSessions');
 const parser = require('body-parser');
 var cors = require('cors');
@@ -90,7 +90,7 @@ apiRouter.route('/usage/:metadataId')
                 let connection = serverSessions.getConnection(req.session);
 
                 let api = usageApi(connection,req.params.metadataId,cache);
-                let response = await api.execUsageQuery();
+                let response = await api.getUsage();
 
                 cache.cacheUsage(cacheKey,response);
                 res.status(200).json(response);   
@@ -141,14 +141,14 @@ apiRouter.route('/metadata')
     }
 );
 
-apiRouter.route('/cache')
+apiRouter.route('/deletecache')
 
-.delete(
+.get(
     cors(corsOptions),
     serverSessions.validateSessions,
     async (req,res,next) => {
         //NEED TO READ ABOUT GC
-        req.session.cache = {};
+        req.session.cache = initCache();
         res.sendStatus(200);
     }
 );

@@ -1,20 +1,63 @@
 const toolingAPI = require('../sfdc_apis/tooling');
 const metadataAPI = require('../sfdc_apis/metadata');
+let packagexml = require('../services/packagexml');
+let stats = require('../services/stats');
 
 function usageApi(connection,metadataId,cache){
 
     let toolingApi = toolingAPI(connection);
 
-    async function execUsageQuery(){
+    async function getUsage(){
 
-        let rawResults = await toolingApi.query(createUsageQuery());
+        let query = usageQuery();
+        await query.exec();
 
-        let callers = simplifyResults(rawResults);
+        let callers = query.getResults();
+        let entryPoint = query.getEntryPoint();
+
         callers = await enhanceCustomFieldData(callers);
+        
+        let package = packagexml(entryPoint,callers);
+        let usageTree = createUsageTree(callers);
+        let statsInfo = stats(callers);
 
-        let tree = sortByMetadataType(callers);
+        return{
+            package,
+            usageTree,
+            stats:statsInfo,
+            entryPoint
+        }    
 
-        return tree;
+    }
+
+    function usageQuery(){
+
+        let result = [];
+        let entryPoint = {};
+
+        async function exec(){
+
+            let rawResults = await toolingApi.query(createUsageQuery());
+
+            if(rawResults.size){
+                let anyCaller = rawResults.records[0];
+                entryPoint.name = anyCaller.RefMetadataComponentName;
+                entryPoint.type = anyCaller.RefMetadataComponentType;
+                entryPoint.id = anyCaller.RefMetadataComponentId;
+            }
+
+            result = simplifyResults(rawResults);
+        }
+
+        return {
+            exec,
+            getResults(){
+                return result;
+            },
+            getEntryPoint(){
+                return entryPoint;
+            }
+        }
 
     }
 
@@ -26,6 +69,9 @@ function usageApi(connection,metadataId,cache){
      * Here, with the aid of the metadata API, with add more detail to these dependencies. 
      */
     async function enhanceCustomFieldData(callers){
+
+        //sort alphabetically
+        callers.sort((a,b) => (a.name > b.name) ? 1 : -1 );
     
         let customFieldIds = [];
     
@@ -54,7 +100,7 @@ function usageApi(connection,metadataId,cache){
         return callers;
     }
 
-    function sortByMetadataType(callers){
+    function createUsageTree(callers){
 
         let tree = callers.reduce((result,caller) => {
 
@@ -231,7 +277,7 @@ function usageApi(connection,metadataId,cache){
 
     }
 
-    return {execUsageQuery}
+    return {getUsage}
 }
 
 module.exports = usageApi;

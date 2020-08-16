@@ -45,7 +45,7 @@ function autocomplete(inp, arr) {
             /*close the list of autocompleted values,
             (or any other open lists of autocompleted values:*/
             closeAllLists();
-            utils.enableButton(document.getElementById('find-button'));
+            utils.enableButton(document.getElementById('search-button'));
           });
           a.appendChild(b);
         }
