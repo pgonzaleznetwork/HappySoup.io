@@ -18,15 +18,6 @@ apiRouter.use(parser.json());
 apiRouter.route('/dependencies')
 
 
-.all(
-    (req,res,next) => {
-        res.status(403).send(`${req.method} not allowed on dependencies/`);
-    }
-);
-
-apiRouter.route('/dependencies/:metadataId')
-
-
 .get(
     cors(corsOptions),
     serverSessions.validateSessions,
@@ -34,9 +25,11 @@ apiRouter.route('/dependencies/:metadataId')
 
         try {
 
-            let cache = cacheApi(req.session.cache);
-            let cacheKey = `deps-${req.params.metadataId}`;
+            let entryPoint = {...req.query};
+
+            let cacheKey = `deps-${entryPoint.id}`;
             
+            let cache = cacheApi(req.session.cache);
             let cachedData = cache.getDependency(cacheKey);
 
             if(cachedData){
@@ -46,7 +39,7 @@ apiRouter.route('/dependencies/:metadataId')
 
                 let connection = serverSessions.getConnection(req.session);
 
-                let api = dependencyApi(connection,req.params.metadataId,cache);
+                let api = dependencyApi(connection,entryPoint,cache);
                 let response = await api.getDependencies();
 
                 cache.cacheDependency(cacheKey,response);
@@ -58,7 +51,7 @@ apiRouter.route('/dependencies/:metadataId')
     }
 )
 
-//any other method on dependencies/:metadataId is blocked
+//any other method on dependencies/ is blocked
 .all(
     (req,res,next) => {
         let metadataId = req.params.metadataId;
@@ -66,7 +59,7 @@ apiRouter.route('/dependencies/:metadataId')
     }
 );
 
-apiRouter.route('/usage/:metadataId')
+apiRouter.route('/usage')
 
 
 .get(
@@ -76,11 +69,12 @@ apiRouter.route('/usage/:metadataId')
 
         try {
 
+            let entryPoint = {...req.query};
+
             let cache = cacheApi(req.session.cache);
-            let cacheKey = `usage-${req.params.metadataId}`;
-            console.log('here');
+            let cacheKey = `usage-${entryPoint.id}`;
+          
             let cachedData = cache.getUsage(cacheKey);
-            console.log('here again')
 
             if(cachedData){
                 res.status(202).json(cachedData);
@@ -89,7 +83,7 @@ apiRouter.route('/usage/:metadataId')
 
                 let connection = serverSessions.getConnection(req.session);
 
-                let api = usageApi(connection,req.params.metadataId,cache);
+                let api = usageApi(connection,entryPoint,cache);
                 let response = await api.getUsage();
 
                 cache.cacheUsage(cacheKey,response);

@@ -3,7 +3,7 @@ const metadataAPI = require('../sfdc_apis/metadata');
 let packagexml = require('../services/packagexml');
 let stats = require('../services/stats');
 
-function usageApi(connection,metadataId,cache){
+function usageApi(connection,entryPoint,cache){
 
     let toolingApi = toolingAPI(connection);
 
@@ -13,8 +13,7 @@ function usageApi(connection,metadataId,cache){
         await query.exec();
 
         let callers = query.getResults();
-        let entryPoint = query.getEntryPoint();
-
+        
         callers = await enhanceCustomFieldData(callers);
         
         let package = packagexml(entryPoint,callers);
@@ -33,19 +32,11 @@ function usageApi(connection,metadataId,cache){
     function usageQuery(){
 
         let result = [];
-        let entryPoint = {};
 
         async function exec(){
 
-            let rawResults = await toolingApi.query(createUsageQuery());
-
-            if(rawResults.size){
-                let anyCaller = rawResults.records[0];
-                entryPoint.name = anyCaller.RefMetadataComponentName;
-                entryPoint.type = anyCaller.RefMetadataComponentType;
-                entryPoint.id = anyCaller.RefMetadataComponentId;
-            }
-
+            let soqlQuery = createUsageQuery(entryPoint.id);
+            let rawResults = await toolingApi.query(soqlQuery);
             result = simplifyResults(rawResults);
         }
 
@@ -53,9 +44,6 @@ function usageApi(connection,metadataId,cache){
             exec,
             getResults(){
                 return result;
-            },
-            getEntryPoint(){
-                return entryPoint;
             }
         }
 
@@ -268,12 +256,12 @@ function usageApi(connection,metadataId,cache){
     }
 
 
-    function createUsageQuery(){
+    function createUsageQuery(id){
 
         return `SELECT MetadataComponentId, MetadataComponentName,MetadataComponentType,MetadataComponentNamespace, RefMetadataComponentName, RefMetadataComponentType, RefMetadataComponentId,
         RefMetadataComponentNamespace 
         FROM MetadataComponentDependency 
-        WHERE RefMetadataComponentId  = '${metadataId}' ORDER BY MetadataComponentType`
+        WHERE RefMetadataComponentId  = '${id}' ORDER BY MetadataComponentType`
 
     }
 

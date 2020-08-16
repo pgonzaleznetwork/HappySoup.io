@@ -6,7 +6,7 @@ let stats = require('../services/stats');
 let utils = require('../services/utils');
 
 
-function dependencyApi(connection,metadataId,cache){
+function dependencyApi(connection,entryPoint,cache){
 
     let toolingApi = toolingAPI(connection);
 
@@ -14,10 +14,9 @@ function dependencyApi(connection,metadataId,cache){
 
         let query = recursiveDependencyQuery();
 
-        await query.exec(metadataId);
+        await query.exec(entryPoint.id);
 
         let dependencies = query.getResults(); 
-        let entryPoint = query.getEntryPoint();
 
         dependencies = await enhanceCustomFieldData(dependencies);
 
@@ -243,8 +242,6 @@ function dependencyApi(connection,metadataId,cache){
 
         let result = [];
         let idsAlreadyQueried = [];
-        let executedOnce = false;
-        let entryPoint = {};
     
         /**
          * Executes the query using the tooling API. If the metadata id has dependencies, it calls itself
@@ -259,25 +256,10 @@ function dependencyApi(connection,metadataId,cache){
                 idsAlreadyQueried.push(ids);
             }
     
-            let query = createDependencyQuery(ids);    
+            let soqlQuery = createDependencyQuery(ids);    
 
-            let rawResults = await toolingApi.query(query);
+            let rawResults = await toolingApi.query(soqlQuery);
             let dependencies = simplifyResults(rawResults);
-
-            /**
-             * Because the client only passes a metadata id as the entry point, the actual details of that
-             * metadata are not known (i.e it's name and it's type). If we were to run the dependency query
-             * only once, then it'd be easy to extract that information from the results. However, because
-             * the query is run recursively as we go through the dependency layers, we need a way to capture
-             * the details of the entry point, which are only available in the first layer of results. 
-             */
-            if(dependencies.length && !executedOnce){
-                let anyDep = dependencies[0];
-                executedOnce = true;
-                entryPoint.name = anyDep.referencedBy.name;
-                entryPoint.id = anyDep.referencedBy.id;
-                entryPoint.type = anyDep.referencedBy.type;
-            }
     
             /**
              * This is the the ids of the returned dependencies, for which we want to query dependencies one level down
@@ -326,9 +308,6 @@ function dependencyApi(connection,metadataId,cache){
             exec:exec,
             getResults(){
                 return result;
-            },
-            getEntryPoint(){
-                return entryPoint;
             }
         }
     }

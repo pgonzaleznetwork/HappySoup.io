@@ -10,6 +10,7 @@ const SFDM = function(){
     function addEvents(){
 
         let inputField = byId("input-field");
+        let queryTypeDropDown = byId('query-type');
         let searchButton = byId('search-button');
         let logoutButton = byId('logout-button');
         let collapseButon = byId('collapse-button');
@@ -17,7 +18,8 @@ const SFDM = function(){
         let mdDropDown = byId('md-type-select');
         let packageButton = byId('package-button');
         let memberIdsByName = new Map();
-        let dependenciesResponse;
+        let lastApiResponse;
+        let selectedMetadataType;
 
         document.addEventListener('DOMContentLoaded', getIdentityInfo);
         logoutButton.onclick = logout;
@@ -25,7 +27,7 @@ const SFDM = function(){
         expandButton.onclick = expandFolders;
         mdDropDown.onchange = getMetadataMembers;
         packageButton.onclick = downloadPackageXml;
-        searchButton.onclick = findDependencies;
+        searchButton.onclick = doSearch;
         inputField.onkeyup = clickFindButton;
 
         async function getIdentityInfo(){
@@ -78,7 +80,9 @@ const SFDM = function(){
             utils.disableInputField(inputField);
             utils.disableButton(searchButton);
 
-            let res = await fetch(`/api/metadata?mdtype=${event.target.value}`);
+            selectedMetadataType = event.target.value;
+
+            let res = await fetch(`/api/metadata?mdtype=${selectedMetadataType}`);
             let json = await res.json();
 
             if(json.error){
@@ -99,10 +103,18 @@ const SFDM = function(){
             
         }
 
-        async function findDependencies(){
+        async function doSearch(){
 
-            if(inputField.value == ''){
+            let selectedMember = inputField.value;
+            let selectedQueryType = queryTypeDropDown.value;
+
+            if(selectedMember == ''){
                 window.alert('Please select a metadata member');
+                return;
+            }
+
+            if(selectedQueryType == ''){
+                window.alert('Please select a query type');
                 return;
             }
 
@@ -114,24 +126,53 @@ const SFDM = function(){
             utils.disableButton(searchButton);
             utils.showLoader();
 
-            let selectedMember = inputField.value;
             let selectedMemberId = memberIdsByName.get(selectedMember);
 
-            let response = await fetch(`/api/dependencies/${selectedMemberId}`);
-            dependenciesResponse = await response.json();
+            if(selectedQueryType == 'deps'){
+                await findDependencies(selectedMember,selectedMemberId,selectedMetadataType);
+            }
+            else if(selectedQueryType == 'usage'){
+                await findUsage(selectedMember,selectedMemberId,selectedMetadataType);
+            }
+        }
+
+        async function findUsage(selectedMember,selectedMemberId,selectedMetadataType){
+
+            let url = `api/usage?name=${selectedMember}&id=${selectedMemberId}&type=${selectedMetadataType}`;
+
+            let response = await fetch(url);
+            response = await response.json();
             
-            if(dependenciesResponse.error) handleError (dependenciesResponse);
+            if(response.error) handleError (response);
+
+            else{
+                utils.hideLoader();
+                lastApiResponse = response;
+                console.log(response);
+            }
+        }
+
+        async function findDependencies(selectedMember,selectedMemberId,selectedMetadataType){
+
+
+            let url = `api/dependencies?name=${selectedMember}&id=${selectedMemberId}&type=${selectedMetadataType}`;
+
+            let response = await fetch(url);
+            response = await response.json();
+            
+            if(response.error) handleError (response);
 
             else{
 
                 utils.hideLoader();
 
-               let isEmpty = (Object.keys(dependenciesResponse.dependencyTree).length === 0);
+               let isEmpty = (Object.keys(response.dependencyTree).length === 0);
                 
                 //if the response contains results
                 if(!isEmpty){
-                    treeApi.createDependencyTree(dependenciesResponse.dependencyTree,tree);
-                    utils.showHelpText(selectedMember);
+                    treeApi.createDependencyTree(response.dependencyTree,tree);
+                    utils.showHelpText(response.entryPoint.name);
+                    lastApiResponse = response;
                 }
                 else{
                     tree.appendChild(utils.createWarning('No results. Either this metadata does not reference any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
@@ -143,9 +184,11 @@ const SFDM = function(){
 
         function downloadPackageXml(){
 
+            //need to validate if the last api response was valid
+
             let hiddenLink = document.createElement('a');
-            hiddenLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(dependenciesResponse.package));
-            hiddenLink.setAttribute('download', `${dependenciesResponse.entryPoint.name}-package.xml`);            
+            hiddenLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(lastApiResponse.package));
+            hiddenLink.setAttribute('download', `${lastApiResponse.entryPoint.name}-package.xml`);            
             hiddenLink.style.display = 'none';
 
             document.body.appendChild(hiddenLink);
