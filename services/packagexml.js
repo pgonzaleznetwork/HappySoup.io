@@ -9,7 +9,18 @@ function createPackageXml(entryPoint,dependencies){
 
     let depsByType = new Map();
 
-    dependencies = dependencies.filter(dep => !utils.isDynamicReference(dep));
+    dependencies = dependencies.filter(dep => !utils.isDynamicReference(dep));//NEED TO REMOVE EMAIL TEMPLATE
+
+    dependencies = dependencies.map(dep => {
+        return {...dep};//return new version to prevent side effects in under functions later
+    })
+
+    //for metadata retrieval and deployment, lookup filters are considered custom fields, so we "fix" the type here
+    dependencies.forEach(dep => {
+        if(dep.type.toUpperCase() == 'LOOKUPFILTER'){
+            dep.type  = 'CustomField';
+        }
+    })
 
     dependencies.push(entryPoint);
 

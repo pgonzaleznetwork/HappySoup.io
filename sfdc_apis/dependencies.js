@@ -587,7 +587,8 @@ function dependencyApi(connection,entryPoint,cache){
         let entityId = objectIdsByCustomFieldId.get(id);         
         let objectName = objectNamesById.get(entityId);
         
-    
+        //object name is truthy only if the entityId corresponds to a custom object
+        //for standard objects, the entityId is the actual object name i.e "Account"
         if(objectName){
             correctName = `${objectName}.${name}`;
         }else{

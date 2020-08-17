@@ -19,14 +19,26 @@ function toolingAPI(connection){
             let json = await res.json();
            
             if(isFailedResponse(json)){
-                throw new ErrorHandler(404,'no-sfdc-connection','Fault response from Tooling API query');
+                let apiError = new Error();
+                apiError.statusCode = 404;
+                apiError.name = 'no-sfdc-connection';
+                apiError.message = json[0].message;
+                apiError.sfdcApi = true;
+                throw apiError;
+                //throw new ErrorHandler(404,'no-sfdc-connection','Fault response from Tooling API query');
             }
             else{
                 return json;
             }
 
         } catch (error) {
-            throw new ErrorHandler(404,'no-sfdc-connection','Fetch failed on Tooling API query');
+            //if it's an API error, throw it as is
+            if(error.sfdcApi){
+                throw error;
+            }
+            else{//otherwise it could be a network error
+                throw new ErrorHandler(404,'no-sfdc-connection','Fetch failed on Tooling API query');
+            }
         }
     }
 

@@ -57,6 +57,7 @@ function usageApi(connection,entryPoint,cache){
         let validationRules = [];
         let customFields = [];
         let layouts = [];
+        let lookupFilters = [];
         let otherMetadata = [];
 
         metadataArray.forEach(metadata => {
@@ -74,6 +75,9 @@ function usageApi(connection,entryPoint,cache){
             else if(type == 'LAYOUT'){ 
                 layouts.push(metadata);
             }
+            else if(type == 'LOOKUPFILTER'){ 
+                lookupFilters.push(metadata);
+            }
             else{
                 otherMetadata.push(metadata);
             }
@@ -88,12 +92,73 @@ function usageApi(connection,entryPoint,cache){
         if(layouts.length){
             layouts = await addParentNamePrefix(layouts,'EntityDefinitionId');
         }
+        if(lookupFilters.length){
+            lookupFilters = await getLookupFilterDetails(lookupFilters);
+        }
 
         otherMetadata.push(...customFields);
         otherMetadata.push(...validationRules);
         otherMetadata.push(...layouts);
+        otherMetadata.push(...lookupFilters);
 
         return otherMetadata;
+
+    }
+
+    async function getLookupFilterDetails(lookupFilters){
+
+        let metadataRecordToEntityMap = new Map();
+
+        lookupFilters.forEach(lf => {
+
+            /**lookup filters in the metadata component dependency are returned as nf_01I0O000000bSwQUAU_00N3Y00000GcJePUAV, where the first
+            id is the object Id and the last one is the lookup field id.
+
+            For standard objects, the format is Account_00N3Y00000GcJePUAV (i.e a 2 part string, as opposed to 3 parts for custom objects)
+            */
+            let parts = lf.name.split('_');
+
+            let fieldId = parts[parts.length -1];
+            let objectId = parts[parts.length -2];
+
+            metadataRecordToEntityMap.set(fieldId,objectId);
+            lf.id = fieldId;//point the id to the actual field id, as opposed to the internal lookup filter id
+            lf.url = `${connection.url}/${fieldId}`;
+        });
+
+        let queryString = createParentIdQuery(Array.from(metadataRecordToEntityMap.keys()),'CustomField','DeveloperName');
+        let results = await toolingApi.query(queryString);
+
+        let developerNamesByFieldId = new Map();
+    
+        results.records.forEach(rec => {
+            developerNamesByFieldId.set(rec.Id,rec.DeveloperName);
+        });
+
+        let objectNamesById = await utils.getObjectNamesById(connection,cache);
+
+        lookupFilters.forEach(lf => {
+
+            let fullName;
+
+            let entityId = metadataRecordToEntityMap.get(lf.id);         
+            let objectName = objectNamesById.get(entityId);
+            let fieldName = developerNamesByFieldId.get(lf.id);
+            fieldName += '__c';
+        
+            //object name is truthy only if the entityId corresponds to a custom object
+            //for standard objects, the entityId is the actual object name i.e "Account"
+            if(objectName){
+                fullName = `${objectName}.${fieldName}`;
+            }else{
+                fullName = `${entityId}.${fieldName}`;
+            }    
+
+            lf.name = fullName;
+
+        });
+
+        return lookupFilters;
 
     }
 
@@ -121,7 +186,8 @@ function usageApi(connection,entryPoint,cache){
             let entityId = metadataRecordToEntityMap.get(metadata.id);         
             let objectName = objectNamesById.get(entityId);
         
-    
+            //object name is truthy only if the entityId corresponds to a custom object
+            //for standard objects, the entityId is the actual object name i.e "Account"
             if(objectName){
                 fullName = `${objectName}${objectPrefixSeparator}${metadata.name}`;
             }else{
@@ -175,15 +241,17 @@ function usageApi(connection,entryPoint,cache){
 
     }
     
-    function createParentIdQuery(ids,type,parentIdField){
+    function createParentIdQuery(ids,type,selectFields){
 
         ids = utils.filterableId(ids);
     
-        return `SELECT Id, ${parentIdField} 
+        return `SELECT Id, ${selectFields}
         FROM ${type} 
         WHERE Id IN ('${ids}') ORDER BY EntityDefinitionId`;
 
     }
+
+    
     
     function createUsageQuery(id){
 
