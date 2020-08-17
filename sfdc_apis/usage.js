@@ -13,9 +13,11 @@ function usageApi(connection,entryPoint,cache){
         await query.exec();
 
         let callers = query.getResults();
-        
-        callers = await enhanceCustomFieldData(callers);
-        
+            
+        callers = await enhanceData(callers);
+        //sort alphabetically
+        callers.sort((a,b) => (a.name > b.name) ? 1 : -1 );
+
         let package = packagexml(entryPoint,callers);
         let usageTree = createUsageTree(callers);
         let statsInfo = stats(callers);
@@ -49,43 +51,86 @@ function usageApi(connection,entryPoint,cache){
 
     }
 
-    /**
-     * The dependency data returned by the Tooling API does not provide enough information to know
-     * what object a custom field belongs to, and whether that object is an actual custom object
-     * or a custom metadata type. 
-     * 
-     * Here, with the aid of the metadata API, with add more detail to these dependencies. 
-     */
-    async function enhanceCustomFieldData(callers){
+    async function enhanceData(metadataArray){
 
-        //sort alphabetically
-        callers.sort((a,b) => (a.name > b.name) ? 1 : -1 );
-    
-        let customFieldIds = [];
-    
-        callers.forEach(caller => {
-    
-            if(isCustomField(caller.type)){
-                caller.name += '__c';
-                customFieldIds.push(caller.id);
+        let validationRules = [];
+        let customFields = [];
+        let layouts = [];
+        let otherMetadata = [];
+
+        metadataArray.forEach(metadata => {
+
+            let {type} = metadata;
+            type = type.toUpperCase();
+
+            if(type == 'CUSTOMFIELD'){
+                metadata.name += '__c';
+                customFields.push(metadata);
             }
-        })
-    
-        if(customFieldIds.length){
-    
-            let objectNamesById = await getObjectNamesById();
-            let objectIdsByCustomFieldId = await getObjectIds(customFieldIds);
-    
-            callers.forEach(caller => {
-    
-                if(isCustomField(caller.type)){
-                    caller.name = getCorrectFieldName(caller.name,caller.id,objectIdsByCustomFieldId,objectNamesById);
-                }
-            });
-            
+            else if(type == 'VALIDATIONRULE'){
+                validationRules.push(metadata);
+            }
+            else if(type == 'LAYOUT'){ 
+                layouts.push(metadata);
+            }
+            else{
+                otherMetadata.push(metadata);
+            }
+        });
+
+        if(customFields.length){
+            customFields = await addParentNamePrefix(customFields,'TableEnumOrId');
         }
+        if(validationRules.length){
+            validationRules = await addParentNamePrefix(validationRules,'EntityDefinitionId');
+        }
+        if(layouts.length){
+            layouts = await addParentNamePrefix(layouts,'EntityDefinitionId');
+        }
+
+        otherMetadata.push(...customFields);
+        otherMetadata.push(...validationRules);
+        otherMetadata.push(...layouts);
+
+        return otherMetadata;
+
+    }
+
+    async function addParentNamePrefix(metadataArray,parentIdField){
+
+        let {type} = metadataArray[0];
+        let ids = metadataArray.map(metadata => metadata.id);
+
+        let queryString = createParentIdQuery(ids,type,parentIdField);
+        let results = await toolingApi.query(queryString);
+
+        let metadataRecordToEntityMap = new Map();
     
-        return callers;
+        results.records.forEach(rec => {
+            metadataRecordToEntityMap.set(rec.Id,rec[parentIdField]);
+        });
+
+        let objectNamesById = await getObjectNamesById();
+
+        metadataArray.forEach(metadata => {
+
+            let fullName;
+
+            let entityId = metadataRecordToEntityMap.get(metadata.id);         
+            let objectName = objectNamesById.get(entityId);
+        
+    
+            if(objectName){
+                fullName = `${objectName}.${metadata.name}`;
+            }else{
+                fullName = `${entityId}.${metadata.name}`;
+            }    
+
+            metadata.name = fullName;
+
+        });
+
+        return metadataArray;
     }
 
     function createUsageTree(callers){
@@ -127,33 +172,6 @@ function usageApi(connection,entryPoint,cache){
         return callers;
 
     }
-
-    /**
-     * The correct field name is determined by looking at a map of objectId => fullName,
-     * provided by the metadata API
-     */
-    function getCorrectFieldName(name,id,objectIdsByCustomFieldId,objectNamesById){
-    
-        let correctName;
-    
-        let entityId = objectIdsByCustomFieldId.get(id);         
-        let objectName = objectNamesById.get(entityId);
-        
-    
-        if(objectName){
-            correctName = `${objectName}.${name}`;
-        }else{
-            correctName = `${entityId}.${name}`;
-        }    
-    
-        return correctName;
-    
-    }
-    
-    function isCustomField(type){
-        return (type.toUpperCase() === 'CUSTOMFIELD');
-    }
-    
     
     /**
      * Uses the Metadata API to get a map of object Ids to object names
@@ -202,33 +220,14 @@ function usageApi(connection,entryPoint,cache){
         return objectsData;
     }
     
-    /**
-     * Because the tooling API doesn't return the object id of a custom field dependency 
-     * we use the tooling API again to query the CustomField object, and get a map
-     * of customFieldId to customObjectId
-     */
-    async function getObjectIds(customFieldIds){
+    function createParentIdQuery(ids,type,parentIdField){
+
+        ids = filterableId(ids);
     
-        let queryString = createCustomFieldQuery(customFieldIds);
-        let results = await toolingApi.query(queryString);
-        let customFieldIdToEntityId = new Map();
-    
-        results.records.forEach(rec => {
-            customFieldIdToEntityId.set(rec.Id,rec.TableEnumOrId);
-        });
-    
-        return customFieldIdToEntityId;
-        
-    }
-    
-    
-    function createCustomFieldQuery(customFieldIds){
-    
-        let ids = filterableId(customFieldIds);
-    
-        return `SELECT Id, TableEnumOrId 
-        FROM CustomField 
+        return `SELECT Id, ${parentIdField} 
+        FROM ${type} 
         WHERE Id IN ('${ids}') ORDER BY EntityDefinitionId`;
+
     }
     
     /**

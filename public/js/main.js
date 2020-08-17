@@ -149,6 +149,7 @@ const SFDM = function(){
                 utils.hideLoader();
                 lastApiResponse = response;
                 console.log(response);
+                utils.enableButton(searchButton);
             }
         }
 

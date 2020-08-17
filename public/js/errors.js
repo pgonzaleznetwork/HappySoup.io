@@ -12,7 +12,8 @@ export function handleError(error){
         appendWarning('Unable to connect to Salesforce. Please check your internet connection or the status of your org at trust.salesforce.com');     
     }
     else{
-        appendWarning(`An error occurred. Please contact the developer of this application and provide the following error: ${error.message}`);
+        appendWarning(`An error occurred. Please contact the developer of this application and provide the following error: ${error.message} 
+        ${error.stack}`);
     }
 }
 

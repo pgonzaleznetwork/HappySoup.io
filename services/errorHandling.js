@@ -9,7 +9,7 @@ class ErrorHandler extends Error{
 
 function handleError(err,res){
     
-    const {statusCode,message} = err;
+    const {statusCode,message,stack} = err;
 
     //this specific error needs to be handled here
     //because the oauth page does not have a javascript file, it's just a route
@@ -20,7 +20,9 @@ function handleError(err,res){
     res.status(statusCode).json({
         error:true,
         statusCode,
-        message
+        message,
+        stack
+
     });
 }
 

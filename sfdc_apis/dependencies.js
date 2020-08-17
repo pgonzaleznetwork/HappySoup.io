@@ -388,7 +388,7 @@ function dependencyApi(connection,entryPoint,cache){
         if(customFieldIds.length){
     
             let objectNamesById = await getObjectNamesById();
-            let objectIdsByCustomFieldId = await getObjectIds(customFieldIds);
+            let objectIdsByCustomFieldId = await getFieldToEntityMap(customFieldIds);
     
             dependencies.forEach(dep => {
     
@@ -676,7 +676,7 @@ function dependencyApi(connection,entryPoint,cache){
      * we use the tooling API again to query the CustomField object, and get a map
      * of customFieldId to customObjectId
      */
-    async function getObjectIds(customFieldIds){
+    async function getFieldToEntityMap(customFieldIds){
     
         let queryString = createCustomFieldQuery(customFieldIds);
         
