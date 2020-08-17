@@ -1,6 +1,7 @@
 const toolingAPI = require('../sfdc_apis/tooling');
 const metadataAPI = require('../sfdc_apis/metadata');
 let packagexml = require('../services/packagexml');
+let utils = require('../services/utils');
 let stats = require('../services/stats');
 
 function usageApi(connection,entryPoint,cache){
@@ -99,6 +100,7 @@ function usageApi(connection,entryPoint,cache){
     async function addParentNamePrefix(metadataArray,parentIdField){
 
         let {type} = metadataArray[0];
+        let objectPrefixSeparator = (type.toUpperCase() == 'LAYOUT' ? '-' : '.');
         let ids = metadataArray.map(metadata => metadata.id);
 
         let queryString = createParentIdQuery(ids,type,parentIdField);
@@ -110,7 +112,7 @@ function usageApi(connection,entryPoint,cache){
             metadataRecordToEntityMap.set(rec.Id,rec[parentIdField]);
         });
 
-        let objectNamesById = await getObjectNamesById();
+        let objectNamesById = await utils.getObjectNamesById(connection,cache);
 
         metadataArray.forEach(metadata => {
 
@@ -121,9 +123,9 @@ function usageApi(connection,entryPoint,cache){
         
     
             if(objectName){
-                fullName = `${objectName}.${metadata.name}`;
+                fullName = `${objectName}${objectPrefixSeparator}${metadata.name}`;
             }else{
-                fullName = `${entityId}.${metadata.name}`;
+                fullName = `${entityId}${objectPrefixSeparator}${metadata.name}`;
             }    
 
             metadata.name = fullName;
@@ -173,56 +175,9 @@ function usageApi(connection,entryPoint,cache){
 
     }
     
-    /**
-     * Uses the Metadata API to get a map of object Ids to object names
-     */
-    async function getObjectNamesById(){
-        
-        let objectsData = await getCustomObjectData();
-
-        let objectsById = new Map();
-        
-        objectsData.forEach(obj => {
-            if(obj.id != ''){
-                objectsById.set(obj.id,obj.fullName);
-            }
-        })
-    
-        return objectsById;
-    
-    }
-    
-   
-    async function getCustomObjectData(){
-
-        let objectsData = [];
-
-        //used the data in cache if it already exists
-        if(cache.getCustomObjects().length){
-            objectsData = [...cache.getCustomObjects()];
-        }
-        else{
-
-            //call the api and cache the data for later use
-            let mdapi = metadataAPI(connection);
-            objectsData = await mdapi.listMetadata('CustomObject');
-
-            objectsData = objectsData.map(obj => {
-                let simplified = {
-                    id:obj.id,
-                    fullName:obj.fullName
-                };
-                return simplified;
-            })
-            cache.cacheCustomObjects(objectsData);
-        }
-
-        return objectsData;
-    }
-    
     function createParentIdQuery(ids,type,parentIdField){
 
-        ids = filterableId(ids);
+        ids = utils.filterableId(ids);
     
         return `SELECT Id, ${parentIdField} 
         FROM ${type} 
@@ -230,31 +185,6 @@ function usageApi(connection,entryPoint,cache){
 
     }
     
-    /**
-     * Takes a list of ids or a single id as a string and formats them in a way that can be used in 
-     * SOQL query filters
-     */
-    function filterableId(metadataId){
-    
-        let ids = '';
-    
-        //allows for the query to filter by either a single id or multiple ids
-        if(Array.isArray(metadataId)){
-    
-            metadataId.forEach(id => {
-                ids += "'"+id+"',"
-            })
-            //remove the first and last ' (and the last comma) as these are included in the query string 
-            ids = ids.substring(1,ids.length-2);
-        }else{
-            ids = metadataId;
-        }
-    
-        return ids;
-    
-    }
-
-
     function createUsageQuery(id){
 
         return `SELECT MetadataComponentId, MetadataComponentName,MetadataComponentType,MetadataComponentNamespace, RefMetadataComponentName, RefMetadataComponentType, RefMetadataComponentId,

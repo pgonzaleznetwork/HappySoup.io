@@ -387,7 +387,7 @@ function dependencyApi(connection,entryPoint,cache){
     
         if(customFieldIds.length){
     
-            let objectNamesById = await getObjectNamesById();
+            let objectNamesById = await utils.getObjectNamesById(connection,cache);
             let objectIdsByCustomFieldId = await getFieldToEntityMap(customFieldIds);
     
             dependencies.forEach(dep => {
@@ -502,7 +502,7 @@ function dependencyApi(connection,entryPoint,cache){
         let lookupFieldsByName = new Map();
         lookupFields.forEach(lf => lookupFieldsByName.set(lf.fullName,lf));
 
-        let customObjectIdsByName = await getObjectIdsByName();
+        let customObjectIdsByName = await utils.getObjectIdsByName(connection,cache);
     
         for (let fieldName of customFieldsByName.keys()){
     
@@ -605,72 +605,9 @@ function dependencyApi(connection,entryPoint,cache){
     function isCustomObject(type){
         return (type.toUpperCase() === 'CUSTOMOBJECT');
     }
-    
-    /**
-     * Uses the Metadata API to get a map of object Ids to object names
-     */
-    async function getObjectNamesById(){
         
-        let objectsData = await getCustomObjectData();
+   
 
-        let objectsById = new Map();
-        
-        objectsData.forEach(obj => {
-            if(obj.id != ''){
-                objectsById.set(obj.id,obj.fullName);
-            }
-        })
-    
-        return objectsById;
-    
-    }
-    
-    /**
-     * The reverse of the above
-     */
-    async function getObjectIdsByName(){
-        
-        let objectsData = await getCustomObjectData();
-    
-        let objectsByName = new Map();
-        
-        objectsData.forEach(obj => {
-            if(obj.id != ''){
-                objectsByName.set(obj.fullName,obj.id);
-            }
-        })
-    
-        return objectsByName;
-    
-    }
-
-    async function getCustomObjectData(){
-
-        let objectsData = [];
-
-        //used the data in cache if it already exists
-        if(cache.getCustomObjects().length){
-            objectsData = [...cache.getCustomObjects()];
-        }
-        else{
-
-            //call the api and cache the data for later use
-            let mdapi = metadataAPI(connection);
-            objectsData = await mdapi.listMetadata('CustomObject');
-
-            objectsData = objectsData.map(obj => {
-                let simplified = {
-                    id:obj.id,
-                    fullName:obj.fullName
-                };
-                return simplified;
-            })
-            cache.cacheCustomObjects(objectsData);
-        }
-
-        return objectsData;
-    }
-    
     /**
      * Because the tooling API doesn't return the object id of a custom field dependency 
      * we use the tooling API again to query the CustomField object, and get a map
@@ -694,7 +631,7 @@ function dependencyApi(connection,entryPoint,cache){
     
     function createCustomFieldQuery(customFieldIds){
     
-        let ids = filterableId(customFieldIds);
+        let ids = utils.filterableId(customFieldIds);
     
         return `SELECT Id, TableEnumOrId 
         FROM CustomField 
@@ -707,7 +644,7 @@ function dependencyApi(connection,entryPoint,cache){
      */
     function createDependencyQuery(metadataId){
     
-        let ids = filterableId(metadataId);
+        let ids = utils.filterableId(metadataId);
         
         return `SELECT MetadataComponentId, MetadataComponentName,MetadataComponentType ,RefMetadataComponentName, RefMetadataComponentType, RefMetadataComponentId,
         RefMetadataComponentNamespace 
@@ -715,30 +652,6 @@ function dependencyApi(connection,entryPoint,cache){
         WHERE MetadataComponentId IN ('${ids}') AND MetadataComponentType != 'FlexiPage' ORDER BY MetadataComponentName, RefMetadataComponentType`;
     }
     
-    /**
-     * Takes a list of ids or a single id as a string and formats them in a way that can be used in 
-     * SOQL query filters
-     */
-    function filterableId(metadataId){
-    
-        let ids = '';
-    
-        //allows for the query to filter by either a single id or multiple ids
-        if(Array.isArray(metadataId)){
-    
-            metadataId.forEach(id => {
-                ids += "'"+id+"',"
-            })
-            //remove the first and last ' (and the last comma) as these are included in the query string 
-            ids = ids.substring(1,ids.length-2);
-        }else{
-            ids = metadataId;
-        }
-    
-        return ids;
-    
-    }
-
     //api returned to the client code
     return {
         getDependencies
