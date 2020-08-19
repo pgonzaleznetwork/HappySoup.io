@@ -17,6 +17,8 @@ const SFDM = function(){
         let expandButton = byId('expand-button');
         let mdDropDown = byId('md-type-select');
         let packageButton = byId('package-button');
+        let dependencyTreeCanvas = byId('dependencyTree');
+        let usageTreeCanvas = byId('usageTree');
         let memberIdsByName = new Map();
         let lastApiResponse;
         let selectedMetadataType;
@@ -119,8 +121,8 @@ const SFDM = function(){
             }
 
             //clear the contents every time a new request is made
-            let tree = byId('tree');
-            tree.innerHTML = "";
+            dependencyTreeCanvas.innerHTML = '';
+            usageTreeCanvas.innerHTML = '';
 
             utils.hideHelpText();
             utils.disableButton(searchButton);
@@ -146,9 +148,21 @@ const SFDM = function(){
             if(response.error) handleError (response);
 
             else{
+                
                 utils.hideLoader();
-                lastApiResponse = response;
-                console.log(response);
+
+                let isEmpty = (Object.keys(response.usageTree).length === 0);
+                
+                //if the response contains results
+                if(!isEmpty){
+                    treeApi.createUsageTree(response.usageTree,usageTreeCanvas);
+                    utils.showHelpText(response.entryPoint.name,'usage');
+                    lastApiResponse = response;
+                }
+                else{
+                    tree.appendChild(utils.createWarning('No results. Either this metadata is not referenced/used by any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
+                }
+    
                 utils.enableButton(searchButton);
             }
         }
@@ -171,8 +185,8 @@ const SFDM = function(){
                 
                 //if the response contains results
                 if(!isEmpty){
-                    treeApi.createDependencyTree(response.dependencyTree,tree);
-                    utils.showHelpText(response.entryPoint.name);
+                    treeApi.createDependencyTree(response.dependencyTree,dependencyTreeCanvas);
+                    utils.showHelpText(response.entryPoint.name,'ref');
                     lastApiResponse = response;
                 }
                 else{

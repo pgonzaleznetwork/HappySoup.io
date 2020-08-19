@@ -48,10 +48,10 @@ function createWarning(text){
     return clone;
 }
 
-function showHelpText(name){
-    let helpText = document.getElementById('ref-help');
+function showHelpText(name,type){
+    let helpText = document.getElementById(`${type}-help`);
     helpText.style.display = 'block';
-    let text = document.getElementById('ref-help-name');
+    let text = document.getElementById(`${type}-help-name`);
     text.innerText = name;
 }
 

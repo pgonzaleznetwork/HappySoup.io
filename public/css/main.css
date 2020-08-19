@@ -124,7 +124,7 @@ header nav a{
     border-radius: 5px;
 }
 
-#ref-help {    
+#ref-help , #usage-help{    
     border: 1px solid #ffeeba;
     color: #856404;
     background-color: #fff3cd;

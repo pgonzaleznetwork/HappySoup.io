@@ -21,6 +21,27 @@ function createDependencyTree(tree,targetElement) {
     }
 }
 
+function createUsageTree(tree,targetElement){
+
+  let metadataTypesList = document.createElement('ul');
+  targetElement.appendChild(metadataTypesList);
+
+  for(let metadataType in tree){
+
+    let metadataTypeNode = document.createElement('li');
+
+    metadataTypesList.appendChild(metadataTypeNode);
+
+    metadataTypeNode.appendChild(foldersApi.createFolderIcon());
+    metadataTypeNode.appendChild(document.createTextNode(` ${metadataType}`));
+
+    tree[metadataType].forEach(member => {
+      createMemberNode(metadataTypeNode,member);
+    });
+  }
+
+}
+
 function createTreeNodes(refs,parentNode){
 
     let childNodes = document.createElement('ul');
@@ -37,12 +58,12 @@ function createTreeNodes(refs,parentNode){
         metadataTypeNode.appendChild(document.createTextNode(` ${mdType}`));
   
         refs[mdType].forEach(member => {
-          createMemberNode(metadataTypeNode,mdType,member);
+          createMemberNode(metadataTypeNode,member);
         });
     }
   }
   
-  function createMemberNode(metadataTypeNode,type,member){
+  function createMemberNode(metadataTypeNode,member){
   
     let memberNames = document.createElement('ul');
     memberNames.style.display = 'none';
@@ -82,5 +103,5 @@ function createTreeNodes(refs,parentNode){
   }
 
   export const treeApi = {
-    createDependencyTree:createDependencyTree
+    createDependencyTree,createUsageTree
   };
