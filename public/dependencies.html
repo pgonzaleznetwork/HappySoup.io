@@ -51,7 +51,7 @@
             <select id="query-type">
                 <option value="" disabled selected hidden>Select a query type</option>
                 <option value="usage">Where is this used</option>
-                <option value="deps">What does it use</option>
+                <option value="deps">What metadata it needs to exist</option>
             </select>
         </div>
         <div>
@@ -78,7 +78,6 @@
     </template>
     <div>
     <div class="loader"></div>
-    <p>We cache your results to improve performance. Not seeing updated results? Clear the cache</p>
         <ul>
             <p id="deps-help" class="help-text">This is the metadata <span style="font-weight: bold">referenced by / called from </span><span id="deps-help-name"></span> and 
                 <span style="font-weight: bold">all its descendants</span>. This represents the package boundary. Learn more</p>
