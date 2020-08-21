@@ -3,6 +3,7 @@ import {foldersApi} from './folders.js';
 import {autocompleteApi} from './autocompleteLib.js';
 import {treeApi} from './tree.js';
 import {utils} from './utils.js'
+import {byId} from './utils.js';
 import {handleError} from './errors.js';
 
 const SFDM = function(){
@@ -17,8 +18,10 @@ const SFDM = function(){
         let expandButton = byId('expand-button');
         let mdDropDown = byId('md-type-select');
         let packageButton = byId('package-button');
-        let dependencyTreeCanvas = byId('dependencyTree');
-        let usageTreeCanvas = byId('usageTree');
+        let dependencyTreePlaceholder = byId('dependency-tree-placeholder');
+        let usageTreePlaceholder = byId('usage-tree-placeholder');
+        let csvButton = byId('csv-button');
+        let excelButton = byId('excel-button');
         let memberIdsByName = new Map();
         let lastApiResponse;
         let selectedMetadataType;
@@ -31,6 +34,8 @@ const SFDM = function(){
         packageButton.onclick = downloadPackageXml;
         searchButton.onclick = doSearch;
         inputField.onkeyup = clickFindButton;
+        csvButton.onclick = copyFile;
+        excelButton.onclick = copyFile;
 
         async function getIdentityInfo(){
 
@@ -121,8 +126,8 @@ const SFDM = function(){
             }
 
             //clear the contents every time a new request is made
-            dependencyTreeCanvas.innerHTML = '';
-            usageTreeCanvas.innerHTML = '';
+            dependencyTreePlaceholder.innerHTML = '';
+            usageTreePlaceholder.innerHTML = '';
 
             utils.hideHelpText();
             utils.disableButton(searchButton);
@@ -148,6 +153,8 @@ const SFDM = function(){
             if(response.error) handleError (response);
 
             else{
+
+                console.log(response);
                 
                 utils.hideLoader();
 
@@ -155,12 +162,12 @@ const SFDM = function(){
                 
                 //if the response contains results
                 if(!isEmpty){
-                    treeApi.createUsageTree(response.usageTree,usageTreeCanvas);
+                    treeApi.createUsageTree(response.usageTree,usageTreePlaceholder);
                     utils.showHelpText(response.entryPoint.name,'usage');
                     lastApiResponse = response;
                 }
                 else{
-                    tree.appendChild(utils.createWarning('No results. Either this metadata is not referenced/used by any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
+                    usageTreePlaceholder.appendChild(utils.createWarning('No results. Either this metadata is not referenced/used by any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
                 }
     
                 utils.enableButton(searchButton);
@@ -185,17 +192,42 @@ const SFDM = function(){
                 
                 //if the response contains results
                 if(!isEmpty){
-                    treeApi.createDependencyTree(response.dependencyTree,dependencyTreeCanvas);
-                    utils.showHelpText(response.entryPoint.name,'ref');
+                    treeApi.createDependencyTree(response.dependencyTree,dependencyTreePlaceholder);
+                    utils.showHelpText(response.entryPoint.name,'deps');
                     lastApiResponse = response;
                 }
                 else{
-                    tree.appendChild(utils.createWarning('No results. Either this metadata does not reference any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
+                    dependencyTreePlaceholder.appendChild(utils.createWarning('No results. Either this metadata does not reference any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
                 }
     
                 utils.enableButton(searchButton);
             }
         }
+
+
+        function copyFile(event){
+
+            let format = event.target.dataset.format;
+
+            if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+                var textarea = document.createElement('textarea');
+                textarea.textContent = lastApiResponse[format];
+                textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in Microsoft Edge.
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+                }
+                catch (ex) {
+                    console.warn("Copy to clipboard failed.", ex);
+                    return false;
+                }
+                finally {
+                    document.body.removeChild(textarea);
+                }
+            }
+        }
+
 
         function downloadPackageXml(){
 
@@ -209,11 +241,6 @@ const SFDM = function(){
             document.body.appendChild(hiddenLink);
             hiddenLink.click();
             document.body.removeChild(hiddenLink); 
-        }
-
-       
-        function byId(id){
-            return document.getElementById(id);
         }
     }
 

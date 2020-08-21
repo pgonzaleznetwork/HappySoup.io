@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/autocomplete.css">
 
     <script src="js/main.js" type="module"></script>
-    <title>Salesforce Package Boundaries</title>
+    <title>Salesforce Happy Soup</title>
     <!-- endbuild -->
 </head>
 
@@ -21,7 +21,7 @@
     <main class="gr2id">
 
     <header>
-        <h3>Salesforce Package Boundaries</h3>
+        <h3>Salesforce Happy Soup</h3>
         <nav>
             <p id="identity"></p>
             <a href="">Docs</a>
@@ -51,7 +51,7 @@
             <select id="query-type">
                 <option value="" disabled selected hidden>Select a query type</option>
                 <option value="usage">Where is this used</option>
-                <option value="deps">What does it depend on</option>
+                <option value="deps">What does it use</option>
             </select>
         </div>
         <div>
@@ -59,38 +59,41 @@
         </div>
     </div>
     </div>
-    <div class="controls base-flex-start">
-        <button id="expand-button" title="Expand All">Expand all <i class="fa fa-expand"></i></button>
-        <button id="collapse-button" title="Collapse All">Collapse all <i class="fa fa-compress"></i></button>
-        <button id="package-button" class="generate-package">Generate package.xml     <i class="fa fa-download"> </i></button>
+    <div class="controls base-flex-between">
+        <div>
+            <button id="expand-button" title="Expand All">Expand all <i class="fa fa-expand"></i></button>
+            <button id="collapse-button" title="Collapse All">Collapse all <i class="fa fa-compress"></i></button>
+        </div>
+        <div>
+            <button id="package-button" class="download-button">package.xml     <i class="fa fa-download"> </i></button>
+            <button id="csv-button" class="download-button" data-format="csv">Ctrl+c (csv)     <i class="fa fa-copy"> </i></button>
+            <button id="excel-button" class="download-button" data-format="excel">Ctrl+c (Excel)     <i class="fa fa-copy"> </i></button>
+        </div>
     </div>
 </main>
-    <section class="dependencies">
-        <template id="warning-template">
-            <div id="warning-template-text">
-            </div>
-        </template>
-        <div>
-        <div class="loader"></div>
+<section class="dependencies">
+    <template id="warning-template">
+        <div id="warning-template-text">
+        </div>
+    </template>
+    <div>
+    <div class="loader"></div>
         <ul>
-            <p id="ref-help">This is the metadata <span style="font-weight: bold">referenced by / called from </span><span id="ref-help-name"></span> and 
+            <p id="deps-help" class="help-text">This is the metadata <span style="font-weight: bold">referenced by / called from </span><span id="deps-help-name"></span> and 
                 <span style="font-weight: bold">all its descendants</span>. This represents the package boundary. Learn more</p>
 
-            <p id="usage-help">This is the metadata <span style="font-weight: bold">that uses/references </span><span id="usage-help-name"></span>. Changes made to it
+            <p id="usage-help" class="help-text">This is the metadata <span style="font-weight: bold">that uses/references </span><span id="usage-help-name"></span>. Changes made to it
                 could have side effects on all this metadata.</p>
 
-            <div id="usageTree">
-
+            <div id="usage-tree-placeholder">
             </div>
-            <li id="dependencyTree">
-               
+
+            <li id="dependency-tree-placeholder">
+            
             </li>
         </ul>
     </div>
-
-    
-
-    </section>  
+</section>  
 </body>
 
 </html>

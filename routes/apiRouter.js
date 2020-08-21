@@ -118,6 +118,7 @@ apiRouter.route('/metadata')
             let cachedData = cache.getMetadataList(cacheKey);
 
             if(cachedData){
+                console.log('using field cache');
                 res.status(202).json(cachedData);
             }
             else{

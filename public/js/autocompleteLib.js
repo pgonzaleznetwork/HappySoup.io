@@ -1,4 +1,5 @@
 import {utils} from './utils.js'
+import {byId} from './utils.js'
 
 //example from W3 schools
 function autocomplete(inp, arr) {
@@ -45,7 +46,7 @@ function autocomplete(inp, arr) {
             /*close the list of autocompleted values,
             (or any other open lists of autocompleted values:*/
             closeAllLists();
-            utils.enableButton(document.getElementById('search-button'));
+            utils.enableButton(byId('search-button'));
           });
           a.appendChild(b);
         }
@@ -53,7 +54,7 @@ function autocomplete(inp, arr) {
     });
     /*execute a function presses a key on the keyboard:*/
     inp.addEventListener("keydown", function (e) {
-      var x = document.getElementById(this.id + "autocomplete-list");
+      var x = byId(this.id + "autocomplete-list");
       if (x) x = x.getElementsByTagName("div");
       if (e.keyCode == 40) {
         /*If the arrow DOWN key is pressed,

@@ -34,7 +34,7 @@ function enableInputField(inputField){
 
 function disableInputField(inputField){
     
-    inputField.value = 'Loading...';
+    inputField.value = 'Loading. This can take a min in large orgs...';
     inputField.readOnly = true;
     inputField.classList.add('disabled-input');
 }
@@ -49,15 +49,21 @@ function createWarning(text){
 }
 
 function showHelpText(name,type){
-    let helpText = document.getElementById(`${type}-help`);
+    let helpText = byId(`${type}-help`);
     helpText.style.display = 'block';
-    let text = document.getElementById(`${type}-help-name`);
+    let text = byId(`${type}-help-name`);
     text.innerText = name;
 }
 
+export function byId(id){
+    return document.getElementById(id);
+}
+
 function hideHelpText(){
-    let helpText = document.getElementById('ref-help');
-    helpText.style.display = 'none';
+
+    document.querySelectorAll('.help-text').forEach(helpText => {
+        helpText.style.display = 'none';
+    })
 }
 
 export const utils = {
@@ -70,5 +76,6 @@ export const utils = {
     enableInputField,
     createWarning,
     showHelpText,
-    hideHelpText
+    hideHelpText,
+    byId
 }

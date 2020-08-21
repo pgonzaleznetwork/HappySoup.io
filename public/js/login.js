@@ -1,4 +1,5 @@
 import {utils} from './utils.js'
+import {byId} from './utils.js'
 
 
 window.onload = init();
@@ -15,9 +16,9 @@ function init(){
         document.querySelector('.login-inner').appendChild(utils.createWarning('We were unable to log into your salesforce org. Try clearing the cache and cookies, using another browser or another org.'));
     }
   
-    document.getElementById('login-button').addEventListener('click',() => {
+    byId('login-button').addEventListener('click',() => {
 
-        let host = document.getElementById('environment').selectedOptions[0].value;
+        let host = byId('environment').selectedOptions[0].value;
         let authEndPoint = `https://${host}.salesforce.com/services/oauth2/authorize`;
 
         let state = JSON.stringify({'environment':host});

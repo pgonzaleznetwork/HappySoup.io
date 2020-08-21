@@ -124,7 +124,7 @@ header nav a{
     border-radius: 5px;
 }
 
-#ref-help , #usage-help{    
+#deps-help , #usage-help{    
     border: 1px solid #ffeeba;
     color: #856404;
     background-color: #fff3cd;
@@ -204,16 +204,16 @@ button:focus{
    border: 2px solid white !important;
 }
 
-.controls .generate-package{
-    width: 200px;
-    margin-left:auto;
+.controls .download-button{
     background:#e58e26;
     color:black;
     transition: .5s ease;
+
 }
 
-.controls .generate-package:hover{
+.controls .download-button:hover{
     background:#fcbc54;
+    
 }
 
 

@@ -1,4 +1,5 @@
 import {utils} from './utils.js'
+import {byId} from './utils.js'
 
 export function handleError(error){
 
@@ -20,7 +21,7 @@ export function handleError(error){
 
 function disableFieldsAndLoaders(){
 
-    let inputField = document.getElementById("input-field");
+    let inputField = byId("input-field");
 
     inputField.value = '';
     inputField.setAttribute('placeholder','');
@@ -30,7 +31,11 @@ function disableFieldsAndLoaders(){
 
 function appendWarning(text){
 
-    let topNode = document.getElementById("tree");
-    topNode.innerHTML = '';
-    topNode.appendChild(utils.createWarning(text));
+    let dependecyTreePlaceholder = byId("dependency-tree-placeholder");
+    let usageTreePlaceholder = byId("usage-tree-placeholder");
+
+    dependecyTreePlaceholder.innerHTML = '';
+    usageTreePlaceholder.innerHTML = '';
+    
+    dependecyTreePlaceholder.appendChild(utils.createWarning(text));
 }

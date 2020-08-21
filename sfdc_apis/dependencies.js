@@ -4,6 +4,7 @@ require('dotenv').config();
 let packagexml = require('../services/packagexml');
 let stats = require('../services/stats');
 let utils = require('../services/utils');
+const sheetFile = require('../services/sheetFile');
 
 
 function dependencyApi(connection,entryPoint,cache){
@@ -24,7 +25,10 @@ function dependencyApi(connection,entryPoint,cache){
 
         dependencies.push(...unsupportedDependencies);
 
-        let package = packagexml(entryPoint,dependencies);
+        let package = packagexml(entryPoint,dependencies,'deps');
+        let csv = sheetFile(entryPoint,dependencies,'deps','csv');
+        let excel = sheetFile(entryPoint,dependencies,'deps','excel');
+
         let dependencyTree = createDependecyTree(dependencies);
         let statsInfo = stats(dependencies);
 
@@ -32,7 +36,9 @@ function dependencyApi(connection,entryPoint,cache){
             package,
             dependencyTree,
             stats:statsInfo,
-            entryPoint
+            entryPoint,
+            csv,
+            excel
         }        
     }
 

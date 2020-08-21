@@ -5,11 +5,15 @@ require('dotenv').config();
  * Creates an xml string following the standards of the salesforce package.xml files
  * used for metadata deployments. 
  */
-function createPackageXml(entryPoint,dependencies){
+function createPackageXml(entryPoint,dependencies,type){
 
     let depsByType = new Map();
 
-    dependencies = dependencies.filter(dep => !utils.isDynamicReference(dep));//NEED TO REMOVE EMAIL TEMPLATE
+    if(type === 'deps'){
+        //when we look at what a metadata depends on, we don't need to include dynamic references
+        //we do need them when the type is "usage"
+        dependencies = dependencies.filter(dep => !utils.isDynamicReference(dep));
+    }
 
     dependencies = dependencies.map(dep => {
         return {...dep};//return new version to prevent side effects in under functions later
