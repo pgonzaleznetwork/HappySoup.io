@@ -1,9 +1,7 @@
-const toolingAPI = require('../sfdc_apis/tooling');
-const metadataAPI = require('../sfdc_apis/metadata');
-let packagexml = require('../services/packagexml');
+let toolingAPI = require('../sfdc_apis/tooling');
 let utils = require('../services/utils');
 let stats = require('../services/stats');
-const sheetFile = require('../services/sheetFile');
+let format = require('../services/fileFormats');
 
 function usageApi(connection,entryPoint,cache){
 
@@ -20,14 +18,17 @@ function usageApi(connection,entryPoint,cache){
         //sort alphabetically
         callers.sort((a,b) => (a.name > b.name) ? 1 : -1 );
 
-        let csv = sheetFile(entryPoint,callers,'usage','csv');
-        let excel = sheetFile(entryPoint,callers,'usage','excel');
-        let package = packagexml(entryPoint,callers,'usage');
+        let files = format(entryPoint,callers,'usage');
+
+        let csv = files.csv();
+        let excel = files.excel();
+        let packageXml = files.xml();
+
         let usageTree = createUsageTree(callers);
         let statsInfo = stats(callers);
 
         return{
-            package,
+            packageXml,
             usageTree,
             stats:statsInfo,
             entryPoint,

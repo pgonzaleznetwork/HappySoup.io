@@ -234,7 +234,7 @@ const SFDM = function(){
             //need to validate if the last api response was valid
 
             let hiddenLink = document.createElement('a');
-            hiddenLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(lastApiResponse.package));
+            hiddenLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(lastApiResponse.packageXml));
             hiddenLink.setAttribute('download', `${lastApiResponse.entryPoint.name}-package.xml`);            
             hiddenLink.style.display = 'none';
 

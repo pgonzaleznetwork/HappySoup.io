@@ -6,6 +6,9 @@
     "start": "node ./bin/www",
     "debug": "node --inspect ./bin/www"
   },
+  "engines": {
+    "node": "14.x"
+  },
   "dependencies": {
     "connect-redis": "^4.0.4",
     "cookie-parser": "~1.4.4",

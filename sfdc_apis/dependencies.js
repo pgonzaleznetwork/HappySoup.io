@@ -1,10 +1,9 @@
 let toolingAPI = require('./tooling');
 let metadataAPI = require('./metadata');
 require('dotenv').config();
-let packagexml = require('../services/packagexml');
 let stats = require('../services/stats');
 let utils = require('../services/utils');
-const sheetFile = require('../services/sheetFile');
+let format = require('../services/fileFormats');
 
 
 function dependencyApi(connection,entryPoint,cache){
@@ -25,15 +24,17 @@ function dependencyApi(connection,entryPoint,cache){
 
         dependencies.push(...unsupportedDependencies);
 
-        let package = packagexml(entryPoint,dependencies,'deps');
-        let csv = sheetFile(entryPoint,dependencies,'deps','csv');
-        let excel = sheetFile(entryPoint,dependencies,'deps','excel');
+        let files = format(entryPoint,dependencies,'deps');
+
+        let csv = files.csv();
+        let excel = files.excel();
+        let packageXml = files.xml();
 
         let dependencyTree = createDependecyTree(dependencies);
         let statsInfo = stats(dependencies);
 
         return{
-            package,
+            packageXml,
             dependencyTree,
             stats:statsInfo,
             entryPoint,
