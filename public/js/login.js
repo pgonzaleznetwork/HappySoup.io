@@ -24,7 +24,7 @@ function init(){
         let state = JSON.stringify({'environment':host});
         let clientId = "3MVG9I5UQ_0k_hTmZuUMosHPf.2zqzHBqd0j.GMmnThrGhd53n4prfPpHNqSAPRrWzc7Hb0ul.s2m4VYoiWyZ";
         let responseType = "code";
-        let redirectURI = encodeURIComponent("http://localhost:3000/oauth2/callback");
+        let redirectURI = encodeURIComponent(`${window.location.origin}/oauth2/callback`);
         let requestURL = `${authEndPoint}?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectURI}&state=${state}`;
         window.location = requestURL;
             
