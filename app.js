@@ -30,7 +30,7 @@ app.use((req,res,next) => {
 
 app.use('/api',require('./routes/apiRouter'));
 app.use('/identity',require('./routes/identityRouter'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'),{extensions: ['html', 'htm']}));
 
 
 // catch 404 and forward to error handler

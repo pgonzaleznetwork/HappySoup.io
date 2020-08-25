@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "debug": "node --inspect ./bin/www"
+    "debug": "node --inspect ./bin/www",
+    "semantic-release": "semantic-release",
+    "commit":"git-cz"
   },
   "engines": {
     "node": "14.x"
@@ -25,7 +27,21 @@
     "redis": "^3.0.2"
   },
   "devDependencies": {
+    "commitizen": "^4.2.0",
+    "cz-conventional-changelog": "^3.2.1",
     "eslint": "^7.7.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "semantic-release": "^17.1.1",
+    "semantic-release-cli": "^5.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pgonzaleznetwork/sfdc-happy-soup.git"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "czConfing":{
+    "path":"node_modules/cz-conventional-changelog"
   }
 }

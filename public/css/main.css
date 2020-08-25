@@ -8,6 +8,14 @@ body{
     background-color: #ecf0f1;
 }
 
+.logo{
+    display:flex;
+    flex-direction: row;
+    justify-content:space-between;
+    width: 310px;
+    align-items: center;
+}
+
 
 a{
     color: inherit; /* blue colors for links too */
