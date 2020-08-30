@@ -136,6 +136,21 @@ apiRouter.route('/metadata')
     }
 );
 
+/**
+ * This endpoint doesn't require a server or sf session because it simply returns
+ * an array of supported types. Also, these types need to be available to the client ASAP
+ * so validating the session with salesforce would delay the response.
+ */
+apiRouter.route('/supportedtypes')
+
+.get(
+    cors(corsOptions),
+    (req,res,next) => {
+        let types = getSupportedMetadataTypes();
+        res.status(200).json(types);  
+    }
+);
+
 apiRouter.route('/deletecache')
 
 .get(
@@ -147,5 +162,13 @@ apiRouter.route('/deletecache')
         res.sendStatus(200);
     }
 );
+
+function getSupportedMetadataTypes(){
+    return [
+        'ApexClass','ApexPage','ApexTrigger',
+        'ApexComponent','Layout','ValidationRule',
+        'WebLink','CustomField','Flow'
+    ]
+}
 
 module.exports = apiRouter;

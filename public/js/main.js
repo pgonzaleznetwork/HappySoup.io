@@ -26,7 +26,7 @@ const SFDM = function(){
         let lastApiResponse;
         let selectedMetadataType;
 
-        document.addEventListener('DOMContentLoaded', getIdentityInfo);
+        document.addEventListener('DOMContentLoaded', loadServerInfo);
         logoutButton.onclick = logout;
         collapseButon.onclick = collapseFolders;
         expandButton.onclick = expandFolders;
@@ -36,6 +36,11 @@ const SFDM = function(){
         inputField.onkeyup = clickFindButton;
         csvButton.onclick = copyFile;
         excelButton.onclick = copyFile;
+
+        function loadServerInfo(){
+            getSupportedMetadataTypes();
+            getIdentityInfo();
+        }
 
         async function getIdentityInfo(){
 
@@ -48,6 +53,20 @@ const SFDM = function(){
             } catch {
                 //no error handling required because this is not critical to the app functionality
             }
+        }
+
+        async function getSupportedMetadataTypes(){
+
+            let url = '/api/supportedtypes';
+            let res = await fetch(url);
+            let types = await res.json();
+
+            types.forEach(type => {
+                let option = document.createElement('option');
+                option.value = type;
+                option.innerText = type;
+                mdDropDown.appendChild(option);
+            })
         }
 
         async function logout(event){
@@ -203,6 +222,7 @@ const SFDM = function(){
                 utils.enableButton(searchButton);
             }
         }
+
 
 
         function copyFile(event){
