@@ -6,6 +6,7 @@ const {cacheApi,initCache} = require('../services/caching');
 let serverSessions = require('../services/serverSessions');
 const parser = require('body-parser');
 var cors = require('cors');
+let {ErrorHandler} = require('../services/errorHandling');
 
 var corsOptions = {
     origin: 'http://localhost',
@@ -24,6 +25,22 @@ apiRouter.route('/dependencies')
     async (req,res,next) => {
 
         try {
+
+            let {name,id,type} = req.query;
+
+            if(!name || !id || !type){
+                throw new ErrorHandler(404,'Invalid parameters','Invalid parameters on dependency API');
+            }else{
+                if(!isSupported(type)){
+                    throw new ErrorHandler(404,'Unsupported type','Unsupported type on dependency API');
+                }
+                if(id.length != 18){
+                    throw new ErrorHandler(404,'Invalid Id length','Invalid Id length on dependency API');
+                }
+                if(name === ''){
+                    throw new ErrorHandler(404,'Invalid name','Invalid name on dependency API');
+                }
+            }
 
             let entryPoint = {...req.query};
 
@@ -180,6 +197,10 @@ function getSupportedMetadataTypes(){
         'ApexComponent','Layout','ValidationRule',
         'WebLink','CustomField','Flow'
     ]
+}
+
+function isSupported(type){
+    return (getSupportedMetadataTypes().indexOf(type) != -1);
 }
 
 module.exports = apiRouter;
