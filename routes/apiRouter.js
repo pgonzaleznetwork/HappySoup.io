@@ -141,7 +141,7 @@ apiRouter.route('/supportedtypes')
 .get(
     cors(corsOptions),
     serverSessions.validateSessions,
-    async (req,res,next) => {
+    (req,res,next) => {
         let types = getSupportedMetadataTypes();
         res.status(200).json(types);  
     }
