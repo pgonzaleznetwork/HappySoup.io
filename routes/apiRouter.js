@@ -136,6 +136,17 @@ apiRouter.route('/metadata')
     }
 );
 
+apiRouter.route('/supportedtypes')
+
+.get(
+    cors(corsOptions),
+    serverSessions.validateSessions,
+    async (req,res,next) => {
+        let types = getSupportedMetadataTypes();
+        res.status(200).json(types);  
+    }
+);
+
 apiRouter.route('/deletecache')
 
 .get(
@@ -147,5 +158,13 @@ apiRouter.route('/deletecache')
         res.sendStatus(200);
     }
 );
+
+function getSupportedMetadataTypes(){
+    return [
+        'ApexClass','ApexPage','ApexTrigger',
+        'ApexComponent','Layout','ValidationRule',
+        'WebLink','CustomField','Flow'
+    ]
+}
 
 module.exports = apiRouter;
