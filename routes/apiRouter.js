@@ -112,18 +112,29 @@ apiRouter.route('/metadata')
 
         try{
 
+            let type = req.query.mdtype;
+
+            let unsupported = (getSupportedMetadataTypes().indexOf(type) == -1);
+
+            if(unsupported){
+                let error = new Error();
+                let text = 'Unsupported Metadata Type';
+                error.name = text;
+                error.message = text;
+                throw error;
+            }
+
             let cache = cacheApi(req.session.cache);
-            let cacheKey = `list-${req.query.mdtype}`;
+            let cacheKey = `list-${type}`;
 
             let cachedData = cache.getMetadataList(cacheKey);
 
             if(cachedData){
-                console.log('using field cache');
                 res.status(202).json(cachedData);
             }
             else{
                 let mdapi = metadataApi(serverSessions.getConnection(req.session));
-                let results = await mdapi.listMetadata(req.query.mdtype);
+                let results = await mdapi.listMetadata(type);
 
                 results = results.map(r => `${r.fullName}:${r.id}`);
         
