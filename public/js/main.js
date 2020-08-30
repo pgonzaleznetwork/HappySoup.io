@@ -61,8 +61,12 @@ const SFDM = function(){
             let res = await fetch(url);
             let types = await res.json();
 
-            console.log('types',types);
-
+            types.forEach(type => {
+                let option = document.createElement('option');
+                option.value = type;
+                option.innerText = type;
+                mdDropDown.appendChild(option);
+            })
         }
 
         async function logout(event){

@@ -136,11 +136,15 @@ apiRouter.route('/metadata')
     }
 );
 
+/**
+ * This endpoint doesn't require a server or sf session because it simply returns
+ * an array of supported types. Also, these types need to be available to the client ASAP
+ * so validating the session with salesforce would delay the response.
+ */
 apiRouter.route('/supportedtypes')
 
 .get(
     cors(corsOptions),
-    serverSessions.validateSessions,
     (req,res,next) => {
         let types = getSupportedMetadataTypes();
         res.status(200).json(types);  
