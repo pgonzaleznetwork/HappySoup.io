@@ -6,6 +6,7 @@ const {cacheApi,initCache} = require('../services/caching');
 let serverSessions = require('../services/serverSessions');
 const parser = require('body-parser');
 var cors = require('cors');
+let {ErrorHandler} = require('../services/errorHandling');
 
 var corsOptions = {
     origin: 'http://localhost',
@@ -21,6 +22,7 @@ apiRouter.route('/dependencies')
 .get(
     cors(corsOptions),
     serverSessions.validateSessions,
+    validateParams,
     async (req,res,next) => {
 
         try {
@@ -65,6 +67,7 @@ apiRouter.route('/usage')
 .get(
     cors(corsOptions),
     serverSessions.validateSessions,
+    validateParams,
     async (req,res,next) => {
 
         try {
@@ -108,6 +111,7 @@ apiRouter.route('/metadata')
 .get(
     cors(corsOptions),
     serverSessions.validateSessions,
+    validateParams,
     async (req,res,next) => {
 
         try{
@@ -118,7 +122,6 @@ apiRouter.route('/metadata')
             let cachedData = cache.getMetadataList(cacheKey);
 
             if(cachedData){
-                console.log('using field cache');
                 res.status(202).json(cachedData);
             }
             else{
@@ -169,6 +172,48 @@ function getSupportedMetadataTypes(){
         'ApexComponent','Layout','ValidationRule',
         'WebLink','CustomField','Flow'
     ]
+}
+
+function isSupported(type){
+    return (getSupportedMetadataTypes().indexOf(type) != -1);
+}
+
+
+
+function validateParams(req,res,next){
+
+    let path = req.path;
+
+    if(path == '/usage' || path == '/dependencies'){
+
+        let {name,id,type} = req.query;
+
+        if(!name || !id || !type){
+            throw new ErrorHandler(404,'Invalid parameters','Invalid parameters on dependency API');
+        }else{
+            if(!isSupported(type)){
+                throw new ErrorHandler(404,'Unsupported type','Unsupported type on dependency API');
+            }
+            if(id.length != 18){
+                throw new ErrorHandler(404,'Invalid Id length','Invalid Id length on dependency API');
+            }
+            if(name === ''){
+                throw new ErrorHandler(404,'Invalid name','Invalid name on dependency API');
+            }
+        }
+    }
+
+    if(path == '/metadata'){
+
+        let type = req.query.mdtype;
+
+        if(!isSupported(type)){
+            throw new ErrorHandler(404,'Unsupported type','Unsupported type on dependency API');
+        }
+    }
+
+    next();
+
 }
 
 module.exports = apiRouter;
