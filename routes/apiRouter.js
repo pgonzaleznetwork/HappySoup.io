@@ -22,25 +22,10 @@ apiRouter.route('/dependencies')
 .get(
     cors(corsOptions),
     serverSessions.validateSessions,
+    validateParams,
     async (req,res,next) => {
 
         try {
-
-            let {name,id,type} = req.query;
-
-            if(!name || !id || !type){
-                throw new ErrorHandler(404,'Invalid parameters','Invalid parameters on dependency API');
-            }else{
-                if(!isSupported(type)){
-                    throw new ErrorHandler(404,'Unsupported type','Unsupported type on dependency API');
-                }
-                if(id.length != 18){
-                    throw new ErrorHandler(404,'Invalid Id length','Invalid Id length on dependency API');
-                }
-                if(name === ''){
-                    throw new ErrorHandler(404,'Invalid name','Invalid name on dependency API');
-                }
-            }
 
             let entryPoint = {...req.query};
 
@@ -82,6 +67,7 @@ apiRouter.route('/usage')
 .get(
     cors(corsOptions),
     serverSessions.validateSessions,
+    validateParams,
     async (req,res,next) => {
 
         try {
@@ -125,24 +111,13 @@ apiRouter.route('/metadata')
 .get(
     cors(corsOptions),
     serverSessions.validateSessions,
+    validateParams,
     async (req,res,next) => {
 
         try{
 
-            let type = req.query.mdtype;
-
-            let unsupported = (getSupportedMetadataTypes().indexOf(type) == -1);
-
-            if(unsupported){
-                let error = new Error();
-                let text = 'Unsupported Metadata Type';
-                error.name = text;
-                error.message = text;
-                throw error;
-            }
-
             let cache = cacheApi(req.session.cache);
-            let cacheKey = `list-${type}`;
+            let cacheKey = `list-${req.query.mdtype}`;
 
             let cachedData = cache.getMetadataList(cacheKey);
 
@@ -151,7 +126,7 @@ apiRouter.route('/metadata')
             }
             else{
                 let mdapi = metadataApi(serverSessions.getConnection(req.session));
-                let results = await mdapi.listMetadata(type);
+                let results = await mdapi.listMetadata(req.query.mdtype);
 
                 results = results.map(r => `${r.fullName}:${r.id}`);
         
@@ -201,6 +176,44 @@ function getSupportedMetadataTypes(){
 
 function isSupported(type){
     return (getSupportedMetadataTypes().indexOf(type) != -1);
+}
+
+
+
+function validateParams(req,res,next){
+
+    let path = req.path;
+
+    if(path == '/usage' || path == '/dependencies'){
+
+        let {name,id,type} = req.query;
+
+        if(!name || !id || !type){
+            throw new ErrorHandler(404,'Invalid parameters','Invalid parameters on dependency API');
+        }else{
+            if(!isSupported(type)){
+                throw new ErrorHandler(404,'Unsupported type','Unsupported type on dependency API');
+            }
+            if(id.length != 18){
+                throw new ErrorHandler(404,'Invalid Id length','Invalid Id length on dependency API');
+            }
+            if(name === ''){
+                throw new ErrorHandler(404,'Invalid name','Invalid name on dependency API');
+            }
+        }
+    }
+
+    if(path == '/metadata'){
+
+        let type = req.query.mdtype;
+
+        if(!isSupported(type)){
+            throw new ErrorHandler(404,'Unsupported type','Unsupported type on dependency API');
+        }
+    }
+
+    next();
+
 }
 
 module.exports = apiRouter;
