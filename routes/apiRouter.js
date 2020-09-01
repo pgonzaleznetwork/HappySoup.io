@@ -12,7 +12,8 @@ let whitelist = ['http://localhost', 'https://qa-sfdc-happy-soup.herokuapp.com',
 
 let corsOptions = {
   origin: function (origin, callback) {
-      console.log('what is the origin',origin);
+    //if the origin is in the whitelist or if its undefined, which 
+    //happens when the API call is made from within the same origin
     if (whitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true)
     } else {
