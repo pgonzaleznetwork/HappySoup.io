@@ -8,9 +8,19 @@ const parser = require('body-parser');
 var cors = require('cors');
 let {ErrorHandler} = require('../services/errorHandling');
 
-var corsOptions = {
-    origin: 'http://localhost',
+let whitelist = ['http://localhost', 'https://qa-sfdc-happy-soup.herokuapp.com','https://sfdc-happy-soup.herokuapp.com'];
+
+let corsOptions = {
+  origin: function (origin, callback) {
+    //if the origin is in the whitelist or if its undefined, which 
+    //happens when the API call is made from within the same origin
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
   }
+}
 
 const apiRouter = express.Router();
 apiRouter.use(parser.json());
