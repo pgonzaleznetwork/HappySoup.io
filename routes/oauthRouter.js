@@ -21,7 +21,7 @@ oauthRouter.route('/callback')
 
         let authEndpoint = `https://${state.environment}.salesforce.com/services/oauth2/token`;
         
-        let data = `grant_type=authorization_code&code=${req.query.code}&client_id=${process.env.clientId}&client_secret=${process.env.clientSecret}&redirect_uri=${encodeURIComponent(process.env.redirectURI)}`;
+        let data = `grant_type=authorization_code&code=${req.query.code}&client_id=${process.env.clientId}&client_secret=${process.env.clientSecret}&redirect_uri=${state.redirectURI}`;
 
         let fetchOptions = {
             headers: {
