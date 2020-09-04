@@ -15,15 +15,61 @@ function init(){
     if(params.has('oauthfailed')){
         document.querySelector('.login-inner').appendChild(utils.createWarning('We were unable to log into your salesforce org. Try clearing the cache and cookies, using another browser or another org.'));
     }
+
+    byId('environment').addEventListener('change',event => {
+
+        let host = event.target.selectedOptions[0].value;
+        let domainInput = byId('domain-input-area');
+
+        if(host === 'domain'){
+            domainInput.classList.remove('base-remove');
+        }else{
+            domainInput.classList.add('base-remove');
+        }
+    });
   
     byId('login-button').addEventListener('click',() => {
 
         let host = byId('environment').selectedOptions[0].value;
-        let authEndPoint = `https://${host}.salesforce.com/services/oauth2/authorize`;
+        let baseURL;
+
+        if(host === 'domain'){
+
+            let domainURL = byId('domain-input').value;
+
+            if(!domainURL){
+                alert('Please enter your domain URL');
+                return;
+            }
+            if(domainURL.indexOf('my.salesforce.com') === -1){
+                alert(`${domainURL} is not a valid salesforce domain`);
+                return;
+            }
+            if(domainURL.indexOf('https://') != 0){
+                alert(`Please use https://`);
+                return;
+            }
+            
+            domainURL = domainURL.trim();
+            let lastCharacter = domainURL.substr(domainURL.length-1);
+            
+            //remove last slash
+            if(lastCharacter === '/'){
+                domainURL = domainURL.substr(0,domainURL.length-1);
+            }
+
+            baseURL = domainURL;
+        }
+        else{
+            baseURL = `https://${host}.salesforce.com`;
+        }
+
+        let authEndPoint = `${baseURL}/services/oauth2/authorize`;
+
         let redirectURI = encodeURIComponent(`${window.location.origin}/oauth2/callback`);
 
         let state = JSON.stringify({
-            'environment':host,
+            'baseURL':baseURL,
             'redirectURI':redirectURI
         });
         

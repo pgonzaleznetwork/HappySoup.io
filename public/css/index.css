@@ -82,6 +82,15 @@ select {
     appearance: none;
 }
 
+#domain-input{
+    width:100%;
+    text-align:center;
+}
+
+#domain-input-area{
+    margin-top: 40px;
+}
+
 .info{
     text-align: center;
     grid-area:info;
