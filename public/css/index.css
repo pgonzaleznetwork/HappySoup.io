@@ -68,7 +68,7 @@ footer{
 }
 
 select {  
-    width: 30%;
+    width: 35%;
     height: calc(2.25rem + 2px);
     padding: .375rem 1.75rem .375rem .75rem;
     line-height: 1.2;
