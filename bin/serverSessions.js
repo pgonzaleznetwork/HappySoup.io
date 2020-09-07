@@ -1,7 +1,27 @@
 var session = require('express-session');
 const redis = require('redis');
 let RedisStore = require('connect-redis')(session);
-let redisClient = redis.createClient();
+let redisClient;
+let redisHost;
+let redisPort;
+
+//if running on heroku
+if (process.env.REDIS_URL){
+
+  let redisUrl = require("url").parse(process.env.REDIS_URL);
+  redisHost = redisUrl.hostname;
+  redisPort = redisUrl.port;
+  redisClient = redis.createClient(redisPort, redisHost);
+
+  redisClient.auth(redisUrl.auth.split(":")[1]);
+
+} else {
+  //running locally
+  redisClient = redis.createClient();
+  redisHost = process.env.redisHost;
+  redisPort = process.env.redisPort;
+}
+
 require('dotenv').config();
 
 /**
@@ -15,8 +35,8 @@ require('dotenv').config();
 const EXPIRE_TIME = 28800000;
 
 let sessionStore = new RedisStore({
-  host: process.env.redisHost, 
-  port: process.env.redisPort, 
+  host: redisHost, 
+  port: redisPort, 
   client: redisClient,
   ttl:EXPIRE_TIME,
   disableTouch:true
