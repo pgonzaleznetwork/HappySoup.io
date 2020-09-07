@@ -68,7 +68,7 @@ footer{
 }
 
 select {  
-    width: 35%;
+    width: 38%;
     height: calc(2.25rem + 2px);
     padding: .375rem 1.75rem .375rem .75rem;
     line-height: 1.2;
@@ -80,6 +80,15 @@ select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+}
+
+#domain-input{
+    width:100%;
+    text-align:center;
+}
+
+#domain-input-area{
+    margin-top: 40px;
 }
 
 .info{

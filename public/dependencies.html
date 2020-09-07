@@ -44,8 +44,8 @@
             <div>
             <select id="query-type">
                 <option value="" disabled selected hidden>Select a query type</option>
+                <option value="deps">Deployment boundary</option>
                 <option value="usage">Where is this used</option>
-                <option value="deps">What metadata it needs to exist</option>
             </select>
         </div>
         <div>
@@ -74,7 +74,7 @@
     <div class="loader"></div>
         <ul>
             <p id="deps-help" class="help-text">This is the metadata <span style="font-weight: bold">referenced by / called from </span><span id="deps-help-name"></span> and 
-                <span style="font-weight: bold">all its descendants</span>. This represents the package boundary. <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup" targe="_blank"> Learn more</a></p>
+                <span style="font-weight: bold">all its descendants</span>. This represents the deployment boundary. <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup" targe="_blank"> Learn more</a></p>
 
             <p id="usage-help" class="help-text">This is the metadata <span style="font-weight: bold">that uses/references </span><span id="usage-help-name"></span>. Changes made to it
                 could have side effects on all this metadata. <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup" targe="_blank"> Learn more</a></p>
