@@ -16,6 +16,11 @@ oauthRouter.route('/callback')
         if(!req.query.code || !req.query.state){
             res.status(404).send('Authorization code and state parameters are required');
         }
+
+        if(req.query.error){
+            let error = new ErrorHandler(404,'oauth-failed',`Error on oauth callback ${req.query.error}`);
+            next(error);
+        }
         
         let state = JSON.parse(req.query.state);
 
@@ -36,7 +41,8 @@ oauthRouter.route('/callback')
             let json = await response.json();
 
             if(json.error){
-                throw new ErrorHandler(404,'oauth-failed','oauth response returned an error');
+                let error = new ErrorHandler(404,'oauth-failed','oauth response returned an error');
+                next(error);
             }
             else{
                 req.session.oauthInfo = json;
