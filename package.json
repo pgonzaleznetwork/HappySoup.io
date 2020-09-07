@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "debug": "node --inspect ./bin/www",
     "semantic-release": "semantic-release",
-    "commit":"git-cz"
+    "commit": "git-cz"
   },
   "engines": {
     "node": "14.x"
@@ -41,7 +41,7 @@
   "publishConfig": {
     "access": "restricted"
   },
-  "czConfing":{
-    "path":"node_modules/cz-conventional-changelog"
+  "czConfing": {
+    "path": "node_modules/cz-conventional-changelog"
   }
 }
