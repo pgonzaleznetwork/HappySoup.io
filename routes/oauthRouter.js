@@ -13,15 +13,15 @@ oauthRouter.route('/callback')
 .get(
     async (req,res,next) => {
 
-        if(!req.query.code || !req.query.state){
-            res.status(404).send('Authorization code and state parameters are required');
-        }
-
         if(req.query.error){
             let error = new ErrorHandler(404,'oauth-failed',`Error on oauth callback ${req.query.error}`);
             next(error);
         }
-        
+
+        if(!req.query.code || !req.query.state){
+            res.status(404).send('Authorization code and state parameters are required');
+        }
+
         let state = JSON.parse(req.query.state);
 
         let authEndpoint = `${state.baseURL}/services/oauth2/token`;
