@@ -353,7 +353,7 @@ function dependencyApi(connection,entryPoint,cache){
            dependencies.forEach(dep => {
     
                 if(utils.isDynamicReference(dep)){
-                    dep.nots = process.env.dynamicRefNote;
+                    dep.nots = 'This entity is dynamically referenced in Apex so its value can only be determined at run time. You may need to manually deploy its components to the target org.';
                     dep.url = connection.url;
                 }
            })

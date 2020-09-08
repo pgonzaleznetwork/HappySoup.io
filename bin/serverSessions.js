@@ -18,8 +18,8 @@ if (process.env.REDIS_URL){
 } else {
   //running locally
   redisClient = redis.createClient();
-  redisHost = process.env.redisHost;
-  redisPort = process.env.redisPort;
+  redisHost = process.env.REDIS_HOST;
+  redisPort = process.env.REDIS_PORT;
 }
 
 require('dotenv').config();
@@ -43,7 +43,7 @@ let sessionStore = new RedisStore({
 });
 
 let sessionOptions = {
-  secret:process.env.sessionSecret,
+  secret:process.env.SESSION_SECRET,
   cookie:{
     maxAge:EXPIRE_TIME
   },

@@ -80,7 +80,7 @@ function getListMetadataBody(connection,type){
           <met:queries>
              <met:type>${type}</met:type>
           </met:queries>
-          <met:asOfVersion>${process.env.sfApiVersion}</met:asOfVersion>
+          <met:asOfVersion>${process.env.SFDC_API_VERSION}</met:asOfVersion>
        </met:listMetadata>
     </soapenv:Body>
     </soapenv:Envelope>`

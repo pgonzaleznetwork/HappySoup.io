@@ -1,5 +1,5 @@
 require('dotenv').config();
-let version = process.env.sfApiVersion;
+let version = process.env.SFDC_API_VERSION;
 
 module.exports = {
     toolingApi:`/services/data/v${version}/tooling/query/?q=`,

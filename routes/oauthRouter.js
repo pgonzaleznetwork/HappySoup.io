@@ -26,7 +26,7 @@ oauthRouter.route('/callback')
 
         let authEndpoint = `${state.baseURL}/services/oauth2/token`;
         
-        let data = `grant_type=authorization_code&code=${req.query.code}&client_id=${process.env.clientId}&client_secret=${process.env.clientSecret}&redirect_uri=${state.redirectURI}`;
+        let data = `grant_type=authorization_code&code=${req.query.code}&client_id=${process.env.OAUTH_CLIENT_ID}&client_secret=${process.env.OAUTH_CLIENT_SECRET}&redirect_uri=${state.redirectURI}`;
 
         let fetchOptions = {
             headers: {

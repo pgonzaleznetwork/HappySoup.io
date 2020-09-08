@@ -134,7 +134,7 @@ function format(entryPoint,metadata,type){
             } 
         }
 
-        let xmlBotton = `<version>${process.env.sfApiVersion}</version>
+        let xmlBotton = `<version>${process.env.SFDC_API_VERSION}</version>
         </Package>`
 
         let allXml = xmlTop+typesXml+xmlBotton;
