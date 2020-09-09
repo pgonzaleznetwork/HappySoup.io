@@ -16,6 +16,29 @@ function init(){
         document.querySelector('.login-inner').appendChild(utils.createWarning('We were unable to log into your salesforce org. Try clearing the cache and cookies, using another browser or another org.'));
     }
 
+    /**
+     * The very first time the login page is loaded, the no-session parameter
+     * will not be on the URL. If the parameter is not there, we immediately
+     * redirect the to dependencies page.
+     * 
+     * The dependencies page however, needs a server side session to be rendered,
+     * if there's no session, it'll redirect back to THIS page with the attribute
+     * no-session.
+     * 
+     * So the 2nd time the page is loaded (by the redirect) and the attribute is in the URL
+     * we don't redirect the user, and allow them to log in. 
+     * 
+     * What this whole ping-pong does is to ensure that users cannot use the login page
+     * if they are already authenticated. This prevents a single session cookie from
+     * being used for 2 different logins/orgs.
+     * 
+     * If users want to use the login page again, they must use the logout button, which
+     * will kill the server side session.
+     */
+    if(!params.has('no-session')){
+        window.location = '/dependencies?session-active=true';
+    }
+
     byId('environment').addEventListener('change',event => {
 
         let host = event.target.selectedOptions[0].value;

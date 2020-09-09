@@ -39,7 +39,8 @@ let sessionStore = new RedisStore({
   port: redisPort, 
   client: redisClient,
   ttl:EXPIRE_TIME,
-  disableTouch:true
+  disableTouch:true,
+  prefix:'sfhs-sess:'
 });
 
 let sessionOptions = {

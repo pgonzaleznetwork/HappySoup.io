@@ -18,10 +18,10 @@ app.use('/oauth2',require('./routes/oauthRouter'));
 //authentication for some public routes
 app.use((req,res,next) => {
 
-  let authenticatedPublicRoutes = ['/dependencies.html'];
+  let authenticatedPublicRoutes = ['/dependencies.html','/dependencies'];
 
   if(authenticatedPublicRoutes.indexOf(req.path) != -1 && !req.session.oauthSuccess){
-    res.redirect('/');
+    res.redirect('/?no-session=true');
   }
   else{
     next();
