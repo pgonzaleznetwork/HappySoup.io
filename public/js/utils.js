@@ -39,6 +39,11 @@ function disableInputField(inputField){
     inputField.classList.add('disabled-input');
 }
 
+function toggleDropdown(dropdown,disabled){
+    dropdown.disabled = disabled;
+    dropdown.style.cursor = (disabled ? 'not-allowed' : '');
+}
+
 function createWarning(text){
  
     let warningTemplate = document.querySelector('#warning-template');
@@ -72,6 +77,7 @@ export const utils = {
     disableButton,
     showLoader,
     hideLoader,
+    toggleDropdown,
     disableInputField,
     enableInputField,
     createWarning,

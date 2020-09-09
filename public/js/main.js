@@ -103,6 +103,7 @@ const SFDM = function(){
 
         async function getMetadataMembers(event){
 
+            utils.toggleDropdown(mdDropDown,true);
             utils.disableInputField(inputField);
             utils.disableButton(searchButton);
 
@@ -113,6 +114,7 @@ const SFDM = function(){
 
             if(json.error){
                 handleError(json);
+                utils.toggleDropdown(mdDropDown,false);
             }
 
             let members = [];
@@ -126,6 +128,7 @@ const SFDM = function(){
             autocompleteApi.autocomplete(inputField, members);
 
             utils.enableInputField(inputField);
+            utils.toggleDropdown(mdDropDown,false);
             
         }
 
@@ -150,6 +153,7 @@ const SFDM = function(){
 
             utils.hideHelpText();
             utils.disableButton(searchButton);
+            utils.toggleDropdown(mdDropDown,true);
             utils.showLoader();
 
             let selectedMemberId = memberIdsByName.get(selectedMember);
@@ -160,6 +164,9 @@ const SFDM = function(){
             else if(selectedQueryType == 'usage'){
                 await findUsage(selectedMember,selectedMemberId,selectedMetadataType);
             }
+
+            utils.toggleDropdown(mdDropDown,false);
+            utils.enableButton(searchButton);
         }
 
         async function findUsage(selectedMember,selectedMemberId,selectedMetadataType){
@@ -188,8 +195,6 @@ const SFDM = function(){
                 else{
                     usageTreePlaceholder.appendChild(utils.createWarning('No results. Either this metadata is not referenced/used by any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
                 }
-    
-                utils.enableButton(searchButton);
             }
         }
 
@@ -218,8 +223,6 @@ const SFDM = function(){
                 else{
                     dependencyTreePlaceholder.appendChild(utils.createWarning('No results. Either this metadata does not reference any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
                 }
-    
-                utils.enableButton(searchButton);
             }
         }
 
