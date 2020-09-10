@@ -1,12 +1,12 @@
-const express = require('express');
-const dependencyApi = require('../sfdc_apis/dependencies');
-const usageApi = require('../sfdc_apis/usage');
-const metadataApi = require('../sfdc_apis/metadata');
-const {cacheApi,initCache} = require('../services/caching');
+let express = require('express');
+let {cacheApi,initCache} = require('../services/caching');
 let serverSessions = require('../services/serverSessions');
-const parser = require('body-parser');
-var cors = require('cors');
+let parser = require('body-parser');
+let cors = require('cors');
 let {ErrorHandler} = require('../services/errorHandling');
+let Queue = require('bull');
+let REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+let workQueue = new Queue('work', REDIS_URL)
 
 let whitelist = ['http://localhost', 'https://qa-sfdc-happy-soup.herokuapp.com','https://sfdc-happy-soup.herokuapp.com'];
 
@@ -44,19 +44,21 @@ apiRouter.route('/dependencies')
             let cache = cacheApi(req.session.cache);
             let cachedData = cache.getDependency(cacheKey);
 
-            if(cachedData){
-                res.status(202).json(cachedData);
-            }
+            if(cachedData) res.status(202).json(cachedData);
+
             else{
 
-                let connection = serverSessions.getConnection(req.session);
+                let jobDetails = {
+                    cacheKey,
+                    entryPoint,
+                    sessionId:getSessionKey(req),
+                    jobType:'DEPENDENCIES'
+                }
 
-                let api = dependencyApi(connection,entryPoint,cache);
-                let response = await api.getDependencies();
-
-                cache.cacheDependency(cacheKey,response);
-                res.status(200).json(response);   
+                let job = await workQueue.add(jobDetails);
+                res.status(200).json({jobId:job.id});   
             }
+
         } catch (error) {
             next(error);
         }     
@@ -89,18 +91,20 @@ apiRouter.route('/usage')
           
             let cachedData = cache.getUsage(cacheKey);
 
-            if(cachedData){
-                res.status(202).json(cachedData);
-            }
+            if(cachedData) res.status(202).json(cachedData);
+            
             else{
 
-                let connection = serverSessions.getConnection(req.session);
+                let jobDetails = {
+                    cacheKey,
+                    entryPoint,
+                    sessionId:getSessionKey(req),
+                    jobType:'USAGE'
+                }
 
-                let api = usageApi(connection,entryPoint,cache);
-                let response = await api.getUsage();
-
-                cache.cacheUsage(cacheKey,response);
-                res.status(200).json(response);   
+                let job = await workQueue.add(jobDetails);
+                res.status(200).json({jobId:job.id});   
+ 
             }
         } catch (error) {
             next(error);
@@ -126,22 +130,27 @@ apiRouter.route('/metadata')
 
         try{
 
+            let {mdtype} = req.query;
             let cache = cacheApi(req.session.cache);
-            let cacheKey = `list-${req.query.mdtype}`;
+            let cacheKey = `list-${mdtype}`;
 
             let cachedData = cache.getMetadataList(cacheKey);
 
             if(cachedData){
+                console.log('retrieved from cache!');
                 res.status(202).json(cachedData);
             }
             else{
-                let mdapi = metadataApi(serverSessions.getConnection(req.session));
-                let results = await mdapi.listMetadata(req.query.mdtype);
 
-                results = results.map(r => `${r.fullName}:${r.id}`);
-        
-                cache.cacheMetadataList(cacheKey,results);
-                res.status(202).json(results);
+                let jobDetails = {
+                    jobType:'LIST_METADATA',
+                    cacheKey,
+                    mdtype,
+                    sessionId:getSessionKey(req)
+                };
+                
+                let job = await workQueue.add(jobDetails);
+                res.status(200).json({jobId:job.id});
             }       
         }catch(error){
             next(error);
@@ -176,6 +185,29 @@ apiRouter.route('/deletecache')
     }
 );
 
+apiRouter.route('/job/:id')
+
+.get(
+    cors(corsOptions),
+    serverSessions.validateSessions,
+    async (req,res,next) => {
+    
+    let jobId = req.params.id;
+    let job = await workQueue.getJob(jobId);
+    
+    if (job === null) {
+        res.status(404).end();
+    } else {
+        let state = await job.getState();
+        let progress = job._progress;
+        let reason = job.failedReason;
+        res.status(200).json({ jobId, state, progress, reason });
+    }
+
+})
+
+
+
 function getSupportedMetadataTypes(){
     return [
         'ApexClass','ApexPage','ApexTrigger',
@@ -187,7 +219,6 @@ function getSupportedMetadataTypes(){
 function isSupported(type){
     return (getSupportedMetadataTypes().indexOf(type) != -1);
 }
-
 
 
 function validateParams(req,res,next){
@@ -224,6 +255,10 @@ function validateParams(req,res,next){
 
     next();
 
+}
+
+function getSessionKey(req){
+    return `sfhs-sess:${req.sessionID}`;
 }
 
 module.exports = apiRouter;

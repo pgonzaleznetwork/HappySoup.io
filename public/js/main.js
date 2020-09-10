@@ -25,6 +25,8 @@ const SFDM = function(){
         let memberIdsByName = new Map();
         let lastApiResponse;
         let selectedMetadataType;
+        let latestIntervalId;
+        let latestInvertalDone = false;
 
         document.addEventListener('DOMContentLoaded', loadServerInfo);
         logoutButton.onclick = logout;
@@ -112,26 +114,40 @@ const SFDM = function(){
             let res = await fetch(`/api/metadata?mdtype=${selectedMetadataType}`);
             let json = await res.json();
 
-            if(json.error){
+            let {jobId} = json;
+
+            if(jobId){
+
+                let callback = getMetadataMembers;
+                let callbackParams = [event];
+                let details = {jobId,callback,callbackParams};
+                
+                latestInvertalDone = false;
+                latestIntervalId = window.setInterval(checkJobStatus,500,details);
+            }     
+
+            else if(json.error){
                 handleError(json);
                 utils.toggleDropdown(mdDropDown,false);
             }
+            else{
 
-            let members = [];
+                let members = [];
 
-            json.forEach(r => {
-                let [fullName,id] = r.split(':');
-                members.push(fullName);
-                memberIdsByName.set(fullName,id);
-            })
-            
-            autocompleteApi.autocomplete(inputField, members);
-
-            utils.enableInputField(inputField);
-            utils.toggleDropdown(mdDropDown,false);
-            
+                json.forEach(r => {
+                    let [fullName,id] = r.split(':');
+                    members.push(fullName);
+                    memberIdsByName.set(fullName,id);
+                })
+                
+                autocompleteApi.autocomplete(inputField, members);
+    
+                utils.enableInputField(inputField);
+                utils.toggleDropdown(mdDropDown,false);
+            }   
         }
 
+    
         async function doSearch(){
 
             let selectedMember = inputField.value;
@@ -159,14 +175,11 @@ const SFDM = function(){
             let selectedMemberId = memberIdsByName.get(selectedMember);
 
             if(selectedQueryType == 'deps'){
-                await findDependencies(selectedMember,selectedMemberId,selectedMetadataType);
+                findDependencies(selectedMember,selectedMemberId,selectedMetadataType);
             }
             else if(selectedQueryType == 'usage'){
-                await findUsage(selectedMember,selectedMemberId,selectedMetadataType);
-            }
-
-            utils.toggleDropdown(mdDropDown,false);
-            utils.enableButton(searchButton);
+                findUsage(selectedMember,selectedMemberId,selectedMetadataType);
+            }    
         }
 
         async function findUsage(selectedMember,selectedMemberId,selectedMetadataType){
@@ -174,27 +187,42 @@ const SFDM = function(){
             let url = `api/usage?name=${selectedMember}&id=${selectedMemberId}&type=${selectedMetadataType}`;
 
             let response = await fetch(url);
-            response = await response.json();
+            let json = await response.json();
+
+            let {jobId} = json;
+
+            if(jobId){
+
+                let callback = findUsage;
+                let callbackParams = [selectedMember,selectedMemberId,selectedMetadataType];
+                let details = {jobId,callback,callbackParams};
+                
+                latestInvertalDone = false;
+                latestIntervalId = window.setInterval(checkJobStatus,500,details);
+            }    
             
-            if(response.error) handleError (response);
+            else if(json.error) handleError (response);
 
             else{
 
-                console.log(response);
+                console.log(json);
                 
                 utils.hideLoader();
 
-                let isEmpty = (Object.keys(response.usageTree).length === 0);
+                let isEmpty = (Object.keys(json.usageTree).length === 0);
                 
                 //if the response contains results
                 if(!isEmpty){
-                    treeApi.createUsageTree(response.usageTree,usageTreePlaceholder);
-                    utils.showHelpText(response.entryPoint.name,'usage');
-                    lastApiResponse = response;
+                    treeApi.createUsageTree(json.usageTree,usageTreePlaceholder);
+                    utils.showHelpText(json.entryPoint.name,'usage');
+                    lastApiResponse = json;
                 }
                 else{
                     usageTreePlaceholder.appendChild(utils.createWarning('No results. Either this metadata is not referenced/used by any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
                 }
+
+                utils.toggleDropdown(mdDropDown,false);
+                utils.enableButton(searchButton);
             }
         }
 
@@ -204,29 +232,54 @@ const SFDM = function(){
             let url = `api/dependencies?name=${selectedMember}&id=${selectedMemberId}&type=${selectedMetadataType}`;
 
             let response = await fetch(url);
-            response = await response.json();
+            let json = await response.json();
+
+            let {jobId} = json;
+
+            if(jobId){
+
+                let callback = findDependencies;
+                let callbackParams = [selectedMember,selectedMemberId,selectedMetadataType];
+                let details = {jobId,callback,callbackParams};
+                
+                latestInvertalDone = false;
+                latestIntervalId = window.setInterval(checkJobStatus,500,details);
+            }    
             
-            if(response.error) handleError (response);
+            else if(json.error) handleError (response);
 
             else{
 
                 utils.hideLoader();
 
-               let isEmpty = (Object.keys(response.dependencyTree).length === 0);
+               let isEmpty = (Object.keys(json.dependencyTree).length === 0);
                 
                 //if the response contains results
                 if(!isEmpty){
-                    treeApi.createDependencyTree(response.dependencyTree,dependencyTreePlaceholder);
-                    utils.showHelpText(response.entryPoint.name,'deps');
-                    lastApiResponse = response;
+                    treeApi.createDependencyTree(json.dependencyTree,dependencyTreePlaceholder);
+                    utils.showHelpText(json.entryPoint.name,'deps');
+                    lastApiResponse = json;
                 }
                 else{
                     dependencyTreePlaceholder.appendChild(utils.createWarning('No results. Either this metadata does not reference any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
                 }
+
+                utils.toggleDropdown(mdDropDown,false);
+                utils.enableButton(searchButton);
             }
         }
 
+        async function checkJobStatus({jobId,callback,callbackParams}){
 
+            let res = await fetch(`/api/job/${jobId}`);
+            let result = await res.json();
+            
+            if(result.state == 'completed' && !latestInvertalDone){
+                latestInvertalDone = true;
+                window.clearInterval(latestIntervalId);
+                await callback(...callbackParams);
+            }
+        }
 
         function copyFile(event){
 
