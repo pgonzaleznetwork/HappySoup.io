@@ -5,8 +5,6 @@ let jobs = require('./jobs');
 // Connect to a local redis instance locally, and the Heroku-provided URL in production
 const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 
-console.log('WHAT IS THE REDIS URL? ',REDIS_URL);
-
 // Spin up multiple processes to handle jobs to take advantage of more CPU cores
 // See: https://devcenter.heroku.com/articles/node-concurrency for more info
 const workers = process.env.WEB_CONCURRENCY || 2;
