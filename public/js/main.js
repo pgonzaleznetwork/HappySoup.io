@@ -117,13 +117,7 @@ const SFDM = function(){
             let {jobId} = json;
 
             if(jobId){
-
-                let callback = getMetadataMembers;
-                let callbackParams = [event];
-                let details = {jobId,callback,callbackParams};
-                
-                latestInvertalDone = false;
-                latestIntervalId = window.setInterval(checkJobStatus,500,details);
+                callItselfWhenJobIsDone(jobId,getMetadataMembers,arguments);
             }     
 
             else if(json.error){
@@ -192,13 +186,7 @@ const SFDM = function(){
             let {jobId} = json;
 
             if(jobId){
-
-                let callback = findUsage;
-                let callbackParams = [selectedMember,selectedMemberId,selectedMetadataType];
-                let details = {jobId,callback,callbackParams};
-                
-                latestInvertalDone = false;
-                latestIntervalId = window.setInterval(checkJobStatus,500,details);
+                callItselfWhenJobIsDone(jobId,findUsage,arguments);
             }    
             
             else if(json.error) handleError (response);
@@ -237,13 +225,7 @@ const SFDM = function(){
             let {jobId} = json;
 
             if(jobId){
-
-                let callback = findDependencies;
-                let callbackParams = [selectedMember,selectedMemberId,selectedMetadataType];
-                let details = {jobId,callback,callbackParams};
-                
-                latestInvertalDone = false;
-                latestIntervalId = window.setInterval(checkJobStatus,500,details);
+                callItselfWhenJobIsDone(jobId,findDependencies,arguments);
             }    
             
             else if(json.error) handleError (response);
@@ -269,7 +251,17 @@ const SFDM = function(){
             }
         }
 
-        async function checkJobStatus({jobId,callback,callbackParams}){
+        async function callItselfWhenJobIsDone(jobId,originalFunction,params){
+            
+            params = Array.from(params);
+
+            let details = {jobId,originalFunction,params};
+                
+            latestInvertalDone = false;
+            latestIntervalId = window.setInterval(checkJobStatus,500,details);
+        }
+
+        async function checkJobStatus({jobId,originalFunction,params}){
 
             let res = await fetch(`/api/job/${jobId}`);
             let result = await res.json();
@@ -277,7 +269,7 @@ const SFDM = function(){
             if(result.state == 'completed' && !latestInvertalDone){
                 latestInvertalDone = true;
                 window.clearInterval(latestIntervalId);
-                await callback(...callbackParams);
+                await originalFunction(...params);
             }
         }
 

@@ -55,7 +55,9 @@ apiRouter.route('/dependencies')
                     jobType:'DEPENDENCIES'
                 }
 
-                let job = await workQueue.add(jobDetails);
+                let jobId = `${req.session.identity.username}:${cacheKey}${Date.now()}`
+
+                let job = await workQueue.add(jobDetails,{jobId});
                 res.status(200).json({jobId:job.id});   
             }
 
@@ -102,7 +104,9 @@ apiRouter.route('/usage')
                     jobType:'USAGE'
                 }
 
-                let job = await workQueue.add(jobDetails);
+                let jobId = `${req.session.identity.username}:${cacheKey}${Date.now()}`
+
+                let job = await workQueue.add(jobDetails,{jobId});
                 res.status(200).json({jobId:job.id});   
  
             }
@@ -148,8 +152,10 @@ apiRouter.route('/metadata')
                     mdtype,
                     sessionId:getSessionKey(req)
                 };
+
+                let jobId = `${req.session.identity.username}:${cacheKey}${Date.now()}`
                 
-                let job = await workQueue.add(jobDetails);
+                let job = await workQueue.add(jobDetails,{jobId});
                 res.status(200).json({jobId:job.id});
             }       
         }catch(error){
