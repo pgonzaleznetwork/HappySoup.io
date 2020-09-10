@@ -24,7 +24,10 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "node-fetch": "^2.6.0",
-    "redis": "^3.0.2"
+    "redis": "^3.0.2",
+    "bull": "^3.7.0",
+    "foreman": "^3.0.1",
+    "throng": "^4.0.0"
   },
   "devDependencies": {
     "commitizen": "^4.2.0",
