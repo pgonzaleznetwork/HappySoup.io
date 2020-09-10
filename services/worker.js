@@ -17,7 +17,7 @@ const maxJobsPerWorker = 50;
 
 function start() {
   // Connect to the named work queue
-  let workQueue = new Queue('work', REDIS_URL);
+  let workQueue = new Queue('happy-soup', REDIS_URL);
 
   workQueue.process(maxJobsPerWorker, async (job) => {
 
