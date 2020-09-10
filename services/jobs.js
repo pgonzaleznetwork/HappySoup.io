@@ -1,11 +1,25 @@
 let redis = require('redis');
-let redisClient = redis.createClient();
 let { promisify } = require("util");
 let metadataApi = require('../sfdc_apis/metadata');
 let serverSessions = require('./serverSessions');
 let {cacheApi} = require('./caching')
 let dependencyApi = require('../sfdc_apis/dependencies');
 let usageApi = require('../sfdc_apis/usage');
+
+let redisClient;
+
+//if running on heroku
+if (process.env.REDIS_URL){
+
+  let redisUrl = require("url").parse(process.env.REDIS_URL);
+  redisClient = redis.createClient(redisUrl.port, redisUrl.hostname);
+
+  redisClient.auth(redisUrl.auth.split(":")[1]);
+
+} else {
+  //running locally
+  redisClient = redis.createClient();
+}
 
 let redisGet = promisify(redisClient.get).bind(redisClient);
 let redisSet = promisify(redisClient.set).bind(redisClient);
