@@ -71,8 +71,24 @@ function hideHelpText(){
     })
 }
 
+function hideChart(){
+    let canvasContainer = byId('canvas-container');
+    let canvas = byId('stats');
+    canvas.innerHTML = '';
+    canvasContainer.style.display = 'none';
+}
+
+function hideTrees(){
+    let dependencyTreePlaceholder = byId('dependency-tree-placeholder');
+    let usageTreePlaceholder = byId('usage-tree-placeholder');
+    dependencyTreePlaceholder.innerHTML = '';
+    usageTreePlaceholder.innerHTML = '';
+}
+
 export const utils = {
     replaceClassWith,
+    hideChart,
+    hideTrees,
     enableButton,
     disableButton,
     showLoader,

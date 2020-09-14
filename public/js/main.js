@@ -22,6 +22,9 @@ const SFDM = function(){
         let usageTreePlaceholder = byId('usage-tree-placeholder');
         let csvButton = byId('csv-button');
         let excelButton = byId('excel-button');
+        let canvasContainer = byId('canvas-container');
+        let canvas = byId('stats');
+        let barChart;
         let memberIdsByName = new Map();
         let lastApiResponse;
         let selectedMetadataType;
@@ -128,8 +131,8 @@ const SFDM = function(){
 
                 let members = [];
 
-                json.forEach(r => {
-                    let [fullName,id] = r.split(':');
+                json.forEach(metadata => {
+                    let [fullName,id] = metadata.split(':');
                     members.push(fullName);
                     memberIdsByName.set(fullName,id);
                 })
@@ -146,6 +149,7 @@ const SFDM = function(){
 
             let selectedMember = inputField.value;
             let selectedQueryType = queryTypeDropDown.value;
+            let selectedMemberId = memberIdsByName.get(selectedMember);
 
             if(selectedMember == ''){
                 window.alert('Please select a metadata member');
@@ -157,16 +161,7 @@ const SFDM = function(){
                 return;
             }
 
-            //clear the contents every time a new request is made
-            dependencyTreePlaceholder.innerHTML = '';
-            usageTreePlaceholder.innerHTML = '';
-
-            utils.hideHelpText();
-            utils.disableButton(searchButton);
-            utils.toggleDropdown(mdDropDown,true);
-            utils.showLoader();
-
-            let selectedMemberId = memberIdsByName.get(selectedMember);
+            displayLoadingUI();
 
             if(selectedQueryType == 'deps'){
                 findDependencies(selectedMember,selectedMemberId,selectedMetadataType);
@@ -192,8 +187,6 @@ const SFDM = function(){
             else if(json.error) handleError (response);
 
             else{
-
-                console.log(json);
                 
                 utils.hideLoader();
 
@@ -201,6 +194,7 @@ const SFDM = function(){
                 
                 //if the response contains results
                 if(!isEmpty){
+                    displayStats(json.stats,'usage');
                     treeApi.createUsageTree(json.usageTree,usageTreePlaceholder);
                     utils.showHelpText(json.entryPoint.name,'usage');
                     lastApiResponse = json;
@@ -215,7 +209,6 @@ const SFDM = function(){
         }
 
         async function findDependencies(selectedMember,selectedMemberId,selectedMetadataType){
-
 
             let url = `api/dependencies?name=${selectedMember}&id=${selectedMemberId}&type=${selectedMetadataType}`;
 
@@ -238,6 +231,7 @@ const SFDM = function(){
                 
                 //if the response contains results
                 if(!isEmpty){
+                    displayStats(json.stats,'deps');
                     treeApi.createDependencyTree(json.dependencyTree,dependencyTreePlaceholder);
                     utils.showHelpText(json.entryPoint.name,'deps');
                     lastApiResponse = json;
@@ -249,6 +243,66 @@ const SFDM = function(){
                 utils.toggleDropdown(mdDropDown,false);
                 utils.enableButton(searchButton);
             }
+        }
+
+        function displayStats(stats,type){
+
+            //remove the contents of the previously initialized chart
+            if(barChart){
+                barChart.destroy();
+            }
+
+            let availableBackgroundColors = [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ];
+            let chartLabels = [];
+            let chartValues = [];
+
+            for (const key in stats) {
+                chartLabels.push(key);
+                chartValues.push(stats[key]);
+            }
+
+            let backgroundColors = [];
+
+            chartLabels.forEach(val => {
+                let randomValue = availableBackgroundColors[Math.floor(Math.random() * availableBackgroundColors.length)]; 
+                backgroundColors.push(randomValue);
+            })
+
+            let ctx = canvas.getContext('2d');
+
+            let label = (type === 'usage' ? '# of Metadata Types using it' : '# of Metadata Types required for deployment');
+
+            canvasContainer.style.display = 'block';
+
+            barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: label,
+                        data: chartValues,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            }); 
         }
 
         async function callItselfWhenJobIsDone(jobId,originalFunction,params){
@@ -309,6 +363,16 @@ const SFDM = function(){
             document.body.appendChild(hiddenLink);
             hiddenLink.click();
             document.body.removeChild(hiddenLink); 
+        }
+
+        function displayLoadingUI(){
+            
+            utils.hideTrees();
+            utils.hideHelpText();
+            utils.disableButton(searchButton);
+            utils.toggleDropdown(mdDropDown,true);
+            utils.showLoader();
+            utils.hideChart();
         }
     }
 

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/framework.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/autocomplete.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script src="js/main.js" type="module"></script>
     <title>Salesforce Happy Soup</title>
     <!-- endbuild -->
@@ -65,13 +65,17 @@
         </div>
     </div>
 </main>
+
 <section class="dependencies">
     <template id="warning-template">
         <div id="warning-template-text">
         </div>
     </template>
     <div>
-    <div class="loader"></div>
+        <div id="canvas-container">
+            <canvas id="stats" ></canvas>
+        </div>
+        <div class="loader"></div>
         <ul>
             <p id="deps-help" class="help-text">This is the metadata <span style="font-weight: bold">referenced by / called from </span><span id="deps-help-name"></span> and 
                 <span style="font-weight: bold">all its descendants</span>. This represents the deployment boundary. <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup" targe="_blank"> Learn more</a></p>
