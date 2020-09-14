@@ -151,6 +151,17 @@ nav{
     flex-direction: row;
 }
 
+#canvas-container{
+    width:800px;
+    height:400px;
+    position:relative;
+    display:none;
+}
+
+canvas{
+    background-color:white;
+}
+
 .loader {
     margin-top:20px;
     margin-left:20px;

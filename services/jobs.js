@@ -39,8 +39,7 @@ async function listMetadataJob(job){
 
     cache.cacheMetadataList(cacheKey,results);
 
-    await redisSet(sessionId,JSON.stringify(session));
-}
+    await commitSessionChanges(sessionId,session);}
 
 async function usageJob(job){
 
@@ -55,8 +54,7 @@ async function usageJob(job){
 
     cache.cacheUsage(cacheKey,response);
   
-    await redisSet(sessionId,JSON.stringify(session));
-}
+    await commitSessionChanges(sessionId,session);}
 
 async function dependencyJob(job){
 
@@ -71,7 +69,11 @@ async function dependencyJob(job){
 
     cache.cacheDependency(cacheKey,response);
 
-    await redisSet(sessionId,JSON.stringify(session));
+    await commitSessionChanges(sessionId,session);
+}
+
+async function commitSessionChanges(sessionId,session){
+  await redisSet(sessionId,JSON.stringify(session));
 }
 
 async function getSession(sessionId){
