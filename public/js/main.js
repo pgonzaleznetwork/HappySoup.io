@@ -184,7 +184,7 @@ const SFDM = function(){
                 callItselfWhenJobIsDone(jobId,findUsage,arguments);
             }    
             
-            else if(json.error) handleError (response);
+            else if(json.error) handleError(response);
 
             else{
                 
@@ -221,7 +221,7 @@ const SFDM = function(){
                 callItselfWhenJobIsDone(jobId,findDependencies,arguments);
             }    
             
-            else if(json.error) handleError (response);
+            else if(json.error) handleError(response);
 
             else{
 
@@ -312,19 +312,29 @@ const SFDM = function(){
             let details = {jobId,originalFunction,params};
                 
             latestInvertalDone = false;
-            latestIntervalId = window.setInterval(checkJobStatus,500,details);
+            latestIntervalId = window.setInterval(checkJobStatus,2000,details);
         }
 
         async function checkJobStatus({jobId,originalFunction,params}){
 
             let res = await fetch(`/api/job/${jobId}`);
             let result = await res.json();
-            
-            if(result.state == 'completed' && !latestInvertalDone){
-                latestInvertalDone = true;
-                window.clearInterval(latestIntervalId);
+
+            let {state,error} = result;
+
+            if(state == 'completed' && !latestInvertalDone){
+                stopPolling();
                 await originalFunction(...params);
             }
+            else if(state == 'failed' && !latestInvertalDone){
+                stopPolling();
+                handleError(error);
+            }
+        }
+
+        function stopPolling(){
+            latestInvertalDone = true;
+            window.clearInterval(latestIntervalId);
         }
 
         function copyFile(event){

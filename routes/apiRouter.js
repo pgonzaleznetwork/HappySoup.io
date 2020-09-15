@@ -204,10 +204,19 @@ apiRouter.route('/job/:id')
     if (job === null) {
         res.status(404).end();
     } else {
-        let state = await job.getState();
-        let progress = job._progress;
-        let reason = job.failedReason;
-        res.status(200).json({ jobId, state, progress, reason });
+
+        let response = {};
+
+        response.jobId = jobId;
+        response.state = await job.getState();
+        response.progress = job._progress;
+
+        if(job.failedReason){
+            response.error = new Error(job.failedReason);
+            response.error.stackTrace = job.stackTrace;
+        }
+
+        res.status(200).json(response);
     }
 
 })
