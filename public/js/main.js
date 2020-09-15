@@ -106,8 +106,11 @@ const SFDM = function(){
             }
         }
 
+        
+
         async function getMetadataMembers(event){
 
+            utils.showProgressBar();
             utils.toggleDropdown(mdDropDown,true);
             utils.disableInputField(inputField);
             utils.disableButton(searchButton);
@@ -126,6 +129,7 @@ const SFDM = function(){
             else if(json.error){
                 handleError(json);
                 utils.toggleDropdown(mdDropDown,false);
+                utils.hideProgressBar();
             }
             else{
 
@@ -141,6 +145,7 @@ const SFDM = function(){
     
                 utils.enableInputField(inputField);
                 utils.toggleDropdown(mdDropDown,false);
+                utils.hideProgressBar();
             }   
         }
 
@@ -306,7 +311,7 @@ const SFDM = function(){
         }
 
         async function callItselfWhenJobIsDone(jobId,originalFunction,params){
-            
+
             params = Array.from(params);
 
             let details = {jobId,originalFunction,params};
@@ -316,6 +321,10 @@ const SFDM = function(){
         }
 
         async function checkJobStatus({jobId,originalFunction,params}){
+
+            //barWidth += 10;
+
+            //progressBar.style.width = barWidth+'%';
 
             let res = await fetch(`/api/job/${jobId}`);
             let result = await res.json();

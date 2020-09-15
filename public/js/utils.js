@@ -85,8 +85,26 @@ function hideTrees(){
     usageTreePlaceholder.innerHTML = '';
 }
 
+function showProgressBar(){
+    let progressBarContainer = byId('progress-bar');
+    let progressBar = byId('progress-bar-inner');
+    replaceClassWith(progressBarContainer,'invisible-progress-bar','visible-progress-bar');
+    replaceClassWith(progressBar,'incomplete-progress-bar','complete-progress-bar');
+    
+}
+
+function hideProgressBar(){
+    let progressBarContainer = byId('progress-bar');
+    let progressBar = byId('progress-bar-inner');
+    replaceClassWith(progressBarContainer,'visible-progress-bar','invisible-progress-bar');
+    replaceClassWith(progressBar,'complete-progress-bar','incomplete-progress-bar');
+    
+}
+
 export const utils = {
     replaceClassWith,
+    hideProgressBar,
+    showProgressBar,
     hideChart,
     hideTrees,
     enableButton,

@@ -162,6 +162,38 @@ canvas{
     background-color:white;
 }
 
+#progress-bar {
+    width: 358px;
+    background-color: white;
+}
+  
+#progress-bar-inner {   
+    max-width:99%;
+    height: 10px;
+    background-color: #49b677;
+    margin-top:0;
+    margin-bottom:0;
+    transition: width 15s ease-out;
+}
+
+.visible-progress-bar{
+    position:static;
+    visibility:visible;
+}
+
+.invisible-progress-bar{
+    position:absolute;
+    visibility:hidden;
+}
+
+.incomplete-progress-bar{
+    width: 10%;
+}
+
+.complete-progress-bar{
+    width:99%;
+}
+
 .loader {
     margin-top:20px;
     margin-left:20px;
