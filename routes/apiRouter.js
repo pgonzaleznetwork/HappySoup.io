@@ -212,8 +212,9 @@ apiRouter.route('/job/:id')
         response.progress = job._progress;
 
         if(job.failedReason){
-            response.error = new Error(job.failedReason);
-            response.error.stackTrace = job.stackTrace;
+            response.error = {};
+            response.error.message = job.failedReason;
+            response.error.stack = job.stacktrace[0];
         }
 
         res.status(200).json(response);

@@ -10,7 +10,8 @@ export function handleError(error){
     }
 
     else if(error.message === 'no-sfdc-connection'){     
-        appendWarning('Unable to connect to Salesforce. Please check your internet connection or the status of your org at trust.salesforce.com');     
+        appendWarning(`Unable to connect to Salesforce. Please check your internet connection or the status of your org at trust.salesforce.com
+        ${error.stack}`);     
     }
     else{
         appendWarning(`An error occurred. Please contact the developer of this application and provide the following error: ${error.message} 
