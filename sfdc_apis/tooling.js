@@ -10,34 +10,42 @@ function toolingAPI(connection){
     async function query(queryString){
 
         let endpoint = connection.url+endpoints.toolingApi;
-        let request = endpoint+encodeURIComponent(queryString);
-    
+        let request = endpoint+encodeURIComponent(queryString); 
         let options = getFetchOptions(connection.token);    
-    
-        let res = await fetch(request,options);
 
-        if(!res.ok){
-
-            if(urlIsTooLong(res)){
-                tryAgainWithLessIds(queryString);
-            }
-            else{
-                throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
-            }  
-        }
-
-        let json = await res.json();
-
-        if(isFailedResponse(json)){
-            let apiError = new Error();
-            apiError.statusCode = 404;
-            apiError.name = 'no-sfdc-connection';
-            apiError.message = json[0].message;
-            throw apiError;
-            
+        if(tooManyIds(queryString)){
+            let json = await tryWithSmallerQueries(queryString,endpoint,options);
+            return json;
         }
         else{
-            return json;
+
+            let res = await fetch(request,options);
+        
+            if(!res.ok){
+
+                if(hitRequestSizeLimit(res)){
+                    let json = await tryWithSmallerQueries(queryString,endpoint,options);
+                    return json;
+                }
+
+                else{
+                    throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
+                }  
+            }
+
+            let json = await res.json();
+
+            if(isFailedResponse(json)){
+                let apiError = new Error();
+                apiError.statusCode = 404;
+                apiError.name = 'no-sfdc-connection';
+                apiError.message = json[0].message;
+                throw apiError;
+                
+            }
+            else{
+                return json;
+            }
         }
     }
 
@@ -45,48 +53,86 @@ function toolingAPI(connection){
 
 }
 
-function urlIsTooLong(res){
-    return (res.status == '414' || res.statusText == 'URI Too Long');
+
+function tooManyIds(queryString){
+    let allIds = getIds(queryString);
+    return (allIds.length > 300);
 }
 
-function tryAgainWithLessIds(queryString){
+function hitRequestSizeLimit(res){
+
+    let tooLargeReponseValues = ['Request Header Fields Too Large','URI Too Long'];
+    let tooLargeStatusCodes = ['414','431'];
+
+    return (tooLargeReponseValues.includes(res.statusText) || tooLargeStatusCodes.includes(res.status));
+
+}
+
+async function tryWithSmallerQueries(queryString,endpoint,options){
 
     let allIds = getIds(queryString);
-    let batches = utils.splitInBatchesOf(allIds,300);
+    let batches = utils.splitInBatchesOf(allIds,100);
 
     let queryParts = getSOQLWithoutIds(queryString);
     let [selectClause,afterFilters] = queryParts;
 
     let smallerQueries = batches.map(batch => {
 
-        console.log('batch size',batch.length);
-        console.log('actual batch',batch);
-
-        let ids = utils.filterableId(batch);
-        let query = `${selectClause} ('${ids}') ${afterFilters}`;
-        console.log('SMALLER QUERY ',query);
+        let ids = batch.join(',');
+        let query = `${selectClause} (${ids}) ${afterFilters}`;
+        return query;
 
     });
+
+    let data = await Promise.all(
+
+        smallerQueries.map(async (smallQuery) => {
+
+            let request = endpoint+encodeURIComponent(smallQuery);  
+            
+            let res = await fetch(request,options);
+
+            if(res.ok){
+
+                let json = await res.json();
+
+                if(isFailedResponse(json)){
+                    let apiError = new Error();
+                    apiError.statusCode = 404;
+                    apiError.name = 'no-sfdc-connection';
+                    apiError.message = json[0].message;
+                    throw apiError;
+                    
+                }
+                else{
+                    return json;
+                }
+
+            }else{
+                throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
+            }
+        })
+    );
+
+    let response = {};
+    response.records = [];
+
+    data.map(d => {
+        response.records.push(...d.records);
+    });
+
+    return response;
 
 }
 
 function getIds(queryString){
 
-    console.log('queryString length',queryString.length);
-
     let startParenthesis = queryString.indexOf('(');
     let endParenthesis = queryString.indexOf(')');
 
     let idFilter = queryString.substring(startParenthesis+1,endParenthesis);
-    idFilter = idFilter.substring(1,idFilter.length-2);
 
     let ids = idFilter.split(',');
-
-    ids = ids.map(id => {
-        return id.substring(1,id.length-2);
-    })
-
-    console.log('how many ids',ids.length);
 
     return ids;
 }

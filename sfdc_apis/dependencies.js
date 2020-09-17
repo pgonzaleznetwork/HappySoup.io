@@ -659,13 +659,15 @@ function dependencyApi(connection,entryPoint,cache){
      * Returnes the raw SOQL query to pass to the tooling API
      */
     function createDependencyQuery(metadataId){
-    
+
         let ids = utils.filterableId(metadataId);
         
-        return `SELECT MetadataComponentId, MetadataComponentName,MetadataComponentType ,RefMetadataComponentName, RefMetadataComponentType, RefMetadataComponentId,
+        let query = `SELECT MetadataComponentId, MetadataComponentName,MetadataComponentType ,RefMetadataComponentName, RefMetadataComponentType, RefMetadataComponentId,
         RefMetadataComponentNamespace 
         FROM MetadataComponentDependency 
         WHERE MetadataComponentId IN ('${ids}') AND MetadataComponentType != 'FlexiPage' ORDER BY MetadataComponentName, RefMetadataComponentType`;
+
+        return query;
     }
     
     //api returned to the client code

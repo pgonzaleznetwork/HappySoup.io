@@ -13,12 +13,15 @@ let metadataAPI = require('../sfdc_apis/metadata');
 function isDynamicReference(dep){
 
     let {name,id} = dep;
-    name = name.toLowerCase();
-    id = id.toLowerCase();
 
-    if(id === name){
-        return true;
+    if(name && id){
+        name = name.toLowerCase();
+        id = id.toLowerCase();
+        if(id === name){
+            return true;
+        }
     }
+
     return false;
 }
 
