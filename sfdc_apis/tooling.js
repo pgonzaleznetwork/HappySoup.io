@@ -2,6 +2,7 @@ let fetch = require('node-fetch');
 require('dotenv').config();
 let {ErrorHandler} = require('../services/errorHandling');
 let endpoints = require('./endpoints');
+let utils = require('../services/utils');
 
 
 function toolingAPI(connection){
@@ -17,9 +18,12 @@ function toolingAPI(connection){
 
         if(!res.ok){
 
-            showIds(queryString);
-
-            throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
+            if(urlIsTooLong(res)){
+                tryAgainWithLessIds(queryString);
+            }
+            else{
+                throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
+            }  
         }
 
         let json = await res.json();
@@ -41,6 +45,31 @@ function toolingAPI(connection){
 
 }
 
+function urlIsTooLong(res){
+    return (res.status == '414' || res.statusText == 'URI Too Long');
+}
+
+function tryAgainWithLessIds(queryString){
+
+    let allIds = getIds(queryString);
+    let batches = utils.splitInBatchesOf(allIds,300);
+
+    let queryParts = getSOQLWithoutIds(queryString);
+    let [selectClause,afterFilters] = queryParts;
+
+    let smallerQueries = batches.map(batch => {
+
+        console.log('batch size',batch.length);
+        console.log('actual batch',batch);
+
+        let ids = utils.filterableId(batch);
+        let query = `${selectClause} ('${ids}') ${afterFilters}`;
+        console.log('SMALLER QUERY ',query);
+
+    });
+
+}
+
 function getIds(queryString){
 
     console.log('queryString length',queryString.length);
@@ -49,12 +78,30 @@ function getIds(queryString){
     let endParenthesis = queryString.indexOf(')');
 
     let idFilter = queryString.substring(startParenthesis+1,endParenthesis);
+    idFilter = idFilter.substring(1,idFilter.length-2);
 
     let ids = idFilter.split(',');
+
+    ids = ids.map(id => {
+        return id.substring(1,id.length-2);
+    })
 
     console.log('how many ids',ids.length);
 
     return ids;
+}
+
+function getSOQLWithoutIds(queryString){
+
+    let startParenthesis = queryString.indexOf('(');
+    let endParenthesis = queryString.indexOf(')');
+
+    let selectClause = queryString.substring(0,startParenthesis);
+    let afterFilters = queryString.substring(endParenthesis+1);
+
+    let parts = [selectClause,afterFilters];
+
+    return parts;
 }
 
 
