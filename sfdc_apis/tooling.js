@@ -16,6 +16,9 @@ function toolingAPI(connection){
         let res = await fetch(request,options);
 
         if(!res.ok){
+
+            showIds(queryString);
+
             throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
         }
 
@@ -36,6 +39,22 @@ function toolingAPI(connection){
 
     return {query}
 
+}
+
+function getIds(queryString){
+
+    console.log('queryString length',queryString.length);
+
+    let startParenthesis = queryString.indexOf('(');
+    let endParenthesis = queryString.indexOf(')');
+
+    let idFilter = queryString.substring(startParenthesis+1,endParenthesis);
+
+    let ids = idFilter.split(',');
+
+    console.log('how many ids',ids.length);
+
+    return ids;
 }
 
 

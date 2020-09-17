@@ -4,6 +4,7 @@ var xmlParser = require('fast-xml-parser');
 let endpoints = require('./endpoints')
 let {ErrorHandler} = require('../services/errorHandling');
 let soapUtils = require('./soapUtils');
+let utils = require('../services/utils');
 
 function metadataAPI(connection){
 
@@ -40,7 +41,7 @@ function metadataAPI(connection){
         //https://developer.salesforce.com/docs/atlas.en-us.api_meta.meta/api_meta/meta_readMetadata.htm
         const MAX_READMETADATA_LIMIT = 10;
 
-        let batches = splitInBatchesOf(fullNames,MAX_READMETADATA_LIMIT);
+        let batches = utils.splitInBatchesOf(fullNames,MAX_READMETADATA_LIMIT);
         
         let allFetchOptions = batches.map(batch => {
 

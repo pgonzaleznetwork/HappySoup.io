@@ -111,4 +111,28 @@ function filterableId(metadataId){
 
 }
 
-module.exports = {isDynamicReference,filterableId,getObjectNamesById,getObjectIdsByName}
+function splitInBatchesOf(items,batchSize){
+
+    let remainingItems = items.length;
+    let indexSoFar = 0;
+    let batches = [];
+
+    while (remainingItems > batchSize) {
+        
+        let batch = [];
+
+        for (let x = 0; x < batchSize; x++,indexSoFar++) {
+            batch.push(items[indexSoFar]);       
+        }
+
+        batches.push(batch);
+        remainingItems -= batchSize;
+    }
+
+    if(remainingItems > 0) batches.push(items.slice(indexSoFar));
+
+    return batches;
+
+}
+
+module.exports = {isDynamicReference,filterableId,getObjectNamesById,getObjectIdsByName,splitInBatchesOf}
