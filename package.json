@@ -12,21 +12,22 @@
     "node": "14.x"
   },
   "dependencies": {
+    "bull": "^3.7.0",
     "connect-redis": "^4.0.4",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
+    "cross-blob": "^2.0.0",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
     "express-session": "^1.17.1",
     "fast-xml-parser": "^3.17.2",
+    "foreman": "^3.0.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "node-fetch": "^2.6.0",
     "redis": "^3.0.2",
-    "bull": "^3.7.0",
-    "foreman": "^3.0.1",
     "throng": "^4.0.0"
   },
   "devDependencies": {

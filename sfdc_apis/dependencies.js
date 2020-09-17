@@ -132,11 +132,11 @@ function dependencyApi(connection,entryPoint,cache){
      */
     function reorderNodes(tree){
     
-        for (currentNodeKey in tree) {
+        for (let currentNodeKey in tree) {
     
             let currentNode = tree[currentNodeKey];
             
-            for(anyNodeKey in tree){
+            for(let anyNodeKey in tree){
     
                 let anyNode = tree[anyNodeKey];
     
@@ -144,7 +144,7 @@ function dependencyApi(connection,entryPoint,cache){
     
                 if(anyNodeReferencesCurrentNode){
     
-                    for (metadataType in anyNode.references) {
+                    for (let metadataType in anyNode.references) {
                         
                         let typeReferences = anyNode.references[metadataType];
                         typeReferences.forEach(ref => {
@@ -195,12 +195,11 @@ function dependencyApi(connection,entryPoint,cache){
      * we can discard these properties
      */
 
-    let iter = 0;
+
 
     function cleanReferences(references){
-        iter++;
-    
-        for (metadataType in references) {
+
+        for (let metadataType in references) {
                         
             let typeReferences = references[metadataType];
     
@@ -223,7 +222,7 @@ function dependencyApi(connection,entryPoint,cache){
      */
     function sortTypesAlphabetically(references){
     
-        for (metadataType in references) {
+        for (let metadataType in references) {
                         
             let typeReferences = references[metadataType];
             typeReferences.sort((a,b) => (a.name > b.name) ? 1 : -1);
@@ -281,6 +280,11 @@ function dependencyApi(connection,entryPoint,cache){
             let nextLevelIds = [];
             
             dependencies.forEach(dep => {
+
+                if(dep.id == '...'){
+                    console.log('weird thing',dep);
+                }
+
     
                 let alreadyQueried = (idsAlreadyQueried.indexOf(dep.id) != -1);
     
@@ -300,8 +304,11 @@ function dependencyApi(connection,entryPoint,cache){
                 else{
                     /**
                      * if it's not been queried already, then we now it's safe to query it for dependencies
+                     * but only if it's not a dynamic reference
                      */
-                    nextLevelIds.push(dep.id);
+                    if(!utils.isDynamicReference(dep)){
+                        nextLevelIds.push(dep.id);
+                    }
                 }
     
             });
@@ -479,7 +486,7 @@ function dependencyApi(connection,entryPoint,cache){
         //for any field that we determined was cached, we add its data to the
         //records array
         cachedFields.forEach(field => {
-            cachedFieldData = cache.getField(field);
+            let cachedFieldData = cache.getField(field);
             if(cachedFieldData) {
                 records.push(cachedFieldData);
             }
@@ -651,13 +658,15 @@ function dependencyApi(connection,entryPoint,cache){
      * Returnes the raw SOQL query to pass to the tooling API
      */
     function createDependencyQuery(metadataId){
-    
+
         let ids = utils.filterableId(metadataId);
         
-        return `SELECT MetadataComponentId, MetadataComponentName,MetadataComponentType ,RefMetadataComponentName, RefMetadataComponentType, RefMetadataComponentId,
+        let query = `SELECT MetadataComponentId, MetadataComponentName,MetadataComponentType ,RefMetadataComponentName, RefMetadataComponentType, RefMetadataComponentId,
         RefMetadataComponentNamespace 
         FROM MetadataComponentDependency 
         WHERE MetadataComponentId IN ('${ids}') AND MetadataComponentType != 'FlexiPage' ORDER BY MetadataComponentName, RefMetadataComponentType`;
+
+        return query;
     }
     
     //api returned to the client code

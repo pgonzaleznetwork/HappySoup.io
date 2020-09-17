@@ -4,11 +4,25 @@ let metadataAPI = require('../sfdc_apis/metadata');
  * The metadata component dependency API also returns references to objects that are only known at run time, for example
  * a test class that queries the Profile object to create a test user. The profile object is returned as a dependency
  * but we don't know what profile is actually being used, again, this is only known at run time.
+ * 
+ * At the time of this writing, you can tell that a reference is dynamic if the id is exactly the same as the name, for example
+ * name: 'SlaProcess',
+ * type: 'EntitlementProcess',
+ * id: 'SlaProcess',
  */
 function isDynamicReference(dep){
 
-    let types = ['Queue','Profile','User','EmailTemplate','RecordType','Report'];
-    return types.indexOf(dep.type) != -1;
+    let {name,id} = dep;
+
+    if(name && id){
+        name = name.toLowerCase();
+        id = id.toLowerCase();
+        if(id === name){
+            return true;
+        }
+    }
+
+    return false;
 }
 
  /**
@@ -100,4 +114,28 @@ function filterableId(metadataId){
 
 }
 
-module.exports = {isDynamicReference,filterableId,getObjectNamesById,getObjectIdsByName}
+function splitInBatchesOf(items,batchSize){
+
+    let remainingItems = items.length;
+    let indexSoFar = 0;
+    let batches = [];
+
+    while (remainingItems > batchSize) {
+        
+        let batch = [];
+
+        for (let x = 0; x < batchSize; x++,indexSoFar++) {
+            batch.push(items[indexSoFar]);       
+        }
+
+        batches.push(batch);
+        remainingItems -= batchSize;
+    }
+
+    if(remainingItems > 0) batches.push(items.slice(indexSoFar));
+
+    return batches;
+
+}
+
+module.exports = {isDynamicReference,filterableId,getObjectNamesById,getObjectIdsByName,splitInBatchesOf}

@@ -322,10 +322,6 @@ const SFDM = function(){
 
         async function checkJobStatus({jobId,originalFunction,params}){
 
-            //barWidth += 10;
-
-            //progressBar.style.width = barWidth+'%';
-
             let res = await fetch(`/api/job/${jobId}`);
             let result = await res.json();
 
@@ -337,6 +333,7 @@ const SFDM = function(){
             }
             else if(state == 'failed' && !latestInvertalDone){
                 stopPolling();
+                utils.toggleDropdown(mdDropDown,false);
                 handleError(error);
             }
         }

@@ -66,7 +66,7 @@ async function dependencyJob(job){
 
     let api = dependencyApi(connection,entryPoint,cache);
     let response = await api.getDependencies();
-
+ 
     cache.cacheDependency(cacheKey,response);
 
     await commitSessionChanges(sessionId,session);
