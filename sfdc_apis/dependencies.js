@@ -223,7 +223,7 @@ function dependencyApi(connection,entryPoint,cache){
      */
     function sortTypesAlphabetically(references){
     
-        for (metadataType in references) {
+        for (let metadataType in references) {
                         
             let typeReferences = references[metadataType];
             typeReferences.sort((a,b) => (a.name > b.name) ? 1 : -1);
