@@ -281,6 +281,11 @@ function dependencyApi(connection,entryPoint,cache){
             let nextLevelIds = [];
             
             dependencies.forEach(dep => {
+
+                if(dep.id == '...'){
+                    console.log('weird thing',dep);
+                }
+
     
                 let alreadyQueried = (idsAlreadyQueried.indexOf(dep.id) != -1);
     
@@ -300,8 +305,11 @@ function dependencyApi(connection,entryPoint,cache){
                 else{
                     /**
                      * if it's not been queried already, then we now it's safe to query it for dependencies
+                     * but only if it's not a dynamic reference
                      */
-                    nextLevelIds.push(dep.id);
+                    if(!utils.isDynamicReference(dep)){
+                        nextLevelIds.push(dep.id);
+                    }
                 }
     
             });
@@ -479,7 +487,7 @@ function dependencyApi(connection,entryPoint,cache){
         //for any field that we determined was cached, we add its data to the
         //records array
         cachedFields.forEach(field => {
-            cachedFieldData = cache.getField(field);
+            let cachedFieldData = cache.getField(field);
             if(cachedFieldData) {
                 records.push(cachedFieldData);
             }
