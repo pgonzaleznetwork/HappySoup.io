@@ -2,6 +2,8 @@
 
 Salesforce Happy Soup is a **100% free** and open source heroku app that you can use to get a full view of your Salesforce org dependencies. 
 
+[Watch a quick demo, you willl start using it!](http://github.com) 
+
 No complex sfdx commands, plug-ins or development knowledge required, just log in and start sipping the soup! 
 
 
@@ -11,6 +13,7 @@ No complex sfdx commands, plug-ins or development knowledge required, just log i
   <img src="./sfdc-happy-main.png" width="738">
 </p>
 
+# Who is this for
 
 **Administrators**
 
@@ -25,7 +28,7 @@ No complex sfdx commands, plug-ins or development knowledge required, just log i
 * Get immediately insights with built-in charts
 * Drill down to the last dependent metadata in an easy to follow tree structure
 
-**General Features**
+# Features
 
 * "Where is this used" and "Deployment Boundary" visualization
 * Easily export the dependencies to excel, csv files or package.xml
