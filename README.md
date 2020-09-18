@@ -13,7 +13,7 @@ No complex sfdx commands, plug-ins or development knowledge required, just log i
   <img src="./sfdc-happy-main.png" width="738">
 </p>
 
-# Who is this for
+## Who is this for
 
 **Administrators**
 
@@ -28,7 +28,7 @@ No complex sfdx commands, plug-ins or development knowledge required, just log i
 * Get immediately insights with built-in charts
 * Drill down to the last dependent metadata in an easy to follow tree structure
 
-# Features
+## Features
 
 * "Where is this used" and "Deployment Boundary" visualization
 * Easily export the dependencies to excel, csv files or package.xml
@@ -37,6 +37,6 @@ No complex sfdx commands, plug-ins or development knowledge required, just log i
 * Log in from anywhere, no installation required
 * Available for self-hosting locally or on your own Heroku account
 
-# "Where is this used?"
+## "Where is this used?"
 
 The "Where is this used?" search is very similar to the one found in the Salesforce UI
