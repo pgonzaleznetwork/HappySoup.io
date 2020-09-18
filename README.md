@@ -39,7 +39,7 @@ No complex sfdx commands, plug-ins or development knowledge required :cold_sweat
 * :white_check_mark: -   Log in from anywhere, no installation required
 * :white_check_mark: -   Available for self-hosting locally or on your own Heroku account
 
-## Security
+## Security :no_entry_sign:
 
 We understand security is very important in the Salesforce ecosystem. With that in mind, we want to be fully transparent as to how this app uses your Salesforce data and what security mechanisms are in place.
 
