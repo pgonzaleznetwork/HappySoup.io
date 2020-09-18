@@ -13,7 +13,7 @@ No complex sfdx commands, plug-ins or development knowledge required :cold_sweat
   <img src="./sfdc-happy-main.png" width="738">
 </p>
 
-## Who is this for
+## :question: Who is this for
 
 **Administrators** 
 
@@ -43,10 +43,9 @@ No complex sfdx commands, plug-ins or development knowledge required :cold_sweat
 
 We understand security is very important in the Salesforce ecosystem. With that in mind, we want to be fully transparent as to how this app uses your Salesforce data and what security mechanisms are in place.
 
-
 **API Access**
 
-When you log in to the app, you'll be asked to authorise it to send requests on your behalf using OAuth. Once you grant permission, the app will make the following API calls during its lifecylce
+When you log in to the app, you'll be asked to authorise it to send requests on your behalf using OAuth. Once you grant permission, the app will make the following API calls during its lifecylce:
 
 * Tooling API to query CustomField, CustomObject and MetadataComponentDependency records
 * Metadata API to get describe information on custom fields
