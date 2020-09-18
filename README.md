@@ -15,7 +15,9 @@ No complex sfdx commands, plug-ins or development knowledge required, just log i
 
 ## Who is this for
 
-**Administrators** <img src="https://d3nqfz2gm66yqg.cloudfront.net/images/v1463575370-salesforceadminCertifiedIMg_vlyccp.png"> 
+**Administrators** 
+
+<img src="https://d3nqfz2gm66yqg.cloudfront.net/images/v1463575370-salesforceadminCertifiedIMg_vlyccp.png" height="100px"> 
 
 * Find all the metadata used in page layout (fields, buttons, inline pages, etc) and export it to excel to review opportunities for optimization.
 * Know the impact of making changes to a field, validation rule, etc - before you break anything!
