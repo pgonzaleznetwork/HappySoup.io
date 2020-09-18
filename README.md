@@ -6,8 +6,8 @@ No complex sfdx commands, plug-ins or development knowledge required, just log i
 
 **Administrators**
 
-* Export all the metadata from page layout (fields, buttons, inline pages, etc) and export it to excel to review opportunities for optimization.
-* Know the impact of making changes to a field
+* Find all the metadata used in page layout (fields, buttons, inline pages, etc) and export it to excel to review opportunities for optimization.
+* Know the impact of making changes to a field, validation rule, etc - before you break anything!
 * Know where your metadata is used 
 
 **Developers & Architects**
@@ -17,3 +17,11 @@ No complex sfdx commands, plug-ins or development knowledge required, just log i
 * Get immediately insights with built-in charts
 * Drill down to the last dependent metadata in an easy to follow tree structure
 
+**General Features**
+
+* "Where is this used" and "Deployment Boundary" visualization
+* Easily export the dependencies to excel, csv files or package.xml
+* Bypass all the limitations of the MetadataComponentDependency API
+* Intuitive UI, easy to follow tree structure
+* Log in from anywhere, no installation required
+* Available for self-hosting locally or on your own Heroku account
