@@ -13,7 +13,7 @@ No complex sfdx commands, plug-ins or development knowledge required :cold_sweat
 
 ## The best feature - Deployment Boundaries
 
-Jump to the the Who is this for for section to see how **:star:admins and developers:star:** can also use this app. 
+Jump to the the [Who is this for](#who-is-this-for) for section to see how **:star:admins and developers:star:** can also use this app. 
 
 #### Why Salesforce DX has seen poor adoption :disappointed:
 
