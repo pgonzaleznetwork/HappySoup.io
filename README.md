@@ -13,7 +13,7 @@ No complex sfdx commands, plug-ins or development knowledge required :cold_sweat
 
 ## The best feature - Deployment Boundaries
 
-Jump to the the Who is this for for section to see how admins and developers can also use this app. 
+Jump to the the Who is this for for section to see how **:star:admins and developers:star:** can also use this app. 
 
 #### Why Salesforce DX has seen poor adoption :disappointed:
 
@@ -32,6 +32,8 @@ Say for example you have a complex visualforce page that you are considering for
 But what about what the controller itself references? Surely it references fields and perhaps other classes. What if some of those fields are cross-object formula fields? This would mean that those objects in the lookup field are also required to be able to deploy this visualforce page to a new org.
 
 What if the controller uses a helper class that itself depends on custom metadata?
+
+You could spend all day running queries through the API! :weary:
 
 #### How happy soup can help you :white_check_mark:
 
