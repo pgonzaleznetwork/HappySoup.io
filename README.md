@@ -57,3 +57,11 @@ If at anytime you want the app to lose access to your access token, you have two
 
 * Use the Logout button on the app. This will completely destroy the server side session and all record of your access token. 
 * From Salesforce > Setup > Connected Apps Oauth Usage > Find the token for sfdc-happy-soup and revoke it. The app will no longer be able to use the access token and you'll be logged out the moment you try to use the app again. 
+
+**How is your token stored**
+
+Your access token will be temporarily stored in a redis database which is provisioned by Heroku. The token is then retrieved by the server every time you use the app, as long as you have a valid server-side session with the app, and the required cookies.
+
+Access to the database is restricted and the credentials are not stored anywhere in the source code; it is managed via environment variables.
+
+This mechanism is the same way Workbench, OrgDoctor, MavensMate and other open source projects work. Again, if this doesn't meet your security standards, we encourage you to use the app locally or own your own heroku account, no need to miss on all the features we provide! 
