@@ -1,6 +1,6 @@
 # Salesforce Happy Soup
 
-Salesforce Happy Soup is a **100% free** and open source heroku app that you can use to get a full view of your Salesforce org dependencies. 
+[Salesforce Happy Soup](https://sfdc-happy-soup.herokuapp.com/) is a **100% free** and open source heroku app that you can use to get a full view of your Salesforce org dependencies. 
 
 [Watch a quick demo, you willl start using it!](http://github.com) 
 
