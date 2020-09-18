@@ -13,6 +13,18 @@ No complex sfdx commands, plug-ins or development knowledge required :cold_sweat
   <img src="./sfdc-happy-main.png" width="738">
 </p>
 
+## The best feature - Deployment Boundaries
+
+Salesforce DX introduced the idea of breaking down your org into packages with discrete and modular functionality. 
+
+Unfortunately, the actual steps do that are very complicated and has led to poor adoption of scratch orgs and unlocked packages. With this realization, Salesforce released the Metadata Dependencies API (MetadataComponentDependency), which allows you to see where your metadata is used or what it uses.
+
+However, it's **not enough** to see where an apex class is used, or what it uses. To be able to take a group of metadata and convert it into an unlocked package/scratch org, you need to be able to answer the question:
+
+*What is all the metadata that I need to deploy this to a brand new empty org?*
+
+
+
 ## :question: Who is this for
 
 **Administrators** 
