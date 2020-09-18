@@ -4,7 +4,7 @@ Salesforce Happy Soup is a **100% free** and open source heroku app that you can
 
 [Watch a quick demo, you willl start using it!](http://github.com) 
 
-No complex sfdx commands, plug-ins or development knowledge required :cold_sweat: just log in and start sipping the soup! :stew: :clap:
+No complex sfdx commands, plug-ins or development knowledge required :cold_sweat:  just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup! :stew: :clap:
 
 
 
