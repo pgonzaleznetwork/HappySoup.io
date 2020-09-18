@@ -4,6 +4,12 @@ Salesforce Happy Soup is a 100% free and open source heroku app that you can use
 
 No complex sfdx commands, plug-ins or development knowledge required, just log in and start sipping the soup! 
 
+
+
+<p align="center">
+  <img src="./sfdc-happy-main.png" width="738">
+</p>
+
 **Administrators**
 
 * Find all the metadata used in page layout (fields, buttons, inline pages, etc) and export it to excel to review opportunities for optimization.
