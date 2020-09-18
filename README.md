@@ -32,12 +32,12 @@ No complex sfdx commands, plug-ins or development knowledge required, just log i
 
 ## Features
 
-* "Where is this used" and "Deployment Boundary" visualization
-* Easily export the dependencies to excel, csv files or package.xml
-* Bypass all the limitations of the MetadataComponentDependency API
-* Intuitive UI, easy to follow tree structure
-* Log in from anywhere, no installation required
-* Available for self-hosting locally or on your own Heroku account
+* :heavy_check_mark:  "Where is this used" and "Deployment Boundary" visualization
+* :heavy_check_mark:  Easily export the dependencies to excel, csv files or package.xml
+* :heavy_check_mark:  Bypass all the limitations of the MetadataComponentDependency API
+* :heavy_check_mark:  Intuitive UI, easy to follow tree structure
+* :heavy_check_mark:  Log in from anywhere, no installation required
+* :heavy_check_mark:  Available for self-hosting locally or on your own Heroku account
 
 ## Security
 
