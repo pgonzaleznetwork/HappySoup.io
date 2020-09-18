@@ -15,13 +15,13 @@ No complex sfdx commands, plug-ins or development knowledge required :cold_sweat
 
 Jump to the the Who is this for for section to see how admins and developers can also use this app. 
 
-#### Why Salesforce DX has seen poor adoption
+#### Why Salesforce DX has seen poor adoption :disappointed:
 
 Salesforce DX introduced the idea of breaking down your org into packages with discrete and modular functionality. 
 
 Unfortunately, the actual steps do that are very complicated and has led to poor adoption of scratch orgs and unlocked packages. With this realization, Salesforce released the Metadata Dependencies API (MetadataComponentDependency), which allows you to see where your metadata is used or what it uses.
 
-#### The real problem
+#### The real problem :thumbsdown:
 
 It's **not enough** to see where an apex class is used, or what it uses. To be able to take a group of metadata and convert it into an unlocked package/scratch org, you need to be able to answer the question:
 
@@ -33,9 +33,13 @@ But what about what the controller itself references? Surely it references field
 
 What if the controller uses a helper class that itself depends on custom metadata?
 
-#### How happy soup can help you
+#### How happy soup can help you :white_check_mark:
 
 To answer to this problem is that you have to recursively query metadata dependencies until you get to the very last metadata member needed to the deploy the top level component. 
+
+This is not a trivial thing to do but Salesforce Happy Soup does it for one with one click.
+
+When you use the Deployment Boundary feature, the app will give you all the metadata that is needed to be able to deploy that component. The moment the results are ready, you can immediately download the package.xml 
 
 
 
