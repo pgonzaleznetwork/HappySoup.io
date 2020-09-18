@@ -7,21 +7,33 @@
 No complex sfdx commands, plug-ins or development knowledge required :cold_sweat:  just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup! :stew: :clap:
 
 
-
-
 <p align="center">
   <img src="./sfdc-happy-main.png" width="738">
 </p>
 
 ## The best feature - Deployment Boundaries
 
+#### Why Salesforce DX has seen poor adoption
+
 Salesforce DX introduced the idea of breaking down your org into packages with discrete and modular functionality. 
 
 Unfortunately, the actual steps do that are very complicated and has led to poor adoption of scratch orgs and unlocked packages. With this realization, Salesforce released the Metadata Dependencies API (MetadataComponentDependency), which allows you to see where your metadata is used or what it uses.
 
-However, it's **not enough** to see where an apex class is used, or what it uses. To be able to take a group of metadata and convert it into an unlocked package/scratch org, you need to be able to answer the question:
+#### The real problem
 
-*What is all the metadata that I need to deploy this to a brand new empty org?*
+It's **not enough** to see where an apex class is used, or what it uses. To be able to take a group of metadata and convert it into an unlocked package/scratch org, you need to be able to answer the question:
+
+*What is all the metadata that I need to deploy this to a brand new, empty org?*
+
+Say for example you have a complex visualforce page that you are considering for an unlocked page. How do you know what is needed to deploy this to a new org? You can use the new Dependency API to see what that visualforce page references, mainly the controller.
+
+But what about what the controller itself references? Surely it references fields and perhaps other classes. What if some of those fields are cross-object formula fields? This would mean that those objects in the lookup field are also required to be able to deploy this visualforce page to a new org.
+
+What if the controller uses a helper class that itself depends on custom metadata?
+
+To answer to this problem is that you have to recursively query metadata dependencies until you get to the very last metadata member needed to the deploy the top level component. 
+
+
 
 
 
