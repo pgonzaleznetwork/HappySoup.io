@@ -51,3 +51,9 @@ When you log in to the app, you'll be asked to authorise it to send requests on 
 * Metadata API to get describe information on custom fields
 * SOAP API to validate that the token is still valid and to logout when requested by the user
 
+**Login out or revoking the access token**
+
+If at anytime you want the app to lose access to your access token, you have two options:
+
+* Use the Logout button on the app. This will completely destroy the server side session and all record of your access token. 
+* From Salesforce > Setup > Connected Apps Oauth Usage > Find the token for sfdc-happy-soup and revoke it. The app will no longer be able to use the access token and you'll be logged out the moment you try to use the app again. 
