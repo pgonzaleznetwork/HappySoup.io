@@ -109,3 +109,13 @@ Every time a request is made to the app, the request goes through the following 
 * We use CORS to validate HTTP requests made from a web browser.
 * Once CORS is validated, we check that the request contains a cookie, which is encrypted. The cookie is then used to retrieve a server-side session. If the session does not exist or has expired, the user is sent back to the login page.
 * Once the server-side session is verified, we check that the user has a valid session with their Salesforce org. If the user doesn't have a valid session with Salesforce, we send the user back to the login page.
+
+## Why Happy Soup is better than the MetadataComponentDependency API
+
+Happy Soup is built on top of the MetadataComponentDependency tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!):
+
+* Custom field names are returned without the object name and without the _ _ c suffix. For example Opportunity.Revenue__c becomes "Revenue". This makes it very hard to know which fields are actually being referenced. The only way around this is to manually and painfully retrieve additional information through the Tooling and Metadata API.
+
+* Validation rules names are also returned without the object prefix, so Account.ValidationRule becomes ValidationRule. If you want to export this via package.xml, again you'd have to use other APIs to retrieve this information.
+
+* The MetadataComponentDependency API does not return objects referenced via a lookup field. For example, if you have a custom field Account.RelatedToAnotherObject__c pointing to 
