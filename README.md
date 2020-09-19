@@ -20,11 +20,11 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 
 ## Contents
 
-* [The best feature - Deployment Boundaries]()
+* [The best feature - Deployment Boundaries](#the-best-feature---deployment-boundaries)
 * [Who is this for](#question-who-is-this-for)
-* [Features]()
-* [Security]()
-* [How we enhaced the MetadataComponentDependency API]()
+* [Features](#thumbsup-features)
+* [Security](#no_entry_sign-security)
+* [How we enhaced the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api)
 
 ## The best feature - Deployment Boundaries
 
