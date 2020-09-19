@@ -40,7 +40,7 @@ Unfortunately, the actual steps do that are very complicated and has led to poor
 
 It's **not enough** to see where an apex class is used, or what it uses. To be able to take a group of metadata and convert it into an unlocked package/scratch org, you need to be able to answer the question:
 
-*What is all the metadata that I need to deploy this to a brand new, empty org?*
+> *What is all the metadata that I need to deploy this to a brand new, empty org?*
 
 Say for example you have a complex visualforce page that you are considering for an unlocked page. How do you know what is needed to deploy this to a new org? You can use the new Dependency API to see what that visualforce page references, mainly the controller.
 
