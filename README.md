@@ -124,4 +124,4 @@ Happy Soup is built on top of the MetadataComponentDependency tooling API. While
 
 * Lookup filters are returned with cryptic names depending on whether they belong to a custom object or a standard one. 
 
-As said above, Salesforce Happy Soup has fixed all this issues so that you can focus on learning about your dependencies rather than fighting the API!
+As said above, Salesforce Happy Soup has **fixed all** this issues so that you can focus on learning about your dependencies rather than fighting the API!
