@@ -9,7 +9,7 @@ No complex sfdx commands :x:
 
 No installation :x:                          
 
-No **development knowledge** required :cold_sweat:  
+No **development knowledge** required :x:  
 
 Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup! :stew: :clap: :white_check_mark:
 
@@ -69,7 +69,7 @@ When you use the Deployment Boundary feature, the app will give you all the meta
 
 *  "Where is this used" and "Deployment Boundary" visualization :white_check_mark: 
 *  Easily export the dependencies to excel, csv files or package.xml :white_check_mark: 
-*  Bypass all the limitations of the MetadataComponentDependency API :white_check_mark: 
+*  [Bypass all the limitations of the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api) :white_check_mark: 
 *  Intuitive UI, easy to follow tree structure :white_check_mark: 
 *  Log in from anywhere, no installation required :white_check_mark: 
 *  Available for self-hosting locally or on your own Heroku account :white_check_mark: 
