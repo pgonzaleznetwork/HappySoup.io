@@ -1,4 +1,5 @@
 # Salesforce Happy Soup
+## The best way to visualize your Salesforce dependencies
 
 [Salesforce Happy Soup](https://sfdc-happy-soup.herokuapp.com/) is a **100% free** and open source heroku app that you can use to get a full view of your Salesforce org dependencies. 
 
