@@ -112,10 +112,16 @@ Every time a request is made to the app, the request goes through the following 
 
 ## How we enhaced the MetadataComponentDependency API
 
-Happy Soup is built on top of the MetadataComponentDependency tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!):
+Happy Soup is built on top of the MetadataComponentDependency tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!)
 
-* Custom field names are returned without the object name and without the _ _ c suffix. For example Opportunity.Revenue__c becomes "Revenue". This makes it very hard to know which fields are actually being referenced. The only way around this is to manually and painfully retrieve additional information through the Tooling and Metadata API.
+* Custom field names are returned without the object name and without the _ _ c suffix. For example `Opportunity.Revenue__c` becomes `Revenue`. This makes it very hard to know which fields are actually being referenced. The only way around this is to manually and painfully retrieve additional information through the Tooling and Metadata API.
 
-* Validation rules names are also returned without the object prefix, so Account.ValidationRule becomes ValidationRule. If you want to export this via package.xml, again you'd have to use other APIs to retrieve this information.
+* Validation rules names are also returned without the object prefix, so `Account.ValidationRule` becomes `ValidationRule`. If you want to export this via package.xml, again you'd have to use other APIs to retrieve this information.
 
-* The MetadataComponentDependency API does not return objects referenced via a lookup field. For example, if you have a custom field Account.RelatedToAnotherObject__c pointing to RelatedToAnotherObject__c, that object is not brought back as a dependency, which is obviously wrong because you can't deploy that custom field to an org where that object doesn't exist. 
+* Objects referenced via a lookup field are not returned. For example, if you have a custom field `Account.RelatedToAnotherObject__c` pointing to `RelatedToAnotherObject__c`, that object is not brought back as a dependency, which is obviously wrong because you can't deploy that custom field to an org where that object doesn't exist. 
+
+* Global Value Sets are not returned when picklist fields depend on them. 
+
+* Lookup filters are returned with cryptic names depending on whether they belong to a custom object or a standard one. 
+
+As said above, Salesforce Happy Soup has fixed all this issues so that you can focus on learning about your dependencies rather than fighting the API!
