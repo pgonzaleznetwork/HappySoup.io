@@ -4,11 +4,11 @@
 
 [Watch a quick demo, you willl start using it!](http://github.com) 
 
-:x: No complex sfdx commands
+:x:           <span></span> No complex sfdx commands
 
-:x: No plug-ins 
+:x:   No plug-ins 
 
-:x: No development knowledge required :cold_sweat:  
+:x:   No development knowledge required :cold_sweat:  
 
 :white_check_mark: just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup! :stew: :clap:
 
