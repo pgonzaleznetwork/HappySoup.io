@@ -18,6 +18,14 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
   <img src="./sfdc-happy-main.png" width="738">
 </p>
 
+## Contents
+
+* [The best feature - Deployment Boundaries]()
+* [Who is this for](#question-who-is-this-for)
+* [Features]()
+* [Security]()
+* [How we enhaced the MetadataComponentDependency API]()
+
 ## The best feature - Deployment Boundaries
 
 Jump to the the [Who is this for](#question-who-is-this-for) for section to see how **:star:admins and developers:star:** can also use this app. 
