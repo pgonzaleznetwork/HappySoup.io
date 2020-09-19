@@ -4,7 +4,13 @@
 
 [Watch a quick demo, you willl start using it!](http://github.com) 
 
-No complex sfdx commands, plug-ins or development knowledge required :cold_sweat:  just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup! :stew: :clap:
+:x: No complex sfdx commands
+
+:x: No plug-ins 
+
+:x: No development knowledge required :cold_sweat:  
+
+:white_check_mark: just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup! :stew: :clap:
 
 
 <p align="center">
@@ -37,13 +43,11 @@ You could spend all day running queries through the API! :weary:
 
 #### How happy soup can help you :white_check_mark:
 
-To answer to this problem is that you have to recursively query metadata dependencies until you get to the very last metadata member needed to the deploy the top level component. 
+To answer to this problem is that you have to recursively query metadata dependencies until you get to the very last metadata member needed to the deploy the top level component. This is what we call a *Deployment Boundary*.
 
 This is **not a trivial thing to do** but Salesforce Happy Soup does it for one with one click. :heart_eyes:
 
 When you use the Deployment Boundary feature, the app will give you all the metadata that is needed to be able to deploy that component. You can then export this data in either an excel/csv or package.xml format (in which case you can immediately retrieve it from your org and package it!).
-
-
 
 
 ## :question: Who is this for
@@ -62,12 +66,12 @@ When you use the Deployment Boundary feature, the app will give you all the meta
 
 ## :thumbsup: Features
 
-* :white_check_mark: -   "Where is this used" and "Deployment Boundary" visualization
-* :white_check_mark: -   Easily export the dependencies to excel, csv files or package.xml
-* :white_check_mark: -   Bypass all the limitations of the MetadataComponentDependency API
-* :white_check_mark: -   Intuitive UI, easy to follow tree structure
-* :white_check_mark: -   Log in from anywhere, no installation required
-* :white_check_mark: -   Available for self-hosting locally or on your own Heroku account
+* :white_check_mark:  "Where is this used" and "Deployment Boundary" visualization
+* :white_check_mark:   Easily export the dependencies to excel, csv files or package.xml
+* :white_check_mark:   Bypass all the limitations of the MetadataComponentDependency API
+* :white_check_mark:   Intuitive UI, easy to follow tree structure
+* :white_check_mark:   Log in from anywhere, no installation required
+* :white_check_mark:   Available for self-hosting locally or on your own Heroku account
 
 ## :no_entry_sign: Security 
 
@@ -95,3 +99,12 @@ Your access token will be temporarily stored in a redis database which is provis
 Access to the database is restricted and the credentials are not stored anywhere in the source code; it is managed via environment variables.
 
 This mechanism is the same way Workbench, OrgDoctor, MavensMate and other open source projects work. Again, if this doesn't meet your security standards, we encourage you to use the app locally or own your own heroku account, no need to miss on all the features we provide! 
+
+**Server-side security**
+
+Every time a request is made to the app, the request goes through the following layers of security:
+
+* Every HTTP request is encrypted with SSL certificates managed by Heroku. 
+* We use CORS to validate HTTP requests made from a web browser.
+* Once CORS is validated, we check that the request contains a cookie, which is encrypted. The cookie is then used to retrieve a server-side session. If the session does not exist or has expired, the user is sent back to the login page.
+* Once the server-side session is verified, we check that the user has a valid session with their Salesforce org. If the user doesn't have a valid session with Salesforce, we send the user back to the login page.
