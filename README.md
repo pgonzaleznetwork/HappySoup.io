@@ -39,7 +39,7 @@ You could spend all day running queries through the API! :weary:
 
 To answer to this problem is that you have to recursively query metadata dependencies until you get to the very last metadata member needed to the deploy the top level component. 
 
-This is not a trivial thing to do but Salesforce Happy Soup does it for one with one click.
+This is **not a trivial thing to do** but Salesforce Happy Soup does it for one with one click. :heart_eyes:
 
 When you use the Deployment Boundary feature, the app will give you all the metadata that is needed to be able to deploy that component. The moment the results are ready, you can immediately download the package.xml 
 
