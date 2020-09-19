@@ -52,7 +52,7 @@ You could spend all day running queries through the API! :weary:
 
 #### How happy soup can help you :white_check_mark:
 
-To answer to this problem is that you have to recursively query metadata dependencies until you get to the very last metadata member needed to the deploy the top level component. This is what we call a *Deployment Boundary*.
+To answer to this problem is that you have to recursively query metadata dependencies until you get to the very last metadata member needed to the deploy the top level component. This is what we call a ***Deployment Boundary*** :bulb:
 
 This is **not a trivial thing to do** but Salesforce Happy Soup does it for one with one click. :heart_eyes:
 
