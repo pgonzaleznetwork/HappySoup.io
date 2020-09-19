@@ -41,8 +41,7 @@ To answer to this problem is that you have to recursively query metadata depende
 
 This is **not a trivial thing to do** but Salesforce Happy Soup does it for one with one click. :heart_eyes:
 
-When you use the Deployment Boundary feature, the app will give you all the metadata that is needed to be able to deploy that component. The moment the results are ready, you can immediately download the package.xml 
-
+When you use the Deployment Boundary feature, the app will give you all the metadata that is needed to be able to deploy that component. You can then export this data in either an excel/csv or package.xml format (in which case you can immediately retrieve it from your org and package it!).
 
 
 
@@ -51,11 +50,8 @@ When you use the Deployment Boundary feature, the app will give you all the meta
 
 **Administrators** 
 
-<img src="https://d3nqfz2gm66yqg.cloudfront.net/images/v1463575370-salesforceadminCertifiedIMg_vlyccp.png" height="100px"> 
-
 * Find all the metadata used in page layout (fields, buttons, inline pages, etc) and export it to excel to review opportunities for optimization.
-* Know the impact of making changes to a field, validation rule, etc - before you break anything!
-* Know where your metadata is used 
+* Don't break your org! Know the impact of making changes to a field, validation rule, etc 
 
 **Developers & Architects**
 
