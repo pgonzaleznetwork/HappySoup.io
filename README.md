@@ -26,7 +26,7 @@ Jump to the the [Who is this for](#question-who-is-this-for) for section to see 
 
 Salesforce DX introduced the idea of breaking down your org into packages with discrete and modular functionality. 
 
-Unfortunately, the actual steps do that are very complicated and has led to poor adoption of scratch orgs and unlocked packages. With this realization, Salesforce released the Metadata Dependencies API (MetadataComponentDependency), which allows you to see where your metadata is used or what it uses.
+Unfortunately, the actual steps do that are very complicated and has led to poor adoption of scratch orgs and unlocked packages. With this realization, Salesforce released the Metadata Dependencies API (`MetadataComponentDependency`), which allows you to see where your metadata is used or what it uses.
 
 #### The real problem :thumbsdown:
 
@@ -82,16 +82,16 @@ We understand security is very important in the Salesforce ecosystem. With that 
 
 When you log in to the app, you'll be asked to authorise it to send requests on your behalf using OAuth. Once you grant permission, the app will make the following API calls during its lifecylce:
 
-* Tooling API to query CustomField, CustomObject and MetadataComponentDependency records
-* Metadata API to get describe information on custom fields
-* SOAP API to validate that the token is still valid and to logout when requested by the user
+* `Tooling API` to query `CustomField`, `CustomObject` and `MetadataComponentDependency` records
+* `Metadata API` to get describe information on custom fields
+* `SOAP API` to validate that the token is still valid and to logout when requested by the user
 
 **Login out or revoking the access token**
 
 If at anytime you want the app to lose access to your access token, you have two options:
 
 * Use the Logout button on the app. This will completely destroy the server side session and all record of your access token. 
-* From Salesforce > Setup > Connected Apps Oauth Usage > Find the token for sfdc-happy-soup and revoke it. The app will no longer be able to use the access token and you'll be logged out the moment you try to use the app again. 
+* From `Salesforce > Setup > Connected Apps Oauth Usage` > Find the token for sfdc-happy-soup and revoke it. The app will no longer be able to use the access token and you'll be logged out the moment you try to use the app again. 
 
 **How is your token stored**
 
