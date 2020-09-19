@@ -112,7 +112,7 @@ Every time a request is made to the app, the request goes through the following 
 
 ## How we enhaced the MetadataComponentDependency API
 
-Happy Soup is built on top of the MetadataComponentDependency tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!)
+Happy Soup is built on top of the `MetadataComponentDependency` tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!)
 
 * Custom field names are returned without the object name and without the _ _ c suffix. For example `Opportunity.Revenue__c` becomes `Revenue`. This makes it very hard to know which fields are actually being referenced. The only way around this is to manually and painfully retrieve additional information through the Tooling and Metadata API.
 
