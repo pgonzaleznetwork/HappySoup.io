@@ -25,10 +25,10 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 * [Features](#thumbsup-features)
 * [Security](#no_entry_sign-security)
 * [How we enhaced the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api)
-* [Best Practices for Deployment Boundaries] (#best-practices-for-deployment-boundaries)
-* [One=click deployment to your own Heroku account]
-* [Local installation]
-* [Build your own apps using the core npm library]
+* [Best Practices for Deployment Boundaries](#best-practices-for-deployment-boundaries)
+* [One=click deployment to your own Heroku account](#best-practices-for-deployment-boundaries)
+* [Local installation](#best-practices-for-deployment-boundaries)
+* [Build your own apps using the core npm library](#best-practices-for-deployment-boundaries)
 
 ## The best feature - Deployment Boundaries
 
