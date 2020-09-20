@@ -59,7 +59,7 @@ This is **not a trivial thing to do** but Salesforce Happy Soup does it for one 
 When you use the Deployment Boundary feature, the app will give you all the metadata that is needed to be able to deploy that component. You can then export this data in either an excel/csv or package.xml format (in which case you can immediately retrieve it from your org and package it!).
 
 
-## :question: Who is this for
+## Who is this for
 
 **Administrators** 
 
@@ -133,3 +133,18 @@ Happy Soup is built on top of the `MetadataComponentDependency` tooling API. Whi
 * Lookup filters are returned with cryptic names depending on whether they belong to a custom object or a standard one. 
 
 As said above, Salesforce Happy Soup has **fixed all** this issues so that you can focus on learning about your dependencies rather than fighting the API! :facepunch:
+
+## Best Practices for Deployment Boundaries
+
+When using the Deployment Boundary feature, you should try to identify the top-most, entry point of your application or business process. Some examples:
+
+**LWC Components**
+
+A LWC that allows Sales reps to better manage their pipeline. This controller is likely the entry point, it is where all the other metadata are eventually called or referenced. 
+
+For example, the apex controller will be directly called here, and said controller with then reference other metadata. If you had started looking at the dependecy tree from the apex class, you would've missed certain metadata items that are only referenced by the LWC itself (i.e custom labels, etc).
+
+**Apex Triggers**
+
+Apex triggers are also a good example of an application entry point. For example if you want to create an unlocked package with all your opportunity functionality, creating a Deployment Boundary from the opportunity triggers would give you a good overview (though not everything) of what functionality is used by the opportunity object.
+
