@@ -26,7 +26,7 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 * [Security](#no_entry_sign-security)
 * [How we enhaced the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api)
 * [Best Practices for Deployment Boundaries](#best-practices-for-deployment-boundaries)
-* [One=click deployment to your own Heroku account](#best-practices-for-deployment-boundaries)
+* [One-click deployment to your own Heroku account](#best-practices-for-deployment-boundaries)
 * [Local installation](#best-practices-for-deployment-boundaries)
 * [Build your own apps using the core npm library](#best-practices-for-deployment-boundaries)
 
@@ -154,3 +154,4 @@ For example, the apex controller will be directly called here, and said controll
 
 Apex triggers are also a good example of an application entry point. For example if you want to create an unlocked package with all your opportunity functionality, creating a Deployment Boundary from the opportunity triggers would give you a good overview (though not everything) of what functionality is used by the opportunity object.
 
+## One-click Installation to your own Heroku Account
