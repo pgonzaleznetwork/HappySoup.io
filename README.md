@@ -15,7 +15,7 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 
 
 <p align="center">
-  <img src="./sfdc-happy-main.png" width="738">
+  <img src="./happysoup.gif" >
 </p>
 
 ## Contents
