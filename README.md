@@ -54,11 +54,13 @@ What if the controller uses a helper class that itself depends on custom metadat
 
 You could spend all day running queries through the API! :weary:
 
-#### How happy soup can help you :white_check_mark:
+#### How Salesforce happy soup can help you :white_check_mark:
 
 To answer to this problem is that you have to recursively query metadata dependencies until you get to the very last metadata member needed to the deploy the top level component. This is what we call a ***Deployment Boundary*** :bulb:
 
-This is **not a trivial thing to do** but Salesforce Happy Soup does it for one with one click. :heart_eyes:
+> *A Deployment Boundary represents all the metadata that needs to exist in another org before you can deploy a specific component*
+
+This is **not a trivial thing to do** but Salesforce Happy Soup does it for you with one click. :heart_eyes:
 
 When you use the Deployment Boundary feature, the app will give you all the metadata that is needed to be able to deploy that component. You can then export this data in either an excel/csv or package.xml format (in which case you can immediately retrieve it from your org and package it!).
 
@@ -103,7 +105,7 @@ When you log in to the app, you'll be asked to authorise it to send requests on 
 If at anytime you want the app to lose access to your access token, you have two options:
 
 * Use the Logout button on the app. This will completely destroy the server side session and all record of your access token. 
-* From `Salesforce > Setup > Connected Apps Oauth Usage` > Find the token for sfdc-happy-soup and revoke it. The app will no longer be able to use the access token and you'll be logged out the moment you try to use the app again. 
+* From `Salesforce > Setup > Connected Apps Oauth Usage` > Find the token for Salesforce Happy Soup and revoke it. The app will no longer be able to use the access token and you'll be logged out the moment you try to use the app again. 
 
 **How is your token stored**
 
@@ -124,7 +126,7 @@ Every time a request is made to the app, the request goes through the following 
 
 ## How we enhaced the MetadataComponentDependency API
 
-Happy Soup is built on top of the `MetadataComponentDependency` tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!)
+Salesforce Happy Soup is built on top of the `MetadataComponentDependency` tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!)
 
 * Custom field names are returned without the object name and without the _ _ c suffix. For example `Opportunity.Revenue__c` becomes `Revenue`. This makes it very hard to know which fields are actually being referenced. The only way around this is to manually and painfully retrieve additional information through the Tooling and Metadata API.
 
