@@ -53,8 +53,8 @@ footer{
     font-size: 13px;
 }
 
-footer a:visited{
-    color:white;
+a:visited{
+    color:#ecf0f1;;
 }
 
 
@@ -72,7 +72,7 @@ footer a:visited{
 }
 
 select {  
-    width: 38%;
+    width: 120px;
     height: calc(2.25rem + 2px);
     padding: .375rem 1.75rem .375rem .75rem;
     line-height: 1.2;
