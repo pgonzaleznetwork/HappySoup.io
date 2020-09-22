@@ -1,0 +1,52 @@
+{
+    "name": "Your own Salesforce Happy Soup",
+    "description": "The best way to visualize your Salesforce dependencies",
+    "repository": "https://github.com/pgonzaleznetwork/sfdc-happy-soup.git",
+    "env": {
+      "OAUTH_CLIENT_ID": {
+        "description": "The Client Id of YOUR OWN Connected App. This can be in any org, not necessarily the orgs you will use the app with"
+      },
+      "OAUTH_CLIENT_SECRET": {
+        "description": "The Client Secret of YOUR OWN Connected App. This can be in any org, not necessarily the orgs you will use the app with"
+      },
+      "SFDC_API_VERSION":{
+          "description":"The version of the Salesforce API",
+          "value":"48.0"
+      },
+      "REDIS_HOST":{
+          "description":"The name of the host were redis is running. localhost should be used for local development. If using in heroku, use the host of your own heroku redis account",
+          "value":"localhost"
+      },
+      "REDIS_PORT":{
+        "description":"The network port were redis is running. 6379 should be used for local development. If using in heroku, use the port of your own heroku redis account",
+        "value":"6379"
+    },
+    "SESSION_SECRET":{
+        "description":"A random word that you must specify. This will be used to encrypt the session cookies"
+    },
+    "PORT":{
+        "description":"The port where the app is running",
+        "value":"3000"
+    },
+      "WEB_CONCURRENCY": {
+        "description": "The number of processes to run.",
+        "value": "1"
+      }
+    },
+    "formation": {
+      "web": {
+        "quantity": 1,
+        "size": "free"
+      },
+      "worker": {
+        "quantity": 1,
+        "size": "free"
+      }
+    },
+    "addons": [
+      "heroku-redis"
+    ]
+  }
+
+
+

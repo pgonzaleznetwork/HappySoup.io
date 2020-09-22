@@ -228,7 +228,7 @@ function getSupportedMetadataTypes(){
     return [
         'ApexClass','ApexPage','ApexTrigger',
         'ApexComponent','Layout','ValidationRule',
-        'WebLink','CustomField','Flow'
+        'WebLink','CustomField','Flow','AuraDefinitionBundle'
     ]
 }
 
