@@ -53,6 +53,10 @@ footer{
     font-size: 13px;
 }
 
+footer a:visited{
+    color:white;
+}
+
 
 .env-selection{
     display:flex;

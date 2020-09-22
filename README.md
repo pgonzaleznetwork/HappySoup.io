@@ -26,7 +26,7 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 
 ## Contents
 
-* [The best feature - Deployment Boundaries](#the-best-feature---deployment-boundaries)
+* [Deployment Boundaries](#deployment-boundaries)
 * [Who is this for](#question-who-is-this-for)
 * [Features](#thumbsup-features)
 * [Security](#no_entry_sign-security)
@@ -36,7 +36,7 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 * [Local deployment](#local-deployment)
 * [Build your own apps using the core npm library](#Build-your-own-apps-using-the-core-npm-library)
 
-## The best feature - Deployment Boundaries
+## Deployment Boundaries
 
 Jump to the the [Who is this for](#question-who-is-this-for) for section to see how **:star:admins and developers:star:** can also use this app. 
 
@@ -98,6 +98,8 @@ When you use the Deployment Boundary feature, the app will give you all the meta
 
 We understand security is very important in the Salesforce ecosystem. With that in mind, we want to be fully transparent as to how this app uses your Salesforce data and what security mechanisms are in place.
 
+>  Remember that you can always [deploy the app to your own Heroku account](#one-click-deployment-to-your-own-heroku-account) or use it [locally](#local-deployment), in which case you need need to worry about security!
+
 **API Access**
 
 When you log in to the app, you'll be asked to authorise it to send requests on your behalf using OAuth. Once you grant permission, the app will make the following API calls during its lifecylce:
@@ -119,7 +121,7 @@ Your access token will be temporarily stored in a redis database which is provis
 
 Access to the database is restricted and the credentials are not stored anywhere in the source code; it is managed via environment variables.
 
-This mechanism is the same way Workbench, OrgDoctor, MavensMate and other open source projects work. Again, if this doesn't meet your security standards, we encourage you to use the app locally or own your own heroku account, no need to miss on all the features we provide! 
+This mechanism is the same way Workbench, OrgDoctor, MavensMate and other open source projects work. 
 
 **Server-side security**
 

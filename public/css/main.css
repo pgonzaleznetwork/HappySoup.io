@@ -173,7 +173,7 @@ canvas{
     background-color: #49b677;
     margin-top:0;
     margin-bottom:0;
-    transition: width 25s ease-out;
+    transition: width 35s ease-out;
 }
 
 .visible-progress-bar{
