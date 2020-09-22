@@ -1,13 +1,13 @@
 # Salesforce Happy Soup
 ## The best way to visualize your Salesforce dependencies
 
-<a href="https://heroku.com/deploy?template=https://github.com/pgonzaleznetwork/sfdc-happy-soup/tree/master">
+<a href="https://heroku.com/deploy?template=https://github.com/pgonzaleznetwork/sfdc-happy-soup/tree/master" target="_blank">
   <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
 </a>
 
 [Salesforce Happy Soup](https://sfdc-happy-soup.herokuapp.com/) is a **100% free** and open source heroku app that you can use to get a full view of your Salesforce org dependencies. 
 
-[Watch a quick demo, you willl start using it!](http://github.com) 
+[Start using it!](https://sfdc-happy-soup.herokuapp.com/)
 
 No complex sfdx commands :x:                  
 
@@ -19,8 +19,10 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 
 
 <p align="center">
-  <img src="./happysoupmini.gif" >
+  <img src="./github-images/happysoupmini.gif" >
 </p>
+
+[Watch full demo](https://www.youtube.com/watch?v=NH4LGbdYaaE) 
 
 ## Contents
 
@@ -30,9 +32,9 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 * [Security](#no_entry_sign-security)
 * [How we enhaced the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api)
 * [Best Practices for Deployment Boundaries](#best-practices-for-deployment-boundaries)
-* [One-click deployment to your own Heroku account](#best-practices-for-deployment-boundaries)
-* [Local installation](#best-practices-for-deployment-boundaries)
-* [Build your own apps using the core npm library](#best-practices-for-deployment-boundaries)
+* [One-click deployment to your own Heroku account](#one-click-deployment-to-your-own-heroku-account)
+* [Local deployment](#local-deployment)
+* [Build your own apps using the core npm library](#Build-your-own-apps-using-the-core-npm-library)
 
 ## The best feature - Deployment Boundaries
 
@@ -158,7 +160,7 @@ For example, the apex controller will be directly called here, and said controll
 
 Apex triggers are also a good example of an application entry point. For example if you want to create an unlocked package with all your opportunity functionality, creating a Deployment Boundary from the opportunity triggers would give you a good overview (though not everything) of what functionality is used by the opportunity object.
 
-## One-click Installation to your own Heroku Account
+## One-click Deployment to your own Heroku Account
 
 You can use the following button to quickly install/deploy the application to your own Heroku Account 
 
@@ -171,5 +173,113 @@ This is by far the easiest way to use the app on your own servers so that you do
 When you click the button and log in to your Heroku account, you'll see a page similar to the following:
 
 <p align="center">
-  <img src="./happysoupmini.gif" >
+  <img src="./github-images/herokudeployment.png" >
 </p>
+
+To get started, add dummy values on all the empty Config Vars, we'll come back to change those later.
+
+Once you've added dummy values, just click the **Deploy App** button. Once the app is deployed, you'll be able to launch it and at a minimum, see the login page. Congratulations!!
+
+Now, the steps to get the app fully working are as follows:
+
+**1. Create a Connected App in any org**
+
+For the app to be able to use OAuth tokens, it needs to be connected to a Connected App. The original app uses a Connected App that lives in one of our orgs; for your own app you can then use a Connected App in any org as well - We recommend using a dev org.
+
+The OAuth configuration for the Connected App needs to look like this:
+
+<p align="center">
+  <img src="./github-images/oauthconfig.png" >
+</p>
+
+**It is very important that you change the Callback URL to point to your heroku app domain name, which is the name that you chose when deploying the app**
+
+For example, if your app name is `mycompany-happysoup.herokuapp.com` then the Callback URL must be `mycompany-happysoup.herokuapp.com/oauth2/callback` . You must also add the following URL so that you can run the app locally using the `heroku local` command
+
+`http://localhost:3000/oauth2/callback`
+
+Note that if you changed the default `PORT` environment variable in the deployment page, you need to update the localhost port in the callback URL as well. 
+
+Once you have created the Connected App, get the Client Secret and Client Id; we'll need them in the next step.
+
+**2. Adding OAuth config**
+
+Now that you have the Client Secret and Id, let's add them to the app.
+
+The Client Id needs to be added in the `public/login.js` file, as follows
+
+```js
+  let clientId = "YOUR OWN CLIENT ID  GOES HERE";
+  let responseType = "code";
+        
+  let requestURL = `${authEndPoint}?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectURI}&state=${state}`;
+```
+
+Then, both the Client Secret and Id need to be added as environment variables on the heroku app itself at `https://dashboard.heroku.com/apps/YOUR-APP-NAME > Settings > Reveal Config Vars`
+
+<p align="center">
+  <img src="./github-images/configvars.png" >
+</p>
+
+All the other variables should be configured already, including `REDIS_URL` which is automatically added by Heroku since redis is required to deploy the app.
+
+That's it! Now you can use the app in your own servers.
+
+## Local Deployment
+
+We don't recommend using the app locally because there are too many variables in your system that may cause the app not to work correctly. Deploying to your own (and also free) heroku account is a lot easier - see the section before this one.
+
+That said, if you really want to use it locally to play around or to submit pull requests, here's a quick overview of what the steps would look like
+
+**NOTE:** Before following any of these steps, you must have a Connected App created in any dev org, see the previous section for the steps.
+
+**1.** Make sure you have NPM and NodeJs installed. 
+
+**2.** Download redis and don't change any of the default configuration. You can use this guide to see how to download it https://redis.io/topics/quickstart
+ 
+**3.** For the github repostory to your own repository. 
+
+**4.** Go to the local repository in your terminal and use the following command
+
+`npm install`
+
+This will install all the required NPM modules for the app to work
+
+**5.** In another terminal, start the redis server using the following command
+
+```
+$ redis-server
+[28550] 01 Aug 19:29:28 # Warning: no config file specified, using the default config. In order to specify a config file use 'redis-server /path/to/redis.conf'
+[28550] 01 Aug 19:29:28 * Server started, Redis version 2.2.12
+[28550] 01 Aug 19:29:28 * The server is now ready to accept connections on port 6379
+```
+
+If the command doesn't work, make sure you followed **ALL** the steps here https://redis.io/topics/quickstart
+
+**6.** Go back to your main terminal, and download the heroku CLI from here https://devcenter.heroku.com/articles/heroku-cli
+
+**7.** Create a `.env` file in the root directory of the app, here's where we are going to place all the environment variables. The file should look like this
+
+```
+OAUTH_CLIENT_ID=YOUR OWN CLIENT ID
+OAUTH_CLIENT_SECRET=YOUR OWN CLIENT SECRET
+SFDC_API_VERSION=49.0 (ANYTHING BEFORE 48.0 WON'T WORK)
+REDIS_HOST=localhost
+REDIS_PORT=6379
+SESSION_SECRET=YOUR OWN SECRET, ANY STRING
+PORT=3000
+```
+
+**7.** Once the Heroku CLI is installed, use the following command
+
+`heroku local`
+
+Then you should be able to open the app on localhost:3000. To be able to log in, you must have localhost:3000 as a callback URL in the Connected App (see the previous section for details)
+
+That's it, congratulations!
+
+## Build your own apps using the core npm library
+
+Salesforce Happy Soup is built on top of the [sfdc-soup](https://github.com/pgonzaleznetwork/sfdc-soup/tree/master) NodeJs library, which is an API that returns an entire salesforce dependency tree in different formats, including JSON, excel and others. 
+
+Head over that its repository to learn how you can create your apps. 
