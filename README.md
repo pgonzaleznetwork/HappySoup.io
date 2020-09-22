@@ -1,6 +1,10 @@
 # Salesforce Happy Soup
 ## The best way to visualize your Salesforce dependencies
 
+<a href="https://heroku.com/deploy?template=https://github.com/pgonzaleznetwork/sfdc-happy-soup/tree/master">
+  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
+</a>
+
 [Salesforce Happy Soup](https://sfdc-happy-soup.herokuapp.com/) is a **100% free** and open source heroku app that you can use to get a full view of your Salesforce org dependencies. 
 
 [Watch a quick demo, you willl start using it!](http://github.com) 
@@ -155,3 +159,17 @@ For example, the apex controller will be directly called here, and said controll
 Apex triggers are also a good example of an application entry point. For example if you want to create an unlocked package with all your opportunity functionality, creating a Deployment Boundary from the opportunity triggers would give you a good overview (though not everything) of what functionality is used by the opportunity object.
 
 ## One-click Installation to your own Heroku Account
+
+You can use the following button to quickly install/deploy the application to your own Heroku Account 
+
+<a href="https://heroku.com/deploy?template=https://github.com/pgonzaleznetwork/sfdc-happy-soup/tree/master">
+  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
+</a>
+
+This is by far the easiest way to use the app on your own servers so that you don't have to worry about security.
+
+When you click the button and log in to your Heroku account, you'll see a page similar to the following:
+
+<p align="center">
+  <img src="./happysoupmini.gif" >
+</p>
