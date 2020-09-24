@@ -138,4 +138,5 @@ function splitInBatchesOf(items,batchSize){
 
 }
 
+
 module.exports = {isDynamicReference,filterableId,getObjectNamesById,getObjectIdsByName,splitInBatchesOf}

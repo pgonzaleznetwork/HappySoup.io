@@ -280,11 +280,6 @@ function dependencyApi(connection,entryPoint,cache){
             let nextLevelIds = [];
             
             dependencies.forEach(dep => {
-
-                if(dep.id == '...'){
-                    console.log('weird thing',dep);
-                }
-
     
                 let alreadyQueried = (idsAlreadyQueried.indexOf(dep.id) != -1);
     
@@ -630,9 +625,9 @@ function dependencyApi(connection,entryPoint,cache){
      */
     async function getFieldToEntityMap(customFieldIds){
     
-        let queryString = createCustomFieldQuery(customFieldIds);
+        let soqlQuery = createCustomFieldQuery(customFieldIds);
         
-        let results = await toolingApi.query(queryString);
+        let results = await toolingApi.query(soqlQuery);
         let customFieldIdToEntityId = new Map();
     
         results.records.forEach(rec => {
@@ -648,9 +643,11 @@ function dependencyApi(connection,entryPoint,cache){
     
         let ids = utils.filterableId(customFieldIds);
     
-        return `SELECT Id, TableEnumOrId 
+        let query = `SELECT Id, TableEnumOrId 
         FROM CustomField 
         WHERE Id IN ('${ids}') ORDER BY EntityDefinitionId`;
+
+        return {query,filterById:true};
     }
     
     
@@ -666,8 +663,10 @@ function dependencyApi(connection,entryPoint,cache){
         FROM MetadataComponentDependency 
         WHERE MetadataComponentId IN ('${ids}') AND MetadataComponentType != 'FlexiPage' ORDER BY MetadataComponentName, RefMetadataComponentType`;
 
-        return query;
+        return {query,filterById:true};
     }
+
+
     
     //api returned to the client code
     return {

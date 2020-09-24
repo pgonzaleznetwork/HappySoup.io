@@ -132,8 +132,8 @@ function usageApi(connection,entryPoint,cache){
             lf.url = `${connection.url}/${fieldId}`;
         });
 
-        let queryString = createParentIdQuery(Array.from(metadataRecordToEntityMap.keys()),'CustomField','DeveloperName');
-        let results = await toolingApi.query(queryString);
+        let soqlQuery = createParentIdQuery(Array.from(metadataRecordToEntityMap.keys()),'CustomField','DeveloperName');
+        let results = await toolingApi.query(soqlQuery);
 
         let developerNamesByFieldId = new Map();
     
@@ -174,8 +174,8 @@ function usageApi(connection,entryPoint,cache){
         let objectPrefixSeparator = (type.toUpperCase() == 'LAYOUT' ? '-' : '.');
         let ids = metadataArray.map(metadata => metadata.id);
 
-        let queryString = createParentIdQuery(ids,type,parentIdField);
-        let results = await toolingApi.query(queryString);
+        let soqlQuery = createParentIdQuery(ids,type,parentIdField);
+        let results = await toolingApi.query(soqlQuery);
 
         let metadataRecordToEntityMap = new Map();
     
@@ -251,9 +251,11 @@ function usageApi(connection,entryPoint,cache){
 
         ids = utils.filterableId(ids);
     
-        return `SELECT Id, ${selectFields}
+        let query = `SELECT Id, ${selectFields}
         FROM ${type} 
         WHERE Id IN ('${ids}') ORDER BY EntityDefinitionId`;
+
+        return {query,filterById:true};
 
     }
 
@@ -261,10 +263,12 @@ function usageApi(connection,entryPoint,cache){
     
     function createUsageQuery(id){
 
-        return `SELECT MetadataComponentId, MetadataComponentName,MetadataComponentType,MetadataComponentNamespace, RefMetadataComponentName, RefMetadataComponentType, RefMetadataComponentId,
+        let query = `SELECT MetadataComponentId, MetadataComponentName,MetadataComponentType,MetadataComponentNamespace, RefMetadataComponentName, RefMetadataComponentType, RefMetadataComponentId,
         RefMetadataComponentNamespace 
         FROM MetadataComponentDependency 
-        WHERE RefMetadataComponentId  = '${id}' ORDER BY MetadataComponentType`
+        WHERE RefMetadataComponentId  = '${id}' ORDER BY MetadataComponentType`;
+
+        return {query,filterById:true};
 
     }
 

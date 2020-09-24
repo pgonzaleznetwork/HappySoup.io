@@ -5,6 +5,7 @@ let serverSessions = require('./serverSessions');
 let {cacheApi} = require('./caching')
 let dependencyApi = require('../sfdc_apis/dependencies');
 let usageApi = require('../sfdc_apis/usage');
+let toolingAPI = require('../sfdc_apis/tooling');
 
 let redisClient;
 
@@ -29,10 +30,31 @@ async function listMetadataJob(job){
     let {sessionId,mdtype} = job.data;
     let session = await getSession(sessionId);
 
-    let mdapi = metadataApi(serverSessions.getConnection(session));
-    let results = await mdapi.listMetadata(mdtype);
+    let results;
 
-    results = results.map(metadata => `${metadata.fullName}:${metadata.id}`);
+    /**
+    * Retrieving ApexClass names with the listMetadata() call of the Metadata API is very very slow
+    * so for this specific metadata type, we use the Tooling API with the queryMore() call to be able to query
+    * the members in batches, which results in much better performance 
+    */
+    if(mdtype === 'ApexClass'){
+
+      let toolingApi = toolingAPI(serverSessions.getConnection(session));
+
+      let query = `SELECT Id,Name FROM ApexClass`;
+      let soqlQuery = {query,filterById:false};
+  
+      let jsonResponse = await toolingApi.query(soqlQuery);
+  
+      results = jsonResponse.records.map(record => `${record.Name}:${record.Id}`)
+    }
+    //for any other metadata type, we use the Metadata API
+    else {
+      let mdapi = metadataApi(serverSessions.getConnection(session));
+      results = await mdapi.listMetadata(mdtype);
+  
+      results = results.map(metadata => `${metadata.fullName}:${metadata.id}`);
+    }
 
     let cache = cacheApi(session.cache);
     let cacheKey = `list-${mdtype}`;

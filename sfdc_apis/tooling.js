@@ -7,16 +7,18 @@ let utils = require('../services/utils');
 
 function toolingAPI(connection){
 
-    async function query(queryString){
+    async function query(soqlQuery){
+
+        let jsonResponse;
 
         let endpoint = connection.url+endpoints.toolingApi;
-        let request = endpoint+encodeURIComponent(queryString); 
+        let request = endpoint+encodeURIComponent(soqlQuery.query); 
         let options = getFetchOptions(connection.token);    
 
-        if(tooManyIds(queryString)){
-            let json = await tryWithSmallerQueries(queryString,endpoint,options);
-            return json;
+        if(soqlQuery.filterById && tooManyIds(soqlQuery.query)){
+            jsonResponse = await tryWithSmallerQueries(soqlQuery.query,endpoint,options);
         }
+
         else{
 
             let res = await fetch(request,options);
@@ -24,35 +26,76 @@ function toolingAPI(connection){
             if(!res.ok){
 
                 if(hitRequestSizeLimit(res)){
-                    let json = await tryWithSmallerQueries(queryString,endpoint,options);
-                    return json;
+                    jsonResponse = await tryWithSmallerQueries(soqlQuery.query,endpoint,options);
                 }
 
-                else{
-                    throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
-                }  
+                else throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');   
             }
 
-            let json = await res.json();
-
-            if(isFailedResponse(json)){
-                let apiError = new Error();
-                apiError.statusCode = 404;
-                apiError.name = 'no-sfdc-connection';
-                apiError.message = json[0].message;
-                throw apiError;
-                
-            }
             else{
-                return json;
-            }
+
+                jsonResponse = await res.json();
+
+                if(isFailedResponse(jsonResponse)){
+                    throw createApiError(jsonResponse);
+                }
+    
+                if(!jsonResponse.done){
+                    let queryMoreRequest = getQueryMoreRequest();
+                    await queryMoreRequest.exec(jsonResponse.nextRecordsUrl,connection,options);
+                    jsonResponse.records.push(...queryMoreRequest.getRecords());
+                }
+            }  
         }
+
+        return jsonResponse;
     }
 
     return {query}
 
 }
 
+function createApiError(jsonResponse){
+    let apiError = new Error();
+    apiError.statusCode = 404;
+    apiError.name = 'no-sfdc-connection';
+    apiError.message = jsonResponse[0].message;
+    return apiError;
+}
+
+
+function getQueryMoreRequest(){
+
+    let records = [];
+
+    async function exec(nextRecordsUrl,connection,fechOptions){
+
+        let endpoint = connection.url+nextRecordsUrl;
+        let res = await fetch(endpoint,fechOptions);
+
+        if(!res.ok){            
+            throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
+        }
+
+        let jsonResponse = await res.json();
+
+        if(isFailedResponse(jsonResponse)){
+            throw createApiError(jsonResponse);
+        }
+
+        records.push(...jsonResponse.records);
+
+        if(!jsonResponse.done){
+            await exec(jsonResponse.nextRecordsUrl,connection,fechOptions);
+        }
+    }
+
+    function getRecords(){
+        return records;
+    }
+
+    return {exec,getRecords};
+}
 
 function tooManyIds(queryString){
     let allIds = getIds(queryString);
@@ -97,11 +140,7 @@ async function tryWithSmallerQueries(queryString,endpoint,options){
                 let json = await res.json();
 
                 if(isFailedResponse(json)){
-                    let apiError = new Error();
-                    apiError.statusCode = 404;
-                    apiError.name = 'no-sfdc-connection';
-                    apiError.message = json[0].message;
-                    throw apiError;
+                    throw createApiError(json);
                     
                 }
                 else{
