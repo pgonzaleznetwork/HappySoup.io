@@ -142,6 +142,10 @@ const SFDM = function(){
                 })
                 
                 autocompleteApi.autocomplete(inputField, members);
+
+                //rename the selected option to display the number of metadata members
+                let selectedOption = mdDropDown.options[mdDropDown.selectedIndex];
+                selectedOption.label = `${selectedOption.innerText} (${members.length})`;
     
                 utils.enableInputField(inputField);
                 utils.toggleDropdown(mdDropDown,false);

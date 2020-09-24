@@ -77,14 +77,16 @@ function getQueryMoreRequest(){
             throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
         }
 
-        if(isFailedResponse(res)){
-            throw createApiError(res);
+        let jsonResponse = await res.json();
+
+        if(isFailedResponse(jsonResponse)){
+            throw createApiError(jsonResponse);
         }
 
-        records.push(...res.records);
+        records.push(...jsonResponse.records);
 
-        if(!res.done){
-            await exec(res.nextRecordsUrl,connection,fechOptions);
+        if(!jsonResponse.done){
+            await exec(jsonResponse.nextRecordsUrl,connection,fechOptions);
         }
     }
 
