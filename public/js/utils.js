@@ -44,12 +44,18 @@ function toggleDropdown(dropdown,disabled){
     dropdown.style.cursor = (disabled ? 'not-allowed' : '');
 }
 
-function createWarning(text){
+function createWarning(text,options){
+
+    let textProperty = 'innerText';
+
+    if(options && options.html){
+        textProperty = 'innerHTML';
+    }
  
     let warningTemplate = document.querySelector('#warning-template');
     let clone = warningTemplate.content.cloneNode(true);
     let warningText = clone.getElementById('warning-template-text');
-    warningText.innerText = text;
+    warningText[textProperty] = text;
     return clone;
 }
 

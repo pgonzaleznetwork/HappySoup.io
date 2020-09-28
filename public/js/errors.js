@@ -14,8 +14,9 @@ export function handleError(error){
         ${error.stack}`);     
     }
     else{
-        appendWarning(`An error occurred. Please contact the developer of this application and provide the following error: ${error.message} 
-        ${error.stack}`);
+        appendWarning(`We are sorry, something went wrong. Please click <a style="font-weight: bold" href="https://github.com/pgonzaleznetwork/sfdc-happy-soup/issues/new?title=${error.message}&body=${error.stack}" target="_blank">here</a> to log a Github 
+        issue with the following details: ${error.message} 
+        ${error.stack}`,{html:true});
     }
 }
 
@@ -30,7 +31,7 @@ function disableFieldsAndLoaders(){
     utils.hideLoader();
 }
 
-function appendWarning(text){
+function appendWarning(text,options){
 
     let dependecyTreePlaceholder = byId("dependency-tree-placeholder");
     let usageTreePlaceholder = byId("usage-tree-placeholder");
@@ -38,5 +39,5 @@ function appendWarning(text){
     dependecyTreePlaceholder.innerHTML = '';
     usageTreePlaceholder.innerHTML = '';
     
-    dependecyTreePlaceholder.appendChild(utils.createWarning(text));
+    dependecyTreePlaceholder.appendChild(utils.createWarning(text,options));
 }
