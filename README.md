@@ -104,6 +104,8 @@ This is **not a trivial thing to do** but Salesforce Happy Soup does it for you 
 
 When you use the Deployment Boundary feature, the app will give you all the metadata that is needed to be able to deploy that component. You can then export this data in either an excel/csv or package.xml format (in which case you can immediately retrieve it from your org and package it!).
 
+[Back to top](#salesforce-happy-soup)
+
 ## Impact Analysis
 
 The Impact Analysis feature allows to see most of the places where a given metadata is used. 
@@ -122,7 +124,7 @@ For example, changing a picklist value or changing a field type could have side-
 Don't break your org! Use the Impact Analysis feature before making any changes so that you are fully aware of what areas could be impacted.
 
 
-
+[Back to top](#salesforce-happy-soup)
 
 ## :thumbsup: Features
 
@@ -132,6 +134,8 @@ Don't break your org! Use the Impact Analysis feature before making any changes 
 *  Intuitive UI, easy to follow tree structure :white_check_mark: 
 *  Log in from anywhere, no installation required :white_check_mark: 
 *  Available for self-hosting locally or on your own Heroku account :white_check_mark: 
+
+[Back to top](#salesforce-happy-soup)
 
 ## :no_entry_sign: Security 
 
@@ -171,6 +175,8 @@ Every time a request is made to the app, the request goes through the following 
 * Once CORS is validated, we check that the request contains a cookie, which is encrypted. The cookie is then used to retrieve a server-side session. If the session does not exist or has expired, the user is sent back to the login page.
 * Once the server-side session is verified, we check that the user has a valid session with their Salesforce org. If the user doesn't have a valid session with Salesforce, we send the user back to the login page.
 
+[Back to top](#salesforce-happy-soup)
+
 ## How we enhaced the MetadataComponentDependency API
 
 Salesforce Happy Soup is built on top of the `MetadataComponentDependency` tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!)
@@ -187,6 +193,8 @@ Salesforce Happy Soup is built on top of the `MetadataComponentDependency` tooli
 
 As said above, Salesforce Happy Soup has **fixed all** this issues so that you can focus on learning about your dependencies rather than fighting the API! :facepunch:
 
+[Back to top](#salesforce-happy-soup)
+
 ## Best Practices for Deployment Boundaries
 
 When using the Deployment Boundary feature, you should try to identify the top-most, entry point of your application or business process. Some examples:
@@ -200,6 +208,8 @@ For example, the apex controller will be directly called here, and said controll
 **Apex Triggers**
 
 Apex triggers are also a good example of an application entry point. For example if you want to create an unlocked package with all your opportunity functionality, creating a Deployment Boundary from the opportunity triggers would give you a good overview (though not everything) of what functionality is used by the opportunity object.
+
+[Back to top](#salesforce-happy-soup)
 
 ## One-click Deployment to your own Heroku Account
 
@@ -266,6 +276,8 @@ All the other variables should be configured already, including `REDIS_URL` whic
 
 That's it! Now you can use the app in your own servers.
 
+[Back to top](#salesforce-happy-soup)
+
 ## Local Deployment
 
 We don't recommend using the app locally because there are too many variables in your system that may cause the app not to work correctly. Deploying to your own (and also free) heroku account is a lot easier - see the section before this one.
@@ -319,8 +331,12 @@ Then you should be able to open the app on localhost:3000. To be able to log in,
 
 That's it, congratulations!
 
+[Back to top](#salesforce-happy-soup)
+
 ## Build your own apps using the core npm library
 
 Salesforce Happy Soup is built on top of the [sfdc-soup](https://github.com/pgonzaleznetwork/sfdc-soup/tree/master) NodeJs library, which is an API that returns an entire salesforce dependency tree in different formats, including JSON, excel and others. 
 
 Head over that its repository to learn how you can create your apps. 
+
+[Back to top](#salesforce-happy-soup)
