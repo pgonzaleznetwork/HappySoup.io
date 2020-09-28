@@ -1,9 +1,12 @@
 # Salesforce Happy Soup
 ## The best way to visualize your Salesforce dependencies
 
-<a href="https://heroku.com/deploy?template=https://github.com/pgonzaleznetwork/sfdc-happy-soup/tree/master" target="_blank">
-  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
-</a>
+<div style="margin-bottom:10px">
+  <a href="https://heroku.com/deploy?template=https://github.com/pgonzaleznetwork/sfdc-happy-soup/tree/master" target="_blank">
+    <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
+  </a>
+</div>
+
 
 [Salesforce Happy Soup](https://sfdc-happy-soup.herokuapp.com/) is a **100% free** and open source heroku app that you can use to get a full view of your Salesforce org dependencies. 
 
@@ -26,8 +29,10 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 
 ## Contents
 
-* [Deployment Boundaries](#deployment-boundaries)
+* [What is a Happy Soup?](#what-is-a-happy-soup)
 * [Who is this for](#question-who-is-this-for)
+* [Deployment Boundaries](#deployment-boundaries)
+* [Impact Analysis](#impact-analysis)
 * [Features](#thumbsup-features)
 * [Security](#no_entry_sign-security)
 * [How we enhaced the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api)
@@ -36,17 +41,46 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 * [Local deployment](#local-deployment)
 * [Build your own apps using the core npm library](#Build-your-own-apps-using-the-core-npm-library)
 
+## What is a Happy Soup?
+
+> *As a long-time customer, you’ve built apps and customizations on the platform for several releases. The more you customize and build on the platform, the more complexity you create in your org. Your single Salesforce org has become a huge container for all the metadata you’re managing and interacting with. We refer to this horn of plenty as your “happy soup.”* **[Trailhead](https://trailhead.salesforce.com/content/learn/modules/unlocked-packages-for-customers/break-up-your-metadata)**
+
+## Who is this for
+
+**Developers & Architects**
+
+* Discover [Deployment Boundaries](#deployment-boundaries) that can be the baseline for a scratch org or unlocked packages
+* Quickly get a package.xml of your deployment boundary
+* Get immediately insights with built-in charts
+* Drill down to the last dependent metadata in an easy to follow tree structure
+
+**Administrators** 
+
+* Find all the metadata used in page layout (fields, buttons, inline pages, etc) and export it to excel to review opportunities for optimization
+* Don't break your org! Know the impact of making changes to a field, validation rule, etc 
+
+
 ## Deployment Boundaries
 
-Jump to the the [Who is this for](#question-who-is-this-for) for section to see how **:star:admins and developers:star:** can also use this app. 
+#### Why Scratch Orgs and Unlocked Packages have seen adoption :disappointed:
 
-#### Why Salesforce DX has seen poor adoption :disappointed:
+Salesforce DX introduced the idea of breaking down your org into packages with discrete and modular functionality. Anyone trying to buy into this idea is faced with the following challenges:
 
-Salesforce DX introduced the idea of breaking down your org into packages with discrete and modular functionality. 
+> * How do you know what metadata can be grouped into a package?
+> * How do you tell what that metadata depends on?
+> * How do you know what metadata is required for a feature to exist?
 
-Unfortunately, the actual steps do that are very complicated and has led to poor adoption of scratch orgs and unlocked packages. With this realization, Salesforce released the Metadata Dependencies API (`MetadataComponentDependency`), which allows you to see where your metadata is used or what it uses.
+Unfortunately, Salesforce DX doesn't provide an answer to these challenges, and it would take most organizations years to be able to split their org in this way.
+
+This has led to poor adoption of scratch orgs and unlocked packages. 
+
+
+
+With this realization, Salesforce released the Metadata Dependencies API (`MetadataComponentDependency`), which allows you to see where your metadata is used or what it uses.
 
 #### The real problem :thumbsdown:
+
+So with the new API now organizations can "easily" see where their metadata is used and start their journey to unlocked packages. **This is an oversimplification** . 
 
 It's **not enough** to see where an apex class is used, or what it uses. To be able to take a group of metadata and convert it into an unlocked package/scratch org, you need to be able to answer the question:
 
@@ -70,20 +104,25 @@ This is **not a trivial thing to do** but Salesforce Happy Soup does it for you 
 
 When you use the Deployment Boundary feature, the app will give you all the metadata that is needed to be able to deploy that component. You can then export this data in either an excel/csv or package.xml format (in which case you can immediately retrieve it from your org and package it!).
 
+## Impact Analysis
 
-## Who is this for
+The Impact Analysis feature allows to see most of the places where a given metadata is used. 
 
-**Administrators** 
+A common requirement Salesforce customers have is to know where a custom field is used to understand the implications of making changes to that field.
 
-* Find all the metadata used in page layout (fields, buttons, inline pages, etc) and export it to excel to review opportunities for optimization.
-* Don't break your org! Know the impact of making changes to a field, validation rule, etc 
+For example, changing a picklist value or changing a field type could have side-effects on:
 
-**Developers & Architects**
+* Reports
+* Report Types
+* Email Templates
+* Aura/LWC Components
+* Apex classes
+* etc
 
-* Discover **deployment boundaries** that can be the baseline for a scratch org or unlocked packages
-* Quickly get a package.xml of your deployment boundary
-* Get immediately insights with built-in charts
-* Drill down to the last dependent metadata in an easy to follow tree structure
+Don't break your org! Use the Impact Analysis feature before making any changes so that you are fully aware of what areas could be impacted.
+
+
+
 
 ## :thumbsup: Features
 

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/autocomplete.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <script src="js/main.js" type="module"></script>
-    <title>Salesforce Happy Soup</title>
+    <title>Happy Soup</title>
     <!-- endbuild -->
 </head>
 
@@ -23,7 +23,7 @@
     <header>
         <div class="logo">
             <div><img src='images/circle-cropped.png' width="80px" height="80px"/></div>
-            <div><h3>Salesforce Happy Soup</h3></div>
+            <div><h3>Happy Soup</h3></div>
         </div>
         <p style="font-size: 13px;">The best way to visualize your Salesforce dependencies</p>
         <nav>
@@ -82,10 +82,10 @@
         <div class="loader"></div>
         <ul>
             <p id="deps-help" class="help-text">This is the metadata <span style="font-weight: bold">referenced by / called from </span><span id="deps-help-name"></span> and 
-                <span style="font-weight: bold">all its descendants</span>. This represents the deployment boundary. <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#the-best-feature---deployment-boundaries" target="_blank"> Learn more</a></p>
+                <span style="font-weight: bold">all its descendants</span>. This represents the deployment boundary. <a style="font-weight: bold" href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#deployment-boundaries" target="_blank"> Learn more <i class="fa fa-external-link"></i></a></p>
 
             <p id="usage-help" class="help-text">This is the metadata <span style="font-weight: bold">that uses/references </span><span id="usage-help-name"></span>. Changes made to it
-                could have side effects on all this metadata.</p>
+                could have side effects on all this metadata. <a style="font-weight: bold" href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#impact-analysis" target="_blank"> Learn more <i class="fa fa-external-link"></i></a></p>
 
             <div id="usage-tree-placeholder">
             </div>

@@ -11,9 +11,12 @@ body{
 .logo{
     display:flex;
     flex-direction: row;
-    justify-content:space-between;
     width: 310px;
     align-items: center;
+}
+
+.logo h3{
+    margin-left:20px;
 }
 
 
