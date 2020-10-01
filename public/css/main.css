@@ -456,3 +456,23 @@ select {
 .metadata-info .prop{
     font-weight: bold;
 }
+
+
+.class-info{
+    border: 1px solid white;
+    border-radius: 50px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-left: 5px;
+    padding-top: 0px;
+    padding-bottom: 1px;
+    font-size: 11px;
+}
+
+.write{
+    background-color: #d63031;
+}
+
+.read{
+    background-color: #49b677;
+}

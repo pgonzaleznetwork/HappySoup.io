@@ -20,12 +20,15 @@ No **development knowledge** required :x:
 
 Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup! :stew: :clap: :white_check_mark:
 
+[Watch full demo](https://www.youtube.com/watch?v=2asljhebqlY&t=6s) 
 
 <p align="center">
   <img src="./github-images/happysoupmini.gif" >
 </p>
 
-[Watch full demo](https://www.youtube.com/watch?v=NH4LGbdYaaE) 
+
+
+
 
 ## Contents
 
@@ -190,6 +193,8 @@ Salesforce Happy Soup is built on top of the `MetadataComponentDependency` tooli
 * Global Value Sets are not returned when picklist fields depend on them. 
 
 * Lookup filters are returned with cryptic names depending on whether they belong to a custom object or a standard one. 
+
+* The app will tell you if a field is used in an apex class in read or write mode. For example, if a field is used in an assignment expression, then you know the class is assigning values to that field. The app will show you this with a visual indicator; something that the raw API cannot do.  
 
 As said above, Salesforce Happy Soup has **fixed all** this issues so that you can focus on learning about your dependencies rather than fighting the API! :facepunch:
 

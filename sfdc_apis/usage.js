@@ -64,6 +64,7 @@ function usageApi(connection,entryPoint,cache){
         let customFields = [];
         let layouts = [];
         let lookupFilters = [];
+        let apexClasses = [];
         let otherMetadata = [];
 
         metadataArray.forEach(metadata => {
@@ -84,6 +85,9 @@ function usageApi(connection,entryPoint,cache){
             else if(type == 'LOOKUPFILTER'){ 
                 lookupFilters.push(metadata);
             }
+            else if(type == 'APEXCLASS' && entryPoint.type == 'CustomField'){ 
+                apexClasses.push(metadata);
+            }
             else{
                 otherMetadata.push(metadata);
             }
@@ -101,14 +105,70 @@ function usageApi(connection,entryPoint,cache){
         if(lookupFilters.length){
             lookupFilters = await getLookupFilterDetails(lookupFilters);
         }
+        if(apexClasses.length){
+            apexClasses = await getFieldUsageMode(apexClasses);
+        }
 
         otherMetadata.push(...customFields);
         otherMetadata.push(...validationRules);
         otherMetadata.push(...layouts);
         otherMetadata.push(...lookupFilters);
+        otherMetadata.push(...apexClasses);
 
         return otherMetadata;
 
+    }
+
+    /**
+     * We know that the field is referenced in this class, but is it
+     * used for reading or assignment? We determine that here by checking
+     * if the field is used in an assignment expression in the body of the class
+     */
+    async function getFieldUsageMode(apexClasses){
+
+        //i.e field_name__c without the object prefix
+        let refCustomField = entryPoint.name.split('.')[1];
+
+        /**
+         * This matches on custom_field__c = but it does NOT match
+         * on custom_field__c == because the latter is a boolean exp
+         * and we are searching for assignment expressions
+         * gi means global and case insensitive search
+         */
+        let assignmentExp = new RegExp(`${refCustomField}=(?!=)`,'gi');
+
+        let ids = apexClasses.map(ac => ac.id);
+        ids = utils.filterableId(ids);
+
+        let query = `SELECT Id,Name,Body FROM ApexClass WHERE Id IN ('${ids}')`;
+        let soqlQuery = {query,filterById:true};
+    
+        let results = await toolingApi.query(soqlQuery);
+
+        let classBodyById = new Map();
+    
+        results.records.forEach(rec => {
+            classBodyById.set(rec.Id,rec.Body);
+        });
+
+        
+        apexClasses.forEach(ac => {
+
+            //by default we assume that the mode is read only
+            ac.fieldMode = 'read';
+
+            let body = classBodyById.get(ac.id);
+            if(body){
+                //remove all white space/new lines
+                body = body.replace(/\s/g,'');
+
+                if(body.match(assignmentExp)){
+                    ac.fieldMode = 'write';
+                }
+            }
+        });
+
+        return apexClasses;
     }
 
     async function getLookupFilterDetails(lookupFilters){

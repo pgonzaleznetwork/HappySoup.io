@@ -80,6 +80,10 @@ function createTreeNodes(refs,parentNode){
     if(member.namespace){
       memberNodeName.appendChild(createWarningIcon());
     }
+
+    if(member.fieldMode){
+      memberNodeName.appendChild(createPill(member.fieldMode));
+    }
   
     memberNames.appendChild(memberNodeName);
     metadataTypeNode.appendChild(memberNames);
@@ -100,6 +104,13 @@ function createTreeNodes(refs,parentNode){
     let warningIcon = document.createElement('i');
     warningIcon.classList.add('fa', 'fa-exclamation-triangle');
     return warningIcon;
+  }
+
+  function createPill(text){
+    let pill = document.createElement('span');
+    pill.classList.add(...['class-info',text]);
+    pill.innerText = text;
+    return pill;
   }
 
   export const treeApi = {
