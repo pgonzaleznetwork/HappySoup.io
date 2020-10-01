@@ -53,7 +53,7 @@ footer{
     font-size: 13px;
 }
 
-a:visited{
+a,a:visited{
     color:#ecf0f1;;
 }
 
