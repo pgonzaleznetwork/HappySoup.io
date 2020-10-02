@@ -228,11 +228,11 @@ This is by far the easiest way to use the app on your own servers so that you do
 
 When you click the button and log in to your Heroku account, you'll see a page similar to the following:
 
+**NOTE** When you see this page, you can add **dummy** values on the empty Config Vars. We'll come back and edit them with the real values at a later step.
+
 <p align="center">
   <img src="./github-images/herokudeployment.png" >
 </p>
-
-To get started, add dummy values on all the empty Config Vars, we'll come back to change those later.
 
 Once you've added dummy values, just click the **Deploy App** button. Once the app is deployed, you'll be able to launch it and at a minimum, see the login page. Congratulations!!
 
@@ -240,7 +240,7 @@ Now, the steps to get the app fully working are as follows:
 
 **1. Create a Connected App in any org**
 
-For the app to be able to use OAuth tokens, it needs to be connected to a Connected App. The original app uses a Connected App that lives in one of our orgs; for your own app you can then use a Connected App in any org as well - We recommend using a dev org.
+For the app to be able to use OAuth tokens, it needs to be connected to a Connected App. The original app uses a Connected App that lives in one of our orgs; for your own app you can then use a Connected App in **any org** as well - it really doesn't matter what org it is, but we recommend using a dev or production org because sandboxes are eventually refreshed.
 
 The OAuth configuration for the Connected App needs to look like this:
 
@@ -258,26 +258,29 @@ Note that if you changed the default `PORT` environment variable in the deployme
 
 Once you have created the Connected App, get the Client Secret and Client Id; we'll need them in the next step.
 
-**2. Adding OAuth config**
+**2. Editing the Config Vars**
 
-Now that you have the Client Secret and Id, let's add them to the app.
+Finally we come back to the Config Vars.
 
-The Client Id needs to be added in the `public/login.js` file, as follows
-
-```js
-  let clientId = "YOUR OWN CLIENT ID  GOES HERE";
-  let responseType = "code";
-        
-  let requestURL = `${authEndPoint}?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectURI}&state=${state}`;
-```
-
-Then, both the Client Secret and Id need to be added as environment variables on the heroku app itself at `https://dashboard.heroku.com/apps/YOUR-APP-NAME > Settings > Reveal Config Vars`
+You can edit the Config Vars at at `https://dashboard.heroku.com/apps/YOUR-APP-NAME > Settings > Reveal Config Vars`
 
 <p align="center">
   <img src="./github-images/configvars.png" >
 </p>
 
 All the other variables should be configured already, including `REDIS_URL` which is automatically added by Heroku since redis is required to deploy the app.
+
+These are the Config Vars that you **MUST** add for the app to work:
+
+**OAUTH_CLIENT_ID**: This is the Client Id that you just got from your connected app.
+
+**OAUTH_CLIENT_SECRET**: This is the Client Secret that you just got from your connected app.
+
+**SESSION_SECRET**: Just put any random string, like `349605ygtdhht%&^&^` (NOT this one though!)
+
+**CORS_DOMAINS**: This must be the full URL of your heroku app. For example, my version of the app lives at `https://sfdc-happy-soup.herokuapp.com`
+
+You **must** specify the full URL of your heroku app, which is the `App Name` that you provided at the very beginning. So your full URL will be `https://THE-NAME-YOU-CHOSE.herokuapp.com`
 
 That's it! Now you can use the app in your own servers.
 
