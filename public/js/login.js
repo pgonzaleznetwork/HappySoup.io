@@ -4,7 +4,12 @@ import {byId} from './utils.js'
 
 window.onload = init();
 
-function init(){
+async function init(){
+
+    let res = await fetch('/api/oauthinfo');
+    let json = await res.json();
+
+    let clientId = json;
 
     let params = new URLSearchParams(location.search);
 
@@ -96,7 +101,6 @@ function init(){
             'redirectURI':redirectURI
         });
         
-        let clientId = "3MVG9I5UQ_0k_hTmZuUMosHPf.2zqzHBqd0j.GMmnThrGhd53n4prfPpHNqSAPRrWzc7Hb0ul.s2m4VYoiWyZ";
         let responseType = "code";
         
         let requestURL = `${authEndPoint}?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectURI}&state=${state}`;
