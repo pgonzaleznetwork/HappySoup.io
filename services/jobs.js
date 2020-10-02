@@ -32,16 +32,11 @@ async function listMetadataJob(job){
 
     let results;
 
-    /**
-    * Retrieving ApexClass names with the listMetadata() call of the Metadata API is very very slow
-    * so for this specific metadata type, we use the Tooling API with the queryMore() call to be able to query
-    * the members in batches, which results in much better performance 
-    */
-    if(mdtype === 'ApexClass'){
+    if(shouldUseToolingApi(mdtype)){
 
       let toolingApi = toolingAPI(serverSessions.getConnection(session));
 
-      let query = `SELECT Id,Name FROM ApexClass`;
+      let query = `SELECT Id,Name FROM ${mdtype}`;
       let soqlQuery = {query,filterById:false};
   
       let jsonResponse = await toolingApi.query(soqlQuery);
@@ -103,6 +98,22 @@ async function getSession(sessionId){
     let result = await redisGet(sessionId);
     let session = JSON.parse(result);
     return session;
+}
+
+/**
+* Retrieving ApexClass names with the listMetadata() call of the Metadata API is very very slow
+* so for this specific metadata type, we use the Tooling API with the queryMore() call to be able to query
+* the members in batches, which results in much better performance 
+*
+* On the other hand, email templates cannot be queried with listMetadata() unless you specify
+* the folder name (which is a pain) so we fallback to the tooling api
+*/
+function shouldUseToolingApi(type){
+
+  let types = ['ApexClass','EmailTemplate'];
+
+  return types.includes(type);
+
 }
 
 module.exports = {dependencyJob,usageJob,listMetadataJob};

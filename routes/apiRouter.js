@@ -225,15 +225,28 @@ apiRouter.route('/job/:id')
 
 
 function getSupportedMetadataTypes(){
+
     return [
-        'ApexClass','ApexPage','ApexTrigger',
-        'ApexComponent','Layout','ValidationRule',
-        'WebLink','CustomField','Flow','AuraDefinitionBundle'
-    ]
+        {label:'Apex Class',value:'ApexClass'},
+        {label:'Visualforce Page',value:'ApexPage'},
+        {label:'Visualforce Component',value:'ApexComponent'},
+        {label:'Apex Trigger',value:'ApexTrigger'},
+        {label:'Page Layout',value:'Layout'},
+        {label:'Custom Button',value:'WebLink'},
+        {label:'Flow / Process',value:'Flow'},
+        {label:'Custom Field',value:'CustomField'},
+        {label:'Custom Label',value:'CustomLabel'},
+        {label:'Email Template',value:'EmailTemplate'},
+        {label:'Lightning Component (Aura)',value:'AuraDefinitionBundle'},
+        {label:'Lightning Web Component',value:'LightningComponentBundle'}
+    ];
 }
 
 function isSupported(type){
-    return (getSupportedMetadataTypes().indexOf(type) != -1);
+
+    let supportedTypes = getSupportedMetadataTypes().map(type => type.value);
+
+    return (supportedTypes.indexOf(type) != -1);
 }
 
 

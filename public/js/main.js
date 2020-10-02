@@ -68,8 +68,8 @@ const SFDM = function(){
 
             types.forEach(type => {
                 let option = document.createElement('option');
-                option.value = type;
-                option.innerText = type;
+                option.value = type.value;
+                option.innerText = type.label;
                 mdDropDown.appendChild(option);
             })
         }
