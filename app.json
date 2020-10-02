@@ -24,6 +24,10 @@
     "SESSION_SECRET":{
         "description":"A random word that you must specify. This will be used to encrypt the session cookies"
     },
+    "CORS_DOMAINS":{
+      "description":"A comma separated list of domains. You must change the 2nd domain with YOUR OWN heroku app name. This can be done now or after deployment",
+      "value":"http://localhost,https://YOUR-APP-NAME.herokuapp.com"
+    },
     "PORT":{
         "description":"The port where the app is running",
         "value":"3000"

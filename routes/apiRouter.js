@@ -8,7 +8,7 @@ let Queue = require('bull');
 let REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 let workQueue = new Queue('happy-soup', REDIS_URL)
 
-let whitelist = ['http://localhost', 'https://qa-sfdc-happy-soup.herokuapp.com','https://sfdc-happy-soup.herokuapp.com'];
+let whitelist = process.env.CORS_DOMAINS.split(',');
 
 let corsOptions = {
   origin: function (origin, callback) {
@@ -188,6 +188,15 @@ apiRouter.route('/deletecache')
         //NEED TO READ ABOUT GC
         req.session.cache = initCache();
         res.sendStatus(200);
+    }
+);
+
+apiRouter.route('/oauthinfo')
+
+.get(
+    cors(corsOptions),
+    async (req,res,next) => {
+        res.status(200).json(process.env.OAUTH_CLIENT_ID);
     }
 );
 
