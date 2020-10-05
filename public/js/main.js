@@ -45,6 +45,22 @@ const SFDM = function(){
         function loadServerInfo(){
             getSupportedMetadataTypes();
             getIdentityInfo();
+            getInstanceURL();
+        }
+
+        async function getInstanceURL(){
+
+            try {
+                let res = await fetch('/api/oauthinfo/instanceurl');
+                let json = await res.json();
+
+                let instanceURL = json;
+
+                localStorage.setItem('lastUsedDomain',instanceURL);
+
+            } catch (error) {
+                //no error handling required because this is not critical to the app functionality
+            }
         }
 
         async function getIdentityInfo(){
