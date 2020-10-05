@@ -6,7 +6,7 @@ window.onload = init();
 
 async function init(){
 
-    let res = await fetch('/api/oauthinfo');
+    let res = await fetch('/api/oauthinfo/clientid');
     let json = await res.json();
 
     let clientId = json;
@@ -42,6 +42,14 @@ async function init(){
      */
     if(!params.has('no-session')){
         window.location = '/dependencies?session-active=true';
+    }
+
+    let lastUsedDomain = localStorage.getItem('lastUsedDomain');
+
+    if(lastUsedDomain){
+        byId('environment').value = 'domain';
+        byId('domain-input').value = lastUsedDomain;
+        byId('domain-input-area').classList.remove('base-remove');
     }
 
     byId('environment').addEventListener('change',event => {
@@ -90,6 +98,10 @@ async function init(){
         }
         else{
             baseURL = `https://${host}.salesforce.com`;
+        }
+
+        if(host === 'domain'){
+            localStorage.setItem('lastUsedDomain',baseURL);
         }
 
         let authEndPoint = `${baseURL}/services/oauth2/authorize`;

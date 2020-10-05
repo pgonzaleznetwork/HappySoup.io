@@ -191,12 +191,22 @@ apiRouter.route('/deletecache')
     }
 );
 
-apiRouter.route('/oauthinfo')
+apiRouter.route('/oauthinfo/clientid')
 
 .get(
     cors(corsOptions),
     async (req,res,next) => {
         res.status(200).json(process.env.OAUTH_CLIENT_ID);
+    }
+);
+
+apiRouter.route('/oauthinfo/instanceurl')
+
+.get(
+    cors(corsOptions),
+    serverSessions.validateSessions,
+    async (req,res,next) => {
+        res.status(200).json(req.session.oauthInfo.instance_url);
     }
 );
 

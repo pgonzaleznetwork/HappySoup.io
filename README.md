@@ -2,7 +2,7 @@
 ## The best way to visualize your Salesforce dependencies
 
 <div style="margin-bottom:10px">
-  <a href="https://heroku.com/deploy?template=https://github.com/pgonzaleznetwork/sfdc-happy-soup/tree/master" target="_blank">
+  <a href="#one-click-deployment-to-your-own-heroku-account">
     <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
   </a>
 </div>
