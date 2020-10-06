@@ -97,10 +97,17 @@ function usageApi(connection,entryPoint,cache){
             customFields = await addParentNamePrefix(customFields,'TableEnumOrId');
         }
         if(validationRules.length){
-            validationRules = await addParentNamePrefix(validationRules,'EntityDefinitionId');
+            /**
+             * Only the version 33.0 of the tooling API supports the TableEnumOrId column on the ValidationRule object. On higher versions
+             * only the EntityDefinitionId is available but this returns the 15 digit Id of the object, whereas everywhere else in the API
+             * the 18 digit version is returned.
+             * 
+             * So here we force the API call to be made against the 33.0 version so that we can use the 18 digit TableEnumOrId
+             */
+            validationRules = await addParentNamePrefix(validationRules,'TableEnumOrId','33.0');
         }
         if(layouts.length){
-            layouts = await addParentNamePrefix(layouts,'EntityDefinitionId');
+            layouts = await addParentNamePrefix(layouts,'TableEnumOrId');
         }
         if(lookupFilters.length){
             lookupFilters = await getLookupFilterDetails(lookupFilters);
@@ -228,13 +235,15 @@ function usageApi(connection,entryPoint,cache){
 
     }
 
-    async function addParentNamePrefix(metadataArray,parentIdField){
+    async function addParentNamePrefix(metadataArray,parentIdField,apiVersionOverride){
 
         let {type} = metadataArray[0];
         let objectPrefixSeparator = (type.toUpperCase() == 'LAYOUT' ? '-' : '.');
         let ids = metadataArray.map(metadata => metadata.id);
 
         let soqlQuery = createParentIdQuery(ids,type,parentIdField);
+
+        if(apiVersionOverride) soqlQuery.apiVersionOverride = apiVersionOverride;
         let results = await toolingApi.query(soqlQuery);
 
         let metadataRecordToEntityMap = new Map();
@@ -313,7 +322,7 @@ function usageApi(connection,entryPoint,cache){
     
         let query = `SELECT Id, ${selectFields}
         FROM ${type} 
-        WHERE Id IN ('${ids}') ORDER BY EntityDefinitionId`;
+        WHERE Id IN ('${ids}') `;
 
         return {query,filterById:true};
 

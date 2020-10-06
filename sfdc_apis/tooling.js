@@ -10,8 +10,16 @@ function toolingAPI(connection){
     async function query(soqlQuery){
 
         let jsonResponse;
+        let endpoint;
 
-        let endpoint = connection.url+endpoints.toolingApi;
+        if(soqlQuery.apiVersionOverride){
+            let versionEndpoint = overrideApiVersion(endpoints.toolingApi,soqlQuery.apiVersionOverride);
+            endpoint = connection.url+versionEndpoint;
+        }
+        else{
+            endpoint = connection.url+endpoints.toolingApi;
+        }
+
         let request = endpoint+encodeURIComponent(soqlQuery.query); 
         let options = getFetchOptions(connection.token);    
 
@@ -205,6 +213,25 @@ function isFailedResponse(json){
         return true;
     }
     return false;
+}
+
+/**
+ * Sometimes the client needs to be able to specify the API version, for example when querying fields that only exists in certain
+ * versions of the API (for example the TableEnumOrId is only available in version 33.0 for the ValidationRule object)
+ */
+function overrideApiVersion(endpoint,newVersion){
+
+    let apiPath = endpoint.indexOf('/v');
+    let apiPathLength = 7; //>> /v45.0/
+
+    let start = endpoint.substring(0,apiPath);
+    let end = endpoint.substring(apiPath+apiPathLength,endpoint.length);
+
+    let newApiPath = `/v${newVersion}/`;
+
+    let newEndpoint = start+newApiPath+end;
+
+    return newEndpoint;
 }
 
 module.exports = toolingAPI;
