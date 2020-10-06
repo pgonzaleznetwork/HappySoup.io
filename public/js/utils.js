@@ -23,10 +23,10 @@ function hideLoader(){
     loader.style.display = 'none';
 }
 
-function enableInputField(inputField){
+function enableInputField(inputField,mdType){
 
     inputField.value = '';
-    inputField.setAttribute('placeholder','Start typing');
+    inputField.setAttribute('placeholder',getPlaceHolder(mdType));
     inputField.focus();
     inputField.readOnly = false;
     inputField.classList.remove('disabled-input');
@@ -105,6 +105,17 @@ function hideProgressBar(){
     replaceClassWith(progressBarContainer,'visible-progress-bar','invisible-progress-bar');
     replaceClassWith(progressBar,'complete-progress-bar','incomplete-progress-bar');
     
+}
+
+function getPlaceHolder(mdType){
+
+    let objectSpecificMetadata = ['Layout','CustomField','ValidationRule'];
+    if(objectSpecificMetadata.includes(mdType)){
+        return 'Start with the object name';
+    }
+    else{
+        return 'Start typing'
+    }
 }
 
 export const utils = {

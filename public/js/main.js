@@ -163,7 +163,7 @@ const SFDM = function(){
                 let selectedOption = mdDropDown.options[mdDropDown.selectedIndex];
                 selectedOption.label = `${selectedOption.innerText} (${members.length})`;
     
-                utils.enableInputField(inputField);
+                utils.enableInputField(inputField,selectedMetadataType);
                 utils.toggleDropdown(mdDropDown,false);
                 utils.hideProgressBar();
             }   
