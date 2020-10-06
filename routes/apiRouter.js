@@ -252,9 +252,11 @@ function getSupportedMetadataTypes(){
         {label:'Apex Trigger',value:'ApexTrigger'},
         {label:'Page Layout',value:'Layout'},
         {label:'Custom Button',value:'WebLink'},
-        {label:'Flow / Process',value:'Flow'},
         {label:'Custom Field',value:'CustomField'},
+        {label:'Field Set',value:'FieldSet'},
         {label:'Custom Label',value:'CustomLabel'},
+        {label:'Validation Rule',value:'ValidationRule'},
+        {label:'Flow / Process',value:'Flow'},
         {label:'Email Template',value:'EmailTemplate'},
         {label:'Lightning Component (Aura)',value:'AuraDefinitionBundle'},
         {label:'Lightning Web Component',value:'LightningComponentBundle'}
