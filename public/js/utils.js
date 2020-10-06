@@ -109,7 +109,7 @@ function hideProgressBar(){
 
 function getPlaceHolder(mdType){
 
-    let objectSpecificMetadata = ['Layout','CustomField','ValidationRule'];
+    let objectSpecificMetadata = ['Layout','CustomField','ValidationRule','WebLink','FieldSet'];
     if(objectSpecificMetadata.includes(mdType)){
         return 'Start with the object name';
     }
