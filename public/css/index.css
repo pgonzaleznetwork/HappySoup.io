@@ -14,6 +14,8 @@ body{
     grid-template-areas: "login info";
 }
 
+
+
 #warning-template-text {
     border: 1px solid #f5c6cb;
     color: #721c24;
@@ -161,5 +163,33 @@ button:hover::before{
     height: 500%;
 }
 
+@media only screen and (max-width:840px){
+    .grid{
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas: 
+        "login"
+        "info"
+    }
 
+    .env-selection, footer , #domain-input-area ,#domain-input,button{
+        display:none;
+    }
 
+    .login-inner{
+        height:0px;
+    }
+
+    .info-inner{
+        top:50%;
+    }
+
+    iframe{
+        width:80%;
+        height:80%;
+    }
+
+    p{
+        line-height: normal;
+    }
+}
