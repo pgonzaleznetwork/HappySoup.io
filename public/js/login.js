@@ -66,6 +66,11 @@ async function init(){
   
     byId('login-button').addEventListener('click',() => {
 
+        if(!byId('privacy-checkbox').checked){
+            window.alert('You must agree to our Privacy Policy before using this app. Remember you can always deploy it to your own FREE Heroku account!');
+            return;
+        }
+
         let host = byId('environment').selectedOptions[0].value;
         let baseURL;
 

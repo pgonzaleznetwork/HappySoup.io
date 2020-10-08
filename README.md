@@ -43,6 +43,7 @@ Just [log in](https://sfdc-happy-soup.herokuapp.com/) and start sipping the soup
 * [One-click deployment to your own Heroku account](#one-click-deployment-to-your-own-heroku-account)
 * [Local deployment](#local-deployment)
 * [Build your own apps using the core npm library](#Build-your-own-apps-using-the-core-npm-library)
+* [Privacy Policy](#privacy-policy)
 
 ## What is a Happy Soup?
 
@@ -142,24 +143,7 @@ Don't break your org! Use the Impact Analysis feature before making any changes 
 
 ## :no_entry_sign: Security 
 
-We understand security is very important in the Salesforce ecosystem. With that in mind, we want to be fully transparent as to how this app uses your Salesforce data and what security mechanisms are in place.
-
->  Remember that you can always [deploy the app to your own Heroku account](#one-click-deployment-to-your-own-heroku-account) or use it [locally](#local-deployment), in which case you need need to worry about security!
-
-**API Access**
-
-When you log in to the app, you'll be asked to authorise it to send requests on your behalf using OAuth. Once you grant permission, the app will make the following API calls during its lifecylce:
-
-* `Tooling API` to query `CustomField`, `CustomObject` and `MetadataComponentDependency` records
-* `Metadata API` to get describe information on custom fields
-* `SOAP API` to validate that the token is still valid and to logout when requested by the user
-
-**Login out or revoking the access token**
-
-If at anytime you want the app to lose access to your access token, you have two options:
-
-* Use the Logout button on the app. This will completely destroy the server side session and all record of your access token. 
-* From `Salesforce > Setup > Connected Apps Oauth Usage` > Find the token for Salesforce Happy Soup and revoke it. The app will no longer be able to use the access token and you'll be logged out the moment you try to use the app again. 
+We understand security is very important in the Salesforce ecosystem. Read our [Privacy Policy](#privacy-policy) to understand what data is collected and how it is used. This section only addresses technical security
 
 **How is your token stored**
 
@@ -179,6 +163,8 @@ Every time a request is made to the app, the request goes through the following 
 * Once the server-side session is verified, we check that the user has a valid session with their Salesforce org. If the user doesn't have a valid session with Salesforce, we send the user back to the login page.
 
 [Back to top](#salesforce-happy-soup)
+
+
 
 ## How we enhaced the MetadataComponentDependency API
 
@@ -346,5 +332,77 @@ That's it, congratulations!
 Salesforce Happy Soup is built on top of the [sfdc-soup](https://github.com/pgonzaleznetwork/sfdc-soup/tree/master) NodeJs library, which is an API that returns an entire salesforce dependency tree in different formats, including JSON, excel and others. 
 
 Head over that its repository to learn how you can create your apps. 
+
+[Back to top](#salesforce-happy-soup)
+
+
+## Privacy Policy
+
+It's important that you understand what information Happy Soup collects, uses how and how you can control it.
+
+>  Remember that you can always [deploy the app to your own Heroku account](#one-click-deployment-to-your-own-heroku-account) or use it [locally](#local-deployment), in which case you need need to worry about security.
+
+## Information Collected
+
+**Your Personal Information**
+
+Your Salesforce `username`, `email` and `display name` will be captured when you log in to Happy Soup.
+
+This information is used to display your username details on the header of the Happy Soup app so that you can easy know which org you are logged into.
+
+Your username is also used as a key to submit asynchronous jobs to Happy Soup's app server. This allows us to group all your requests in a single area of the database.
+
+**Your Salesforce Org's Metadata**
+
+To be able to analyise your dependencies, we need to query your org's metadata. Some metadata is queried only to get its name, while other metadata is queried to inspect its contents and find dependencies (i.e apex classes)
+
+The specific objects that are queried are as follows
+
+* `MetadataComponentDependency`
+* `CustomField`
+* `CustomObject`
+* `ApexClass`
+* `EmailTemplate`
+* `Layout`
+* `ValidationRule`
+* `CustomLabel`
+* `WebLink`
+* `LightningComponentBundle`
+* `AuraComponentBundle`
+
+Other objects may be added as we further enhance our dependency analysis capabilities. 
+
+All this metadata, along with the results of a dependency query that you execute via the UI, will be cached in a secure server side session that is isolated to your own session with Happy Soup.
+
+This metadata is cached to enable subsequent requets to be performed faster.
+
+The session data and its cache is deleted after 8 hours or when the Salesforce access token expires; whichever happens first. 
+
+**Cookies**
+
+We use cookies and local storage the following information:
+
+* Your session id cookie
+* The Salesforce domain you used. This will help you quickly log in the next time you use the app.
+
+## Your Rights
+
+**Right to be forgotten**
+
+If you want Happy Soup to immediately delete all the data we have collected from your org, you can use the Logout button on the main page. 
+
+When this button is clicked, the server session is completely deleted and cannot be recovered.
+
+If you no longer have access to the browser or device from which you initated a session with Happy Soup but still want to prevent Happy Soup from accessing your org's metadata, you can go to your `Salesforce org > Setup > Connected Apps Oauth Usage > `Find the token for Salesforce Happy Soup and revoke it. 
+
+Happy Soup will no longer be able to use the access token and you'll be logged out the moment you try to use the app again.
+
+**Right to Access Data**
+
+If at any time you want to get the data that we have from your org, you can contact us at pgonzaleznetwork@gmail.com. Note that because all the data we collect from you is deleted in 8 hours, we can only provide you with your data if it's still in our database.
+
+**Right of Restriction of Processing**
+
+If at any time you want Happy Soup to stop processing your data and you are unable to log out (because you no longer have access to the original device you logged in with), you can email us at pgonzaleznetwork@gmail.com and we will delete all your information. 
 
 [Back to top](#salesforce-happy-soup)
