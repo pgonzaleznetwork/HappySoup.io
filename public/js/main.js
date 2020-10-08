@@ -149,6 +149,8 @@ const SFDM = function(){
             }
             else{
 
+                //if
+
                 let members = [];
 
                 json.forEach(metadata => {

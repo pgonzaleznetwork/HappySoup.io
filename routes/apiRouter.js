@@ -6,7 +6,9 @@ let cors = require('cors');
 let {ErrorHandler} = require('../services/errorHandling');
 let Queue = require('bull');
 let REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
-let workQueue = new Queue('happy-soup', REDIS_URL)
+const QUEUE_NAME = 'happy-soup';
+let workQueue = new Queue(QUEUE_NAME, REDIS_URL);
+let redisOps = require('../services/redisOps');
 
 let whitelist = process.env.CORS_DOMAINS.split(',');
 
@@ -56,9 +58,8 @@ apiRouter.route('/dependencies')
                 }
 
                 let jobId = `${req.session.identity.username}:${cacheKey}${Date.now()}`
-                let jobOptions = {removeOnComplete:true,jobId};
-
-                let job = await workQueue.add(jobDetails,jobOptions);
+      
+                let job = await workQueue.add(jobDetails,{jobId});
                 res.status(200).json({jobId:job.id});   
             }
 
@@ -233,6 +234,7 @@ apiRouter.route('/job/:id')
         if(response.state == 'completed'){
             let jobResult = job.returnvalue;
             req.session.cache = jobResult.newCache;
+            setTimeout(deleteJobInfo,30000,jobId);
         }
         
         if(job.failedReason){
@@ -310,6 +312,12 @@ function validateParams(req,res,next){
 
     next();
 
+}
+
+function deleteJobInfo(jobId){
+    //bull:happy-soup:pgonzalez@test.com.uat:list-ApexClass1602182549998
+    let redisKey = `bull:${QUEUE_NAME}:${jobId}`;
+    redisOps.redisDel(redisKey);
 }
 
 function getSessionKey(req){
