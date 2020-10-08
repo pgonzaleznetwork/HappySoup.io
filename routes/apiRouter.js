@@ -228,8 +228,12 @@ apiRouter.route('/job/:id')
 
         response.jobId = jobId;
         response.state = await job.getState();
-        response.progress = job._progress;
 
+        if(response.state == 'completed'){
+            let jobResult = job.returnvalue;
+            req.session.cache = jobResult.newCache;
+        }
+        
         if(job.failedReason){
             response.error = {};
             response.error.message = job.failedReason;

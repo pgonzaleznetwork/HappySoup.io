@@ -56,7 +56,11 @@ async function listMetadataJob(job){
 
     cache.cacheMetadataList(cacheKey,results);
 
-    await commitSessionChanges(sessionId,session);}
+    return {
+      newCache:session.cache,
+    }
+  }
+    
 
 async function usageJob(job){
 
@@ -70,8 +74,11 @@ async function usageJob(job){
     let response = await api.getUsage();
 
     cache.cacheUsage(cacheKey,response);
-  
-    await commitSessionChanges(sessionId,session);}
+
+    return {
+      newCache:session.cache,
+    }
+  }
 
 async function dependencyJob(job){
 
@@ -86,7 +93,10 @@ async function dependencyJob(job){
  
     cache.cacheDependency(cacheKey,response);
 
-    await commitSessionChanges(sessionId,session);
+    return {
+      newCache:session.cache,
+    }
+
 }
 
 async function commitSessionChanges(sessionId,session){
