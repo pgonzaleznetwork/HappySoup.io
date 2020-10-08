@@ -40,7 +40,7 @@ async function init(){
      * If users want to use the login page again, they must use the logout button, which
      * will kill the server side session.
      */
-    if(!params.has('no-session')){
+    if(!params.has('no-session') && !params.has('logout') && !params.has('oauthfailed')){
         window.location = '/dependencies?session-active=true';
     }
 
