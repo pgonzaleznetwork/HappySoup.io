@@ -52,7 +52,7 @@ footer{
     bottom:5%;
     left:5%;
     right:5%;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 a,a:visited{
@@ -163,6 +163,15 @@ button:hover::before{
     height: 500%;
 }
 
+#privacy-statement{
+    margin-top:30px;
+    font-size:12px;
+}
+
+#privacy-statement a{
+    text-decoration: underline;
+}
+
 @media only screen and (max-width:840px){
     .grid{
         grid-template-columns: 1fr;
@@ -172,7 +181,7 @@ button:hover::before{
         "info"
     }
 
-    .env-selection, footer , #domain-input-area ,#domain-input,button{
+    .env-selection, footer , #domain-input-area ,#domain-input,button,#privacy-statement{
         display:none;
     }
 

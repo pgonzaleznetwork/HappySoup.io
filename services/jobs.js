@@ -1,5 +1,6 @@
-let redis = require('redis');
-let { promisify } = require("util");
+//let redis = require('redis');
+//let { promisify } = require("util");
+let redisOps = require('../services/redisOps');
 let metadataApi = require('../sfdc_apis/metadata');
 let serverSessions = require('./serverSessions');
 let {cacheApi} = require('./caching')
@@ -7,23 +8,7 @@ let dependencyApi = require('../sfdc_apis/dependencies');
 let usageApi = require('../sfdc_apis/usage');
 let toolingAPI = require('../sfdc_apis/tooling');
 
-let redisClient;
 
-//if running on heroku
-if (process.env.REDIS_URL){
-
-  let redisUrl = require("url").parse(process.env.REDIS_URL);
-  redisClient = redis.createClient(redisUrl.port, redisUrl.hostname);
-
-  redisClient.auth(redisUrl.auth.split(":")[1]);
-
-} else {
-  //running locally
-  redisClient = redis.createClient();
-}
-
-let redisGet = promisify(redisClient.get).bind(redisClient);
-let redisSet = promisify(redisClient.set).bind(redisClient);
 
 async function listMetadataJob(job){
 
@@ -56,7 +41,11 @@ async function listMetadataJob(job){
 
     cache.cacheMetadataList(cacheKey,results);
 
-    await commitSessionChanges(sessionId,session);}
+    return {
+      newCache:session.cache,
+    }
+  }
+    
 
 async function usageJob(job){
 
@@ -70,8 +59,11 @@ async function usageJob(job){
     let response = await api.getUsage();
 
     cache.cacheUsage(cacheKey,response);
-  
-    await commitSessionChanges(sessionId,session);}
+
+    return {
+      newCache:session.cache,
+    }
+  }
 
 async function dependencyJob(job){
 
@@ -86,16 +78,16 @@ async function dependencyJob(job){
  
     cache.cacheDependency(cacheKey,response);
 
-    await commitSessionChanges(sessionId,session);
+    return {
+      newCache:session.cache,
+    }
+
 }
 
-async function commitSessionChanges(sessionId,session){
-  await redisSet(sessionId,JSON.stringify(session));
-}
 
 async function getSession(sessionId){
 
-    let result = await redisGet(sessionId);
+    let result = await redisOps.redisGet(sessionId);
     let session = JSON.parse(result);
     return session;
 }

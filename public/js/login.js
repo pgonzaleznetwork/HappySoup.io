@@ -40,7 +40,7 @@ async function init(){
      * If users want to use the login page again, they must use the logout button, which
      * will kill the server side session.
      */
-    if(!params.has('no-session')){
+    if(!params.has('no-session') && !params.has('logout') && !params.has('oauthfailed')){
         window.location = '/dependencies?session-active=true';
     }
 
@@ -65,6 +65,11 @@ async function init(){
     });
   
     byId('login-button').addEventListener('click',() => {
+
+        if(!byId('privacy-checkbox').checked){
+            window.alert('You must agree to our Privacy Policy before using Happy Soup. Remember you can always deploy it to your own FREE Heroku account!');
+            return;
+        }
 
         let host = byId('environment').selectedOptions[0].value;
         let baseURL;

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "heroku local",
     "debug": "node --inspect ./bin/www",
     "semantic-release": "semantic-release",
     "commit": "git-cz"

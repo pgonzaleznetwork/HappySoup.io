@@ -23,21 +23,23 @@ function start() {
 
     let {jobType} = job.data;
 
+    let result = '';
+
     switch(jobType) {
         case 'LIST_METADATA':
-            await jobs.listMetadataJob(job);
+          result = await jobs.listMetadataJob(job);
             break;
         case 'DEPENDENCIES':
-            await jobs.dependencyJob(job);
+          result = await jobs.dependencyJob(job);
             break;
         case 'USAGE':
-            await jobs.usageJob(job);
+          result = await jobs.usageJob(job);
             break;
     }
 
     // A job can return values that will be stored in Redis as JSON
     // This return value is unused in this demo application.
-    return null;
+    return result;
   });
 }
 
