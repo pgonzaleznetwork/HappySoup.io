@@ -342,6 +342,8 @@ It's important that you understand what information Happy Soup collects, uses ho
 
 >  Remember that you can always [deploy the app to your own Heroku account](#one-click-deployment-to-your-own-heroku-account) or use it [locally](#local-deployment), in which case you need need to worry about security.
 
+Our full Privacy Policy can be found [here](https://pgonzaleznetwork.github.io/privacy.html). The sections below contain the specifics about how your Salesforce data is used and what your options are to stop access to your data.
+
 ## Information Collected
 
 **Your Personal Information**

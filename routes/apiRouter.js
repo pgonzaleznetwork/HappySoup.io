@@ -56,8 +56,9 @@ apiRouter.route('/dependencies')
                 }
 
                 let jobId = `${req.session.identity.username}:${cacheKey}${Date.now()}`
+                let jobOptions = {removeOnComplete:true,jobId};
 
-                let job = await workQueue.add(jobDetails,{jobId});
+                let job = await workQueue.add(jobDetails,jobOptions);
                 res.status(200).json({jobId:job.id});   
             }
 
