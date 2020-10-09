@@ -14,6 +14,10 @@ body{
     grid-template-areas: "login info";
 }
 
+#logo{
+    margin-bottom:10px;
+}
+
 
 
 #warning-template-text {

@@ -1,4 +1,7 @@
 # Salesforce Happy Soup
+
+ <img src="./github-images/cover.jpg">
+
 ## The best way to visualize your Salesforce dependencies
 
 <div style="margin-bottom:10px">
