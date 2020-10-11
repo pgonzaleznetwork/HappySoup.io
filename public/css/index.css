@@ -4,6 +4,7 @@ body{
     color:#ecf0f1;
     font-family: "Open Sans",sans-serif;
     height: 100vh;
+    line-height: normal;
 }
 
 .grid{
@@ -69,7 +70,7 @@ a,a:visited{
     justify-content: center;
     align-items: center;
     font-size: 13px;
-    margin-top:80px;
+    margin-top:50px;
 }
 
 .env-selection label, .env-selection select{
@@ -97,6 +98,10 @@ select {
     text-align:center;
 }
 
+#mobile-login{
+    display:none;
+}
+
 #domain-input-area{
     margin-top: 40px;
 }
@@ -119,7 +124,7 @@ select {
 
 
 .taglines{
-    line-height: 8px;
+   
     font-size: 17px;
 }
 
@@ -189,6 +194,10 @@ button:hover::before{
         display:none;
     }
 
+    #mobile-login{
+        display:block;
+    }
+
     .login-inner{
         height:0px;
     }
@@ -204,5 +213,21 @@ button:hover::before{
 
     p{
         line-height: normal;
+    }
+}
+
+@media only screen and (max-height:730px){
+    footer{
+        bottom:1px;
+        font-size:13px;
+    }
+    iframe{
+        height:350px;
+    }
+}
+
+@media only screen and (max-height:670px){
+    footer p{
+        display:none;
     }
 }
