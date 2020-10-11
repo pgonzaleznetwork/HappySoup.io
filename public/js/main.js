@@ -154,9 +154,8 @@ const SFDM = function(){
                 let members = [];
 
                 json.forEach(metadata => {
-                    let [fullName,id] = metadata.split(':');
-                    members.push(fullName);
-                    memberIdsByName.set(fullName,id);
+                    members.push(metadata.name);
+                    memberIdsByName.set(metadata.name,metadata.id);
                 })
                 
                 autocompleteApi.autocomplete(inputField, members);
@@ -227,7 +226,11 @@ const SFDM = function(){
                     lastApiResponse = json;
                 }
                 else{
-                    usageTreePlaceholder.appendChild(utils.createWarning('No results. Either this metadata is not referenced/used by any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
+                    usageTreePlaceholder.appendChild(utils.createWarning(`No results. There are 3 main reasons for this:
+                    1) This metadata is not used anywhere.
+                    2) This metadata is part of a managed package.
+                    3) This metadata type is not fully supported by the MetadataComponentDependency API.
+                    `));
                 }
 
                 utils.toggleDropdown(mdDropDown,false);
@@ -265,7 +268,11 @@ const SFDM = function(){
                     lastApiResponse = json;
                 }
                 else{
-                    dependencyTreePlaceholder.appendChild(utils.createWarning('No results. Either this metadata does not reference any other metadata or it is part of a managed package, in which case we are unable to see its dependencies.'));
+                    dependencyTreePlaceholder.appendChild(utils.createWarning(`No results. There are 3 main reasons for this:
+                    1) This metadata does not reference/use any other metadata.
+                    2) This metadata is part of a managed package.
+                    3) This metadata type is not fully supported by the MetadataComponentDependency API.
+                    `));
                 }
 
                 utils.toggleDropdown(mdDropDown,false);

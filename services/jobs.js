@@ -26,14 +26,24 @@ async function listMetadataJob(job){
   
       let jsonResponse = await toolingApi.query(soqlQuery);
   
-      results = jsonResponse.records.map(record => `${record.Name}:${record.Id}`)
+      results = jsonResponse.records.map(record => {
+          return {
+            name:record.Name,
+            id:record.Id
+          }
+      });
     }
     //for any other metadata type, we use the Metadata API
     else {
       let mdapi = metadataApi(serverSessions.getConnection(session));
-      results = await mdapi.listMetadata(mdtype);
+      let jsonResponse = await mdapi.listMetadata(mdtype);
   
-      results = results.map(metadata => `${metadata.fullName}:${metadata.id}`);
+      results = jsonResponse.map(record => {
+        return {
+          name:record.fullName,
+          id:record.id
+        }
+    });
     }
 
     let cache = cacheApi(session.cache);
