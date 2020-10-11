@@ -107,6 +107,11 @@ function hideProgressBar(){
     
 }
 
+function scrollTo(el){
+    el.scrollIntoView({behavior:'smooth'});
+    console.log('scroll',el);
+}
+
 function getPlaceHolder(mdType){
 
     let objectSpecificMetadata = ['Layout','CustomField','ValidationRule','WebLink','FieldSet'];
@@ -124,6 +129,7 @@ export const utils = {
     showProgressBar,
     hideChart,
     hideTrees,
+    scrollTo,
     enableButton,
     disableButton,
     showLoader,
