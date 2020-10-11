@@ -217,10 +217,16 @@ button:hover::before{
 }
 
 @media only screen and (max-height:730px){
+
     footer{
-        bottom:1px;
+        bottom:3px;
         font-size:13px;
     }
+
+    .taglines{
+        font-size: 15px;
+    }
+
     iframe{
         height:350px;
     }

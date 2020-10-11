@@ -232,6 +232,7 @@ const SFDM = function(){
 
                 utils.toggleDropdown(mdDropDown,false);
                 utils.enableButton(searchButton);
+                setTimeout(utils.scrollTo,200,byId('usage-help'));
             }
         }
 
@@ -269,6 +270,7 @@ const SFDM = function(){
 
                 utils.toggleDropdown(mdDropDown,false);
                 utils.enableButton(searchButton);
+                setTimeout(utils.scrollTo,200,byId('deps-help'));
             }
         }
 
@@ -367,11 +369,19 @@ const SFDM = function(){
 
         function copyFile(event){
 
-            let format = event.target.dataset.format;
+            //nothing to copy if we haven't had a response at all i.e the page was just loaded
+            if(!lastApiResponse) return;
+
+            let button = event.target;
+
+            let originalName = button.innerText;
+            button.innerText = 'Copied! ';
+
+            setTimeout(resetName,3000,button,originalName);
 
             if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
                 var textarea = document.createElement('textarea');
-                textarea.textContent = lastApiResponse[format];
+                textarea.textContent = lastApiResponse[button.dataset.format];
                 textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in Microsoft Edge.
                 document.body.appendChild(textarea);
                 textarea.select();
@@ -386,6 +396,10 @@ const SFDM = function(){
                     document.body.removeChild(textarea);
                 }
             }
+        }
+
+        function resetName(button,originalName){
+            button.innerText = originalName;
         }
 
 
