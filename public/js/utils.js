@@ -109,7 +109,7 @@ function hideProgressBar(){
 
 function scrollTo(el){
     el.scrollIntoView({behavior:'smooth'});
-    console.log('scroll',el);
+    
 }
 
 function getPlaceHolder(mdType){
