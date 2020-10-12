@@ -219,12 +219,16 @@ button:hover::before{
 @media only screen and (max-height:730px){
 
     footer{
-        bottom:3px;
+        bottom:8px;
         font-size:13px;
     }
 
-    .taglines{
+    .taglines, #company-tagline{
         font-size: 15px;
+    }
+
+    .info-inner,.login-inner{
+        top:22%;
     }
 
     iframe{
