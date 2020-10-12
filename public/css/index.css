@@ -94,8 +94,9 @@ select {
 }
 
 #domain-input{
-    width:400px;
+    width:250px;
     text-align:center;
+    font-size: 14px;
 }
 
 #mobile-login{
@@ -124,8 +125,7 @@ select {
 
 
 .taglines{
-   
-    font-size: 17px;
+    font-size: 16px;
 }
 
 .taglines .fa-check{
