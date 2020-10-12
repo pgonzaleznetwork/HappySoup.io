@@ -381,7 +381,11 @@ All this metadata, along with the results of a dependency query that you execute
 
 This metadata is cached to enable subsequent requets to be performed faster.
 
-The session data and its cache is deleted after 8 hours or when the Salesforce access token expires; whichever happens first. 
+The session data and its cache is deleted when any of the below options occurs first:
+
+* 8 hours have passed since you logged into Happy Soup. This is because the access token provided by Salesforce will also live for 8 hours. This means that you can use Happy Soup for a maximum of 8 hours using the same org, without having to log in again. After 8 hours, the session is completely deleted.
+* When you log out manually. When a logout is performed, the session is completely deleted.
+* The app tries to issue a request to Salesforce but the access token has been revoked. When this occurs, the session is completely deleted. 
 
 **Cookies**
 
