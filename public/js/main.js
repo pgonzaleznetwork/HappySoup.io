@@ -38,7 +38,6 @@ const SFDM = function(){
         mdDropDown.onchange = getMetadataMembers;
         packageButton.onclick = downloadPackageXml;
         searchButton.onclick = doSearch;
-        inputField.onkeyup = clickFindButton;
         csvButton.onclick = copyFile;
         excelButton.onclick = copyFile;
 
@@ -112,17 +111,6 @@ const SFDM = function(){
             });
         }
 
-        function clickFindButton(event){
-
-            let enterKey = 13;
-    
-            if (event.keyCode == enterKey) {
-                event.preventDefault();
-                searchButton.click();
-            }
-        }
-
-        
 
         async function getMetadataMembers(event){
 
