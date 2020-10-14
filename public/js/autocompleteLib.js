@@ -2,12 +2,12 @@ import {utils} from './utils.js'
 import {byId} from './utils.js'
 
 //example from W3 schools
-function autocomplete(inp, arr) {
+function autocomplete(inputElement, items) {
     /*the autocomplete function takes two arguments,
       the text field element and an array of possible autocompleted values:*/
     var currentFocus;
     /*execute a function when someone writes in the text field:*/
-    inp.addEventListener("input", function (e) {
+    inputElement.addEventListener("input", function (e) {
       var a,
         b,
         i,
@@ -25,24 +25,24 @@ function autocomplete(inp, arr) {
       /*append the DIV element as a child of the autocomplete container:*/
       this.parentNode.appendChild(a);
       /*for each item in the array...*/
-      for (i = 0; i < arr.length; i++) {
+      for (i = 0; i < items.length; i++) {
         /*check if the item starts with the same letters as the text field value:*/
-        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+        if (items[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
           /*create a DIV element for each matching element:*/
           b = document.createElement("DIV");
           /*make the matching letters bold:*/
           b.innerHTML =
             "<strong style=color:black;>" +
-            arr[i].substr(0, val.length) +
+            items[i].substr(0, val.length) +
             "</strong>";
-          b.innerHTML += arr[i].substr(val.length);
+          b.innerHTML += items[i].substr(val.length);
           /*insert a input field that will hold the current array item's value:*/
           b.innerHTML +=
-            "<input id='selectedMember' type='hidden' value='" + arr[i] + "'>";
+            "<input id='selectedMember' type='hidden' value='" + items[i] + "'>";
           /*execute a function when someone clicks on the item value (DIV element):*/
           b.addEventListener("click", function (e) {
             /*insert the value for the autocomplete text field:*/
-            inp.value = this.getElementsByTagName("input")[0].value;
+            inputElement.value = this.getElementsByTagName("input")[0].value;
             /*close the list of autocompleted values,
             (or any other open lists of autocompleted values:*/
             closeAllLists();
@@ -53,7 +53,7 @@ function autocomplete(inp, arr) {
       }
     });
     /*execute a function presses a key on the keyboard:*/
-    inp.addEventListener("keydown", function (e) {
+    inputElement.addEventListener("keydown", function (e) {
       var x = byId(this.id + "autocomplete-list");
       if (x) x = x.getElementsByTagName("div");
       if (e.keyCode == 40) {
@@ -99,7 +99,7 @@ function autocomplete(inp, arr) {
         except the one passed as an argument:*/
       var x = document.getElementsByClassName("autocomplete-items");
       for (var i = 0; i < x.length; i++) {
-        if (elmnt != x[i] && elmnt != inp) {
+        if (elmnt != x[i] && elmnt != inputElement) {
           x[i].parentNode.removeChild(x[i]);
         }
       }
