@@ -26,7 +26,7 @@ function hideLoader(){
 function enableInputField(inputField,mdType){
 
     inputField.value = '';
-    inputField.setAttribute('placeholder',getPlaceHolder(mdType));
+    inputField.setAttribute('placeholder','Type at least 3 characters');
     inputField.focus();
     inputField.readOnly = false;
     inputField.classList.remove('disabled-input');
@@ -110,17 +110,6 @@ function hideProgressBar(){
 function scrollTo(el){
     el.scrollIntoView({behavior:'smooth'});
     
-}
-
-function getPlaceHolder(mdType){
-
-    let objectSpecificMetadata = ['Layout','CustomField','ValidationRule','WebLink','FieldSet'];
-    if(objectSpecificMetadata.includes(mdType)){
-        return 'Start with the object name';
-    }
-    else{
-        return 'Start typing'
-    }
 }
 
 export const utils = {

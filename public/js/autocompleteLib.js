@@ -1,13 +1,12 @@
 import {utils} from './utils.js'
 import {byId} from './utils.js'
 
-//example from W3 schools
 function autocomplete(inputElement, items) {
-    /*the autocomplete function takes two arguments,
-      the text field element and an array of possible autocompleted values:*/
+
     let currentFocus = -1;
 
-    let debouncedFilterItems = debounce(filterItems,250);
+    //prevents the filtering function to be called too often
+    let debouncedFilterItems = debounce(filterItems,800);
     let listener = debouncedFilterItems.bind(inputElement,items,currentFocus)
 
     inputElement.addEventListener('input',listener);
@@ -39,6 +38,7 @@ function autocomplete(inputElement, items) {
         }
       }
     });
+
     function addActive(x) {
       /*a function to classify an item as "active":*/
       if (!x) return false;
@@ -75,15 +75,16 @@ function autocomplete(inputElement, items) {
 
 function filterItems(items,currentFocus) {
 
-  let searchTerm = this.value;
-  let parentThis = this;
-
-  var a,
-    b,
-    i,
-    val = this.value;
   /*close any already open lists of autocompleted values*/
   closeAllLists(null,this);
+
+  let searchTerm = this.value;
+
+  //prevent doing searches for only a few characters because it uses too much browser memory
+  if(searchTerm.length < 3) return;
+
+  let parentThis = this;
+ 
   if (!searchTerm) {
     return false;
   }
@@ -97,25 +98,30 @@ function filterItems(items,currentFocus) {
   /*append the DIV element as a child of the autocomplete container:*/
   this.parentNode.appendChild(autoCompleteList);
 
-  /*for each item in the array...*/
-  for (i = 0; i < items.length; i++) {
-    /*check if the item starts with the same letters as the text field value:*/
-    
-    //items[i].substr(0, searchTerm.length).toUpperCase() == searchTerm.toUpperCase()
-    if (items[i].toUpperCase().includes(searchTerm.toUpperCase())) {
+  items.forEach(item => {
+
+    let itemUpperCase = item.toUpperCase();
+    let searchTermUpperCase = searchTerm.toUpperCase();
+
+    if (itemUpperCase.includes(searchTermUpperCase)) {
+   
+      let startIndex = itemUpperCase.indexOf(searchTermUpperCase);
+      
+      let textBeforeMatch = item.substr(0,startIndex);
+      let matchingText = item.substr(startIndex,searchTerm.length);
+      let textAfterMatch = item.substr(startIndex+searchTerm.length,item.length);
+
       /*create a DIV element for each matching element:*/
-      b = document.createElement("DIV");
+      let suggestedItem  = document.createElement("DIV");
+
       /*make the matching letters bold:*/
-      b.innerHTML =
-        "<span>" +
-        items[i].substr(0, searchTerm.length) +
-        "</span>";
-      b.innerHTML += items[i].substr(searchTerm.length);
+      suggestedItem.innerHTML = `${textBeforeMatch}<strong style=color:black;>${matchingText}</strong>${textAfterMatch}`;
+
       /*insert a input field that will hold the current array item's value:*/
-      b.innerHTML +=
-        "<input id='selectedMember' type='hidden' value='" + items[i] + "'>";
+      suggestedItem.innerHTML +=
+        "<input id='selectedMember' type='hidden' value='" + item + "'>";
       /*execute a function when someone clicks on the item value (DIV element):*/
-      b.addEventListener("click", function (e) {
+      suggestedItem.addEventListener("click", function () {
         /*insert the value for the autocomplete text field:*/
         parentThis.value = this.getElementsByTagName("input")[0].value;
         /*close the list of autocompleted values,
@@ -123,9 +129,10 @@ function filterItems(items,currentFocus) {
         closeAllLists();
         utils.enableButton(byId('search-button'));
       });
-      autoCompleteList.appendChild(b);
+
+      autoCompleteList.appendChild(suggestedItem);
     }
-  }
+  })
 }
 
 function debounce(func, wait, immediate) {
