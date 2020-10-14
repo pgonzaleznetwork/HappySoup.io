@@ -6,7 +6,6 @@
  
   .autocomplete-items {
     position: absolute;
-    border: 1px solid #d4d4d4;
     border-bottom: none;
     border-top: none;
     z-index: 99;
@@ -18,9 +17,11 @@
   .autocomplete-items div {
     padding: 10px;
     cursor: pointer;
+    border-radius:5px;
     background-color: #fff;
     color:rgb(108, 108, 108);
     border-bottom: 1px solid #d4d4d4;
+    font-size: 14px;
   }
   .autocomplete-items div:hover {
     /*when hovering an item:*/
