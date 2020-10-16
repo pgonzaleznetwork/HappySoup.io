@@ -10,6 +10,8 @@ const SFDM = function(){
 
     function addEvents(){
 
+        let wbStyleSheet = byId('workbench-stylesheet')
+        let themeSwitcher = byId('theme-switcher');
         let inputField = byId("input-field");
         let queryTypeDropDown = byId('query-type');
         let searchButton = byId('search-button');
@@ -32,6 +34,7 @@ const SFDM = function(){
         let latestInvertalDone = false;
 
         document.addEventListener('DOMContentLoaded', loadServerInfo);
+        themeSwitcher.onclick = switchTheme;
         logoutButton.onclick = logout;
         collapseButon.onclick = collapseFolders;
         expandButton.onclick = expandFolders;
@@ -45,6 +48,20 @@ const SFDM = function(){
             getSupportedMetadataTypes();
             getIdentityInfo();
             getInstanceURL();
+        }
+
+        function switchTheme(event){
+
+            event.preventDefault();
+
+            if(wbStyleSheet.hasAttribute('disabled')){
+                wbStyleSheet.removeAttribute('disabled');
+                themeSwitcher.innerText = 'Switch to Happy Soup Theme';
+            }
+            else{
+                wbStyleSheet.setAttribute('disabled','true');
+                themeSwitcher.innerText = 'Switch to Workbench Theme';
+            }
         }
 
         async function getInstanceURL(){

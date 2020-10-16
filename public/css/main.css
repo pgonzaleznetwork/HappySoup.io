@@ -269,6 +269,18 @@ button:focus{
     
 }
 
+#header-lower{
+    font-size: 13px;
+}
+
+#header-lower a{
+    font-size: 11px;
+}
+
+#theme-switcher{
+    cursor: pointer;
+}
+
 
 .dependencies{    
     background: #2d3436;
