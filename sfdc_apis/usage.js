@@ -9,7 +9,7 @@ function usageApi(connection,entryPoint,cache){
 
     async function getUsage(){
 
-        let query = usageQuery();
+        let query = usageQuery(entryPoint);
         await query.exec();
 
         let callers = query.getResults();
@@ -38,7 +38,7 @@ function usageApi(connection,entryPoint,cache){
 
     }
 
-    function usageQuery(){
+    function usageQuery(entryPoint){
 
         let result = [];
 
@@ -342,6 +342,12 @@ function usageApi(connection,entryPoint,cache){
     }
 
     return {getUsage}
+}
+
+function getCustomQuery(entryPoint){
+
+
+
 }
 
 module.exports = usageApi;
