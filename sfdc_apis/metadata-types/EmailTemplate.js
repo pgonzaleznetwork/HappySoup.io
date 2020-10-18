@@ -47,11 +47,11 @@ async function findReferences(connection,entryPoint){
     
             let simplified = {
                 name:record.MetadataComponentName,
-                type:`Apex classes with EmailTemplate SOQL query`,
+                type:`ApexClass with EmailTemplate SOQL`,
                 id:record.MetadataComponentId,
                 url:`${connection.url}/${record.MetadataComponentId}`,
                 notes:null,
-                namespace: record.MetadataComponentNamespace,       
+                namespace: record.MetadataComponentNamespace,      
             }
 
             return simplified;          
