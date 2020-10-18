@@ -32,6 +32,8 @@ function toolingAPI(connection){
             let res = await fetch(request,options);
         
             if(!res.ok){
+                
+                console.log(res);
 
                 if(hitRequestSizeLimit(res)){
                     jsonResponse = await tryWithSmallerQueries(soqlQuery.query,endpoint,options);

@@ -9,10 +9,14 @@ function usageApi(connection,entryPoint,cache){
 
     async function getUsage(){
 
-        let query = usageQuery();
+        let query = usageQuery(entryPoint);
         await query.exec();
-
         let callers = query.getResults();
+
+        if(lacksDependencyApiSupport(entryPoint)){
+            let additionalReferences = await seachAdditionalReferences(connection,entryPoint);
+            callers.push(...additionalReferences);
+        }
             
         callers = await enhanceData(callers);
         //sort alphabetically
@@ -38,7 +42,7 @@ function usageApi(connection,entryPoint,cache){
 
     }
 
-    function usageQuery(){
+    function usageQuery(entryPoint){
 
         let result = [];
 
@@ -295,6 +299,28 @@ function usageApi(connection,entryPoint,cache){
 
     }
 
+    /**
+     * Some metadata types are not fully supported by the MetadataComponentDependency API
+     * so we need to manually query related objects to find dependencies. An example of this is the
+     * EmailTemplate object, which is when queried, does not return WorkflowAlerts that reference the template
+     */
+    function lacksDependencyApiSupport(entryPoint){
+        return ['EmailTemplate'].includes(entryPoint.type);
+    }
+
+    async function seachAdditionalReferences(connection,entryPoint){
+
+        let additionalReferences = [];
+
+        if(entryPoint.type == 'EmailTemplate'){
+            let findTemplateRefs =  require('./metadata-types/EmailTemplate');
+            additionalReferences = await findTemplateRefs(connection,entryPoint);
+        }
+
+        return additionalReferences;
+
+    }
+
 
     function simplifyResults(rawResults){
 
@@ -343,5 +369,7 @@ function usageApi(connection,entryPoint,cache){
 
     return {getUsage}
 }
+
+
 
 module.exports = usageApi;

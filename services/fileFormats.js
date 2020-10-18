@@ -16,10 +16,13 @@ function format(entryPoint,metadata,type){
             mtds = mtds.filter(dep => !utils.isDynamicReference(dep));
         }
 
-        //for metadata retrieval and deployment, lookup filters are considered custom fields, so we "fix" the type here
+        //for metadata retrieval and deployment some types need to be renamed
         mtds.forEach(dep => {
             if(dep.type.toUpperCase() == 'LOOKUPFILTER'){
                 dep.type  = 'CustomField';
+            }
+            else if(dep.type == 'ApexClass with EmailTemplate SOQL'){
+                dep.type = 'ApexClass'
             }
         })
 
