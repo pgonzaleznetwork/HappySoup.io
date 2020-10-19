@@ -20,6 +20,16 @@ async function findReferences(connection,entryPoint){
 
     references.push(...apexClasses);
 
+    let emailTemplQuery = createEmailTemplateQuery(entryPoint.id);
+    let emailTemplate = await toolingApi.query(emailTemplQuery);
+    let templateFullName = emailTemplate.records[0].FullName;
+
+    let customLabelQuery = createCustomLabelQuery(entryPoint,templateFullName);
+    let customLabels = await toolingApi.query(customLabelQuery);
+    customLabels = parseCustomLabels(customLabels);
+    
+    references.push(...customLabels);
+
     return references;
 
     function parseWfAlerts(rawResults){
@@ -58,9 +68,48 @@ async function findReferences(connection,entryPoint){
         });
 
         return apexClasses;
-
     }
 
+    function parseCustomLabels(rawResults){
+
+        let customLabels = rawResults.records.map(record => {
+    
+            let simplified = {
+                name:record.Name,
+                type:'CustomLabel',
+                id: record.Id,
+                url:`${connection.url}/${record.Id}`,
+                notes:null,
+                namespace: record.NamespacePrefix,       
+            }
+    
+            return simplified;          
+        });
+    
+        return customLabels;
+    }
+
+}
+
+function createEmailTemplateQuery(emailTemplateId){
+
+    let ids = utils.filterableId(emailTemplateId);
+
+    let query = `SELECT FullName
+    FROM EmailTemplate WHERE Id IN ('${ids}')`;
+
+    return {query,filterById:true};
+}
+
+function createCustomLabelQuery(entryPoint,templateFullName){
+
+    //remove the folder part of the name
+    templateFullName = templateFullName.substr(templateFullName.indexOf('/')+1);
+
+    let query = `SELECT Id, Name , NamespacePrefix FROM 
+    externalString WHERE value IN ('${entryPoint.name}','${entryPoint.id}','${templateFullName}')`
+
+    return {query,filterById:false};
 }
 
 function createWfAlertQuery(emailTemplateId){
