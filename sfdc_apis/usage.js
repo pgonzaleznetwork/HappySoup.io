@@ -275,6 +275,13 @@ function usageApi(connection,entryPoint,cache){
 
             metadata.name = fullName;
 
+            //page layouts have a unique url that requires both the entitiy id and the layout id, so we take advantage
+            //that we have already queried this data in this method and build the URL here
+            //not the cleanest way but we save a whole roundtrip to the server
+            if(type.toUpperCase() == 'LAYOUT'){
+                metadata.url = `${connection.url}/layouteditor/layoutEditor.apexp?type=${entityId}&lid=${metadata.id}`;
+            }
+
         });
 
         return metadataArray;
