@@ -5,6 +5,7 @@ let logger = require('morgan');
 let sessionConfig = require('./bin/serverSessions');
 let {handleError} = require('./services/errorHandling');
 var enforce = require('express-sslify');
+require('dotenv').config();
 
 let app = express();
 
@@ -12,6 +13,9 @@ app.use(sessionConfig);
 app.use(logger('dev'));
 app.use(express.json());
 
+if(process.env.ENFORCE_SSL == 'true'){
+  app.use(enforce.HTTPS({ trustProtoHeader: true }));
+}
 
 //unauthenticated route for oauth login
 app.use('/oauth2',require('./routes/oauthRouter'));
