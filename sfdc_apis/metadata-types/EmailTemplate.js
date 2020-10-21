@@ -139,12 +139,6 @@ function createApexClassQuery(){
 
 }
 
-function createDependencyRecord(name,type,id,url,notes,namespace){
-
-    return {name,type,id,url,notes,namespace}
-
-}
-
 
 
 module.exports = findReferences;
