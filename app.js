@@ -17,6 +17,16 @@ if(process.env.ENFORCE_SSL == 'true'){
   app.use(enforce.HTTPS({ trustProtoHeader: true }));
 }
 
+app.use((req,res,next) => {
+
+  if(req.hostname == 'sfdc-happy-soup.herokuapp.com'){
+    res.redirect(301,'https://happysoup.io');
+  }else{
+    next();
+  }  
+
+});
+
 //unauthenticated route for oauth login
 app.use('/oauth2',require('./routes/oauthRouter'));
 
