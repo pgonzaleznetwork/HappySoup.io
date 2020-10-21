@@ -4,6 +4,7 @@ let path = require('path');
 let logger = require('morgan');
 let sessionConfig = require('./bin/serverSessions');
 let {handleError} = require('./services/errorHandling');
+var enforce = require('express-sslify');
 
 let app = express();
 
@@ -17,6 +18,8 @@ app.use('/oauth2',require('./routes/oauthRouter'));
 
 //authentication for some public routes
 app.use((req,res,next) => {
+
+  console.log('what is the hostname: ',req.hostname);
 
   let authenticatedPublicRoutes = ['/dependencies.html','/dependencies'];
 
