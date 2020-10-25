@@ -7,6 +7,7 @@ let {cacheApi} = require('./caching')
 let dependencyApi = require('../sfdc_apis/dependencies');
 let usageApi = require('../sfdc_apis/usage');
 let toolingAPI = require('../sfdc_apis/tooling');
+let {ErrorHandler} = require('../services/errorHandling');
 
 
 
@@ -25,6 +26,12 @@ async function listMetadataJob(job){
       let soqlQuery = {query,filterById:false};
   
       let jsonResponse = await toolingApi.query(soqlQuery);
+
+      if(!jsonResponse){
+        let responseString = JSON.stringify(jsonResponse);
+        console.log('HAPPY SOUP ERROR: ',responseString);
+        throw new ErrorHandler(404,`Fault response from Tooling API query: ${responseString}`,'Fault response from listMetadata()'); 
+      }
   
       results = jsonResponse.records.map(record => {
           return {
@@ -37,6 +44,12 @@ async function listMetadataJob(job){
     else {
       let mdapi = metadataApi(serverSessions.getConnection(session));
       let jsonResponse = await mdapi.listMetadata(mdtype);
+
+      if(!jsonResponse || !Array.isArray(jsonResponse)){
+        let responseString = JSON.stringify(jsonResponse);
+        console.log('HAPPY SOUP ERROR: ',responseString);
+        throw new ErrorHandler(404,`Fault response from mdapi.ListMetadata(): ${responseString}`,'Fault response from listMetadata()');  
+      }
   
       results = jsonResponse.map(record => {
         return {
