@@ -38,7 +38,7 @@ function toolingAPI(connection){
                 }
 
                 else {
-                    console.log('HAPPY SOUP ERROR - when sending the following request ',res);
+                    console.log('HAPPY SOUP ERROR - when sending the following request ',request);
                     console.log('HAPPY SOUP ERROR - got the following response ',res);
                     throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
                 } 
