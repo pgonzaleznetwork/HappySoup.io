@@ -20,15 +20,23 @@ async function findReferences(connection,entryPoint){
 
     references.push(...apexClasses);
 
-    let emailTemplQuery = createEmailTemplateQuery(entryPoint.id);
-    let emailTemplate = await toolingApi.query(emailTemplQuery);
-    let templateFullName = emailTemplate.records[0].FullName;
+    //this can throw an error if the email template is in a private user's folder
+    //rather than failing completely, we just ignore this part and return the other results
+    try{
 
-    let customLabelQuery = createCustomLabelQuery(entryPoint,templateFullName);
-    let customLabels = await toolingApi.query(customLabelQuery);
-    customLabels = parseCustomLabels(customLabels);
-    
-    references.push(...customLabels);
+        let emailTemplQuery = createEmailTemplateQuery(entryPoint.id);
+        let emailTemplate = await toolingApi.query(emailTemplQuery);
+        let templateFullName = emailTemplate.records[0].FullName;
+
+        let customLabelQuery = createCustomLabelQuery(entryPoint,templateFullName);
+        let customLabels = await toolingApi.query(customLabelQuery);
+        customLabels = parseCustomLabels(customLabels);
+        
+        references.push(...customLabels);
+
+    }catch (error) {
+        //nothing to do, not critical functionality
+    }
 
     return references;
 
