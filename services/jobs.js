@@ -16,7 +16,7 @@ async function listMetadataJob(job){
     let {sessionId,mdtype} = job.data;
     let session = await getSession(sessionId);
 
-    let results;
+    let results = [];
 
     if(shouldUseToolingApi(mdtype)){
 
@@ -29,10 +29,12 @@ async function listMetadataJob(job){
 
       if(!jsonResponse){
         let responseString = JSON.stringify(jsonResponse);
-        console.log('HAPPY SOUP ERROR: ',responseString);
+        console.log('HAPPY SOUP ERROR tooling: ',responseString);
         throw new ErrorHandler(404,`Fault response from Tooling API query: ${responseString}`,'Fault response from listMetadata()'); 
       }
   
+      //the response from the tooling api always returns a records array even if it's empty
+      //so this operation is safe
       results = jsonResponse.records.map(record => {
           return {
             name:record.Name,
@@ -45,18 +47,21 @@ async function listMetadataJob(job){
       let mdapi = metadataApi(serverSessions.getConnection(session));
       let jsonResponse = await mdapi.listMetadata(mdtype);
 
-      if(!jsonResponse || !Array.isArray(jsonResponse)){
-        let responseString = JSON.stringify(jsonResponse);
-        console.log('HAPPY SOUP ERROR: ',responseString);
-        throw new ErrorHandler(404,`Fault response from mdapi.ListMetadata(): ${responseString}`,'Fault response from listMetadata()');  
-      }
-  
-      results = jsonResponse.map(record => {
-        return {
-          name:record.fullName,
-          id:record.id
+      if(jsonResponse){
+        //if multiple items are returned the response comes in array form
+        if(Array.isArray(jsonResponse)){
+          results = jsonResponse.map(record => {
+            return {
+              name:record.fullName,
+              id:record.id
+            }
+          });
         }
-    });
+        else{
+          //single item is returned as an object
+          results.push({name:jsonResponse.fullName,id:jsonResponse.id});
+        }
+      }      
     }
 
     let cache = cacheApi(session.cache);
