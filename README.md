@@ -2,16 +2,21 @@
 
  <img src="./github-images/cover.jpg">
 
-## The best way to visualize your Salesforce dependencies
+## Salesforce Impact Analysis | The best way to visualize your Salesforce dependencies
 
 <div style="margin-bottom:10px">
   <a href="#one-click-deployment-to-your-own-heroku-account">
     <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
   </a>
+  <a href="https://www.linkedin.com/company/happy-soup-app">
+    <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white">
+  </a>
+ 
+ https://www.linkedin.com/company/71103994/admin/
 </div>
 
 
-[Salesforce Happy Soup](https://happysoup.io) is a **100% free** and open source heroku app that you can use to get a full view of your Salesforce org dependencies. 
+[Salesforce Happy Soup](https://happysoup.io) is a **100% free** and open source app that you can use to get a full view of your Salesforce org dependencies and perform impact analysis.
 
 [Start using it!](https://happysoup.io)
 
