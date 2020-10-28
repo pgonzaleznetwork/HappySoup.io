@@ -45,10 +45,16 @@ function dependencyApi(connection,entryPoint,cache){
 
     function createDependecyTree(dependencies){
 
+        //create its own version of the objects to avoid
+        //side effects somewhere else
+        dependencies = dependencies.map(dep => {
+            return {...dep};
+        })
+
         let tree = initTree(dependencies);
         tree = reorderNodes(tree);
         let root = getRootNode(tree);
-    
+
         return root;
     
     }
@@ -68,7 +74,15 @@ function dependencyApi(connection,entryPoint,cache){
     
         let dependencyTree = dependencies.reduce((tree,dep) => {
     
-            let newNodeKey = dep.referencedBy.name;
+            //the node key and the dependency names must be unique so we create a special
+            //name which is the actual name plus the id
+            //this is because sometimes two different metadata types in a single tree can have the exact
+            //same name, which causes errors when creating the tree
+            //an example of this is a visualforce page called "MyPage" with a controller also called "MyPage"
+            //later in the tree parsing logic, we remove the special part from the name so that in the UI
+            //the name appears without the id
+            let newNodeKey = `${dep.referencedBy.name}:::${dep.referencedBy.id}`;
+            dep.name = `${dep.name}:::${dep.id}`;
         
             //if the tree doesn't yet have a node for this key
             if(!tree[newNodeKey]){
@@ -194,9 +208,6 @@ function dependencyApi(connection,entryPoint,cache){
      * initTree() and reorderNodes(). Since the tree is ordered at this point
      * we can discard these properties
      */
-
-
-
     function cleanReferences(references){
 
         for (let metadataType in references) {
@@ -214,7 +225,7 @@ function dependencyApi(connection,entryPoint,cache){
             })
         }
     }
-    
+
      
     /**
      * Recursively sort the references by their name. This allows custom fields of the same object type
@@ -343,6 +354,7 @@ function dependencyApi(connection,entryPoint,cache){
                     notes:null,
                     namespace: dep.RefMetadataComponentNamespace,
                     referencedBy:{
+                        //
                         name:dep.MetadataComponentName,
                         id:dep.MetadataComponentId,
                         type:dep.MetadataComponentType
