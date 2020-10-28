@@ -6,7 +6,7 @@ function createDependencyTree(tree,targetElement) {
     for (let topKey in tree) {
     
       //here we create the icon and name for the top node
-      let topMetadataName = document.createTextNode(` ${topKey}`);
+      let topMetadataName = document.createTextNode(` ${getDisplayName(topKey)}`);
   
       targetElement.appendChild(foldersApi.createFolderIcon(true));
       targetElement.appendChild(topMetadataName);
@@ -63,7 +63,7 @@ function createTreeNodes(refs,parentNode){
     }
   }
   
-  function createMemberNode(metadataTypeNode,member){
+function createMemberNode(metadataTypeNode,member){
   
     let memberNames = document.createElement('ul');
     memberNames.style.display = 'none';
@@ -72,8 +72,8 @@ function createTreeNodes(refs,parentNode){
     let memberName = document.createElement('a');
     memberName.setAttribute('href',member.url);
     memberName.setAttribute('target','_blank');
-    memberName.innerText = ` ${member.name}`;
-    
+ 
+    memberName.innerText = ` ${getDisplayName(member.name)}`;
     memberNodeName.appendChild(createMemberIcon());
     memberNodeName.appendChild(memberName);
 
@@ -93,25 +93,41 @@ function createTreeNodes(refs,parentNode){
     }
   }
   
-  function createMemberIcon(){
+function createMemberIcon(){
 
     let memberIcon = document.createElement('i');
     memberIcon.classList.add(...['fa','fa-code']);
     return memberIcon;
+}
+
+function createWarningIcon(){
+  let warningIcon = document.createElement('i');
+  warningIcon.classList.add('fa', 'fa-exclamation-triangle');
+  return warningIcon;
+}
+
+function createPill(text){
+  let pill = document.createElement('span');
+  pill.classList.add(...['class-info',text]);
+  pill.innerText = text;
+  return pill;
+}
+
+/**
+ * Removes the special character ::: that is added by the API to ensure that the
+ * key is unique. We no longer need this character here
+ */
+function getDisplayName(name){
+
+  let displayName = name;
+  let indexOfSpecialChar = name.indexOf(':::');
+
+  if(indexOfSpecialChar != -1){
+    displayName = name.substr(0,indexOfSpecialChar);
   }
 
-  function createWarningIcon(){
-    let warningIcon = document.createElement('i');
-    warningIcon.classList.add('fa', 'fa-exclamation-triangle');
-    return warningIcon;
-  }
-
-  function createPill(text){
-    let pill = document.createElement('span');
-    pill.classList.add(...['class-info',text]);
-    pill.innerText = text;
-    return pill;
-  }
+  return displayName;
+}
 
   export const treeApi = {
     createDependencyTree,createUsageTree
