@@ -11,9 +11,9 @@
 </div>
 
 
-[Salesforce Happy Soup](happysoup.io) is a **100% free** and open source heroku app that you can use to get a full view of your Salesforce org dependencies. 
+[Salesforce Happy Soup](https://happysoup.io) is a **100% free** and open source heroku app that you can use to get a full view of your Salesforce org dependencies. 
 
-[Start using it!](happysoup.io)
+[Start using it!](https://happysoup.io)
 
 No complex sfdx commands :x:                  
 
@@ -21,7 +21,7 @@ No installation :x:
 
 No **development knowledge** required :x:  
 
-Just [log in](happysoup.io) and start sipping the soup! :stew: :clap: :white_check_mark:
+Just [log in](https://happysoup.io) and start sipping the soup! :stew: :clap: :white_check_mark:
 
 [Watch full demo](https://www.youtube.com/watch?v=2asljhebqlY&t=6s) 
 
