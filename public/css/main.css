@@ -221,13 +221,18 @@ canvas{
     100% { transform: rotate(360deg); }
   }
 
-.form select, .form input, .form button{
+.form select, .form input[type=text], .form button{
     width: 60%;
     height:30px;
     padding:5px;
     margin-left:0;
     text-align: center;
     font-size:14px;
+}
+
+#options{
+    font-size:13px;
+    margin-top: 15px;
 }
 
 /*.form input{
