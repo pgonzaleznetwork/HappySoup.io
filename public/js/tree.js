@@ -81,9 +81,15 @@ function createMemberNode(metadataTypeNode,member){
       memberNodeName.appendChild(createWarningIcon());
     }
 
-    if(member.fieldMode){
+    console.log(member);
+
+    member.pills.forEach(pill => {
+      memberNodeName.appendChild(createPill(pill));
+    })
+
+    /*if(member.fieldMode){
       memberNodeName.appendChild(createPill(member.fieldMode));
-    }
+    }*/
   
     memberNames.appendChild(memberNodeName);
     metadataTypeNode.appendChild(memberNames);
@@ -106,11 +112,12 @@ function createWarningIcon(){
   return warningIcon;
 }
 
-function createPill(text){
-  let pill = document.createElement('span');
-  pill.classList.add(...['class-info',text]);
-  pill.innerText = text;
-  return pill;
+function createPill(pill){
+  let pillEl = document.createElement('span');
+  pillEl.classList.add(['pill']);
+  pillEl.style.backgroundColor = pill.color;
+  pillEl.innerText = pill.label;
+  return pillEl;
 }
 
 /**

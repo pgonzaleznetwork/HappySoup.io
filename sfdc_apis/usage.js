@@ -76,6 +76,10 @@ function usageApi(connection,entryPoint,cache){
 
         metadataArray.forEach(metadata => {
 
+            //make sure every metadata item has a pills property that we can add values
+            //to later
+            metadata.pills = [];
+
             let {type} = metadata;
             type = type.toUpperCase();
 
@@ -157,8 +161,6 @@ function usageApi(connection,entryPoint,cache){
         let ids = reports.map(r => r.id);
         let reportsMetadata = await reportsApi.getReportsMetadata(ids);
 
-        //console.log(reportsMetadata.records);
-
         let reportsMetadataById = new Map();
     
         reportsMetadata.records.forEach(rep => {
@@ -171,26 +173,23 @@ function usageApi(connection,entryPoint,cache){
             }
         });
 
-        console.log(reportsMetadataById);
-
         let fullFieldName = entryPoint.name;
 
         reports.forEach(report => {
-
-            report.pills = [];
 
             let reportMetadata = reportsMetadataById.get(report.id);
 
             if(reportMetadata){
                 //if the report has groupings and one of the groupings uses the field in question
                 if(reportMetadata.reportExtendedMetadata.groupingColumnInfo && reportMetadata.reportExtendedMetadata.groupingColumnInfo[fullFieldName]){
-                    report.pills.push({label:'Grouping',color:'red'});
+                    report.pills.push({label:'Grouping',color:getColor('red')});
                 }
 
+                //if the report has filters and uses the field as a filter criteria
                 if(reportMetadata.reportMetadata.reportFilters){
                     reportMetadata.reportMetadata.reportFilters.forEach(filter => {
                         if(filter.column == fullFieldName){
-                            report.pills.push({label:'Filter Condition',color:'red'});
+                            report.pills.push({label:'Filter Condition',color:getColor('red')});
                         }
                     })
                 }
@@ -199,9 +198,15 @@ function usageApi(connection,entryPoint,cache){
                 //if there isn't a match here is because the response for this report
                 //came in an array format, which means that the report is in a private folder
                 //and its metadata is not available to the running user
-                report.pills.push({label:'Unavailable - Report is in private folder',color:'red'});
+                report.pills.push({label:'Unavailable - Report is in private folder',color:getColor()});
             }
 
+            //if we reach this point and there are no pills on this report, it means that the report
+            //is accessible, but the field in question is not used for filtering or grouping
+            //it is only used for view
+            if(report.pills.length < 1){
+                report.pills.push({label:'View only',color:'green'});
+            }
         });
 
         return reports;
@@ -243,16 +248,16 @@ function usageApi(connection,entryPoint,cache){
         
         apexClasses.forEach(ac => {
 
-            //by default we assume that the mode is read only
-            ac.fieldMode = 'read';
-
             let body = classBodyById.get(ac.id);
             if(body){
                 //remove all white space/new lines
                 body = body.replace(/\s/g,'');
 
                 if(body.match(assignmentExp)){
-                    ac.fieldMode = 'write';
+                    ac.pills.push({label:'write',color:getColor('red')});
+                }
+                else{
+                    ac.pills.push({label:'read',color:getColor('green')});
                 }
             }
         });
@@ -453,6 +458,21 @@ function usageApi(connection,entryPoint,cache){
     }
 
     return {getUsage}
+}
+
+function getColor(color){
+
+    //default grey color
+    let hex = '#7f766c';
+
+    if(color == 'red'){
+        hex = '#d63031';
+    }
+    else if(color == 'green'){
+        hex = '#3c9662';
+    }
+    
+    return hex;
 }
 
 

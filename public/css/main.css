@@ -470,7 +470,7 @@ select {
 }
 
 
-.class-info{
+.pill{
     border: 1px solid white;
     border-radius: 50px;
     padding-left: 5px;
@@ -479,13 +479,5 @@ select {
     padding-top: 0px;
     padding-bottom: 1px;
     font-size: 11px;
-}
-
-.write{
-    background-color: #d63031;
-}
-
-.read{
-    background-color: #3c9662;
 }
 
