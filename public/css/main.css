@@ -233,6 +233,7 @@ canvas{
 #options{
     font-size:13px;
     margin-top: 15px;
+    display:none;
 }
 
 /*.form input{

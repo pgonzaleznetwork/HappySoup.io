@@ -25,6 +25,7 @@ const SFDM = function(){
         let csvButton = byId('csv-button');
         let excelButton = byId('excel-button');
         let canvasContainer = byId('canvas-container');
+        let optionsContainer = byId('options');
         let canvas = byId('stats');
         let barChart;
         let memberIdsByName = new Map();
@@ -39,6 +40,7 @@ const SFDM = function(){
         collapseButon.onclick = collapseFolders;
         expandButton.onclick = expandFolders;
         mdDropDown.onchange = getMetadataMembers;
+        queryTypeDropDown.onchange = filterOptions;
         packageButton.onclick = downloadPackageXml;
         searchButton.onclick = doSearch;
         csvButton.onclick = copyFile;
@@ -48,6 +50,17 @@ const SFDM = function(){
             getSupportedMetadataTypes();
             getIdentityInfo();
             getInstanceURL();
+        }
+
+        function filterOptions(){
+            let selectedQueryType = queryTypeDropDown.value;
+            let mdType = mdDropDown.value;
+            if(selectedQueryType == 'usage' && mdType == 'CustomField'){
+                optionsContainer.style.display = 'block';
+            }
+            else{
+                optionsContainer.style.display = 'none';
+            }
         }
 
         function switchTheme(event){
