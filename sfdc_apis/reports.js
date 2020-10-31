@@ -14,7 +14,6 @@ function reportsAPI(connection){
             reportIds.map(async (reportId) => {
     
                 let request = `${connection.url}${endpoints.reportsApi}reports/${reportId}/describe`; 
-                console.log(request);
                 let options = getFetchOptions(connection.token)
                 
                 let res = await fetch(request,options);

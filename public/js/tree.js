@@ -81,8 +81,6 @@ function createMemberNode(metadataTypeNode,member){
       memberNodeName.appendChild(createWarningIcon());
     }
 
-    console.log(member);
-
     member.pills.forEach(pill => {
       memberNodeName.appendChild(createPill(pill));
     })
