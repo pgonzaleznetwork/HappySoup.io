@@ -14,9 +14,12 @@ export function handleError(error){
         ${error.stack}`);     
     }
     else{
-        appendWarning(`We are sorry, something went wrong. Please click <a style="font-weight: bold" href="https://github.com/pgonzaleznetwork/sfdc-happy-soup/issues/new?title=${error.message}&body=${error.stack}" target="_blank">here</a> to log a Github 
-        issue with the following details: ${error.message} 
-        ${error.stack}`,{html:true});
+        appendWarning(`We are sorry, something went wrong. Please click <a style="font-weight: bold" href="https://github.com/pgonzaleznetwork/sfdc-happy-soup/issues/new" target="_blank">here</a> to log a Github 
+        issue so that we can review the error. Please include the following details: ${error.message} 
+        ${error.stack}
+        
+        <p>If you don't have a github account, please email us a <b>pgonzaleznetwork@gmail.com</b></p>
+        `,{html:true});
     }
 }
 
