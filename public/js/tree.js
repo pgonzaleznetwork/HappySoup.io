@@ -81,14 +81,12 @@ function createMemberNode(metadataTypeNode,member){
       memberNodeName.appendChild(createWarningIcon());
     }
 
-    member.pills.forEach(pill => {
-      memberNodeName.appendChild(createPill(pill));
-    })
+    if(member.pills){
+      member.pills.forEach(pill => {
+        memberNodeName.appendChild(createPill(pill));
+      })
+    }
 
-    /*if(member.fieldMode){
-      memberNodeName.appendChild(createPill(member.fieldMode));
-    }*/
-  
     memberNames.appendChild(memberNodeName);
     metadataTypeNode.appendChild(memberNames);
   
