@@ -1,8 +1,6 @@
 let fetch = require('node-fetch');
 require('dotenv').config();
-let {ErrorHandler} = require('../services/errorHandling');
 let endpoints = require('./endpoints');
-let utils = require('../services/utils');
 
 
 function reportsAPI(connection){
@@ -14,12 +12,20 @@ function reportsAPI(connection){
             reportIds.map(async (reportId) => {
     
                 let request = `${connection.url}${endpoints.reportsApi}reports/${reportId}/describe`; 
-                let options = getFetchOptions(connection.token)
-                
-                let res = await fetch(request,options);
-                let json = await res.json();
+                let options = getFetchOptions(connection.token);
 
-                return json;
+                try {
+                    let res = await fetch(request,options);
+                    let json = await res.json();
+
+                    return json;
+                } catch (error) {
+                    //if one report throws an error here, we can move on to the next
+                    //one because this is not critical functionality
+                    console.log('HAPPY SOUP ERROR - when querying report metadata: ',error);
+                }
+                
+                
             })
         );
     
