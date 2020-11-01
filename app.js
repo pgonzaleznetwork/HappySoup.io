@@ -33,8 +33,6 @@ app.use('/oauth2',require('./routes/oauthRouter'));
 //authentication for some public routes
 app.use((req,res,next) => {
 
-  console.log('what is the hostname: ',req.hostname);
-
   let authenticatedPublicRoutes = ['/dependencies.html','/dependencies'];
 
   if(authenticatedPublicRoutes.indexOf(req.path) != -1 && !req.session.oauthSuccess){
