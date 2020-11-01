@@ -236,6 +236,10 @@ canvas{
     display:none;
 }
 
+#options a{
+    text-decoration:underline;
+}
+
 /*.form input{
    margin-top:10px;
    margin-bottom: 10px;
@@ -482,7 +486,7 @@ select {
     padding-left: 5px;
     padding-right: 5px;
     margin-left: 5px;
-    padding-top: 0px;
+    padding-top: 1px;
     padding-bottom: 1px;
     font-size: 11px;
 }

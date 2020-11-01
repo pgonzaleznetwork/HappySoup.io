@@ -26,6 +26,7 @@ const SFDM = function(){
         let excelButton = byId('excel-button');
         let canvasContainer = byId('canvas-container');
         let canvas = byId('stats');
+        let optionsContainer = byId('options');
         let barChart;
         let memberIdsByName = new Map();
         let lastApiResponse;
@@ -207,7 +208,16 @@ const SFDM = function(){
 
         async function findUsage(selectedMember,selectedMemberId,selectedMetadataType){
 
-            let url = `api/usage?name=${selectedMember}&id=${selectedMemberId}&type=${selectedMetadataType}`;
+            let inputOptions = Array.from(optionsContainer.getElementsByTagName('input'));
+            let options = {};
+
+            inputOptions.forEach(option => {
+                options[option.id] =  option.checked;
+            });
+
+            options = JSON.stringify(options);
+
+            let url = `api/usage?name=${selectedMember}&id=${selectedMemberId}&type=${selectedMetadataType}&options=${options}`;
 
             let response = await fetch(url);
             let json = await response.json();

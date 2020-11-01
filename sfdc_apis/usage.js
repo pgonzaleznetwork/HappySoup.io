@@ -3,11 +3,12 @@ let reportsAPI = require('../sfdc_apis/reports');
 let utils = require('../services/utils');
 let stats = require('../services/stats');
 let format = require('../services/fileFormats');
-const endpoints = require('./endpoints');
+
 
 function usageApi(connection,entryPoint,cache){
 
     let toolingApi = toolingAPI(connection);
+    let {options} = entryPoint;
 
     async function getUsage(){
 
@@ -155,6 +156,10 @@ function usageApi(connection,entryPoint,cache){
      * checking the report metadata against the analytics API 
      */
     async function getFieldInfoForReport(reports){
+
+        //exist early and return the original report objects if the
+        //client side did not enable this option
+        if(!options.enhancedReportData) return reports;
 
         let reportsApi = reportsAPI(connection);
 

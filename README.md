@@ -133,6 +133,16 @@ For example, changing a picklist value or changing a field type could have side-
 
 Don't break your org! Use the Impact Analysis feature before making any changes so that you are fully aware of what areas could be impacted.
 
+### Enhanced Report Data
+
+When a field is used in a report, by default Happy Soup will only show you which reports the field is used in, but not how
+
+ <img src="./github-images/reports-simpleinfo.png" width="200px" height="100px">
+
+When selecting the Impact Analysis feature for a custom field, you'll be given the option to display whether the field is used for the purposes of filtering, grouping or visualization.
+
+ <img src="./github-images/reports-enhancedinfo.png" width="400px" height="120px">
+
 
 [Back to top](#salesforce-happy-soup)
 
