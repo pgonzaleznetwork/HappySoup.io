@@ -1,11 +1,14 @@
 let toolingAPI = require('../sfdc_apis/tooling');
+let reportsAPI = require('../sfdc_apis/reports');
 let utils = require('../services/utils');
 let stats = require('../services/stats');
 let format = require('../services/fileFormats');
 
+
 function usageApi(connection,entryPoint,cache){
 
     let toolingApi = toolingAPI(connection);
+    let {options} = entryPoint;
 
     async function getUsage(){
 
@@ -69,9 +72,14 @@ function usageApi(connection,entryPoint,cache){
         let layouts = [];
         let lookupFilters = [];
         let apexClasses = [];
+        let reports = [];
         let otherMetadata = [];
 
         metadataArray.forEach(metadata => {
+
+            //make sure every metadata item has a pills property that we can add values
+            //to later
+            metadata.pills = [];
 
             let {type} = metadata;
             type = type.toUpperCase();
@@ -89,8 +97,16 @@ function usageApi(connection,entryPoint,cache){
             else if(type == 'LOOKUPFILTER'){ 
                 lookupFilters.push(metadata);
             }
-            else if(type == 'APEXCLASS' && entryPoint.type == 'CustomField'){ 
-                apexClasses.push(metadata);
+            //for the following metadata types, we only need to enhance their data when the entry point is 
+            //a custom field, this is because fields can be used by these metadata types in different ways
+            //for example a field can be used in a report for its filter conditions or only for viewing 
+            else if(entryPoint.type.toUpperCase() == 'CUSTOMFIELD'){
+                if(type == 'APEXCLASS'){
+                    apexClasses.push(metadata);
+                }
+                else if(type == 'REPORT'){
+                    reports.push(metadata);
+                }
             }
             else{
                 otherMetadata.push(metadata);
@@ -117,7 +133,10 @@ function usageApi(connection,entryPoint,cache){
             lookupFilters = await getLookupFilterDetails(lookupFilters);
         }
         if(apexClasses.length){
-            apexClasses = await getFieldUsageMode(apexClasses);
+            apexClasses = await getFieldInfoForClass(apexClasses);
+        }
+        if(reports.length){
+            reports = await getFieldInfoForReport(reports);
         }
 
         otherMetadata.push(...customFields);
@@ -125,8 +144,77 @@ function usageApi(connection,entryPoint,cache){
         otherMetadata.push(...layouts);
         otherMetadata.push(...lookupFilters);
         otherMetadata.push(...apexClasses);
+        otherMetadata.push(...reports);
 
         return otherMetadata;
+
+    }
+
+    /**
+     * We know that the field is referenced in these reports, but is it
+     * used for filtering conditions or just for visualization? We determine that here by 
+     * checking the report metadata against the analytics API 
+     */
+    async function getFieldInfoForReport(reports){
+
+        //exist early and return the original report objects if the
+        //client side did not enable this option
+        if(!options.enhancedReportData) return reports;
+
+        let reportsApi = reportsAPI(connection);
+
+        let ids = reports.map(r => r.id);
+        let reportsMetadata = await reportsApi.getReportsMetadata(ids);
+
+        let reportsMetadataById = new Map();
+    
+        reportsMetadata.records.forEach(rep => {
+
+            //when the data is accessible to the running user, the response comes 
+            //as a single json object
+            //if the report is in a private folder, the response comes in an array format
+            if(!Array.isArray(rep)){
+                reportsMetadataById.set(rep.attributes.reportId,rep);
+            }
+        });
+
+        let fullFieldName = entryPoint.name;
+
+        reports.forEach(report => {
+
+            let reportMetadata = reportsMetadataById.get(report.id);
+
+            if(reportMetadata){
+                //if the report has groupings and one of the groupings uses the field in question
+                if(reportMetadata.reportExtendedMetadata.groupingColumnInfo && reportMetadata.reportExtendedMetadata.groupingColumnInfo[fullFieldName]){
+                    report.pills.push({label:'Grouping',color:getColor('red')});
+                }
+
+                //if the report has filters and uses the field as a filter criteria
+                if(reportMetadata.reportMetadata.reportFilters){
+                    reportMetadata.reportMetadata.reportFilters.forEach(filter => {
+                        if(filter.column == fullFieldName){
+                            report.pills.push({label:'Filter Condition',color:getColor('red')});
+                        }
+                    })
+                }
+            }
+            else{
+                //if there isn't a match here is because the response for this report
+                //came in an array format, which means that the report is in a private folder
+                //and its metadata is not available to the running user
+                report.pills.push({label:'Unavailable - Report is in private folder',color:getColor()});
+            }
+
+            //if we reach this point and there are no pills on this report, it means that the report
+            //is accessible, but the field in question is not used for filtering or grouping
+            //it is only used for view
+            if(report.pills.length < 1){
+                report.pills.push({label:'View only',color:'green'});
+            }
+        });
+
+        return reports;
 
     }
 
@@ -135,7 +223,7 @@ function usageApi(connection,entryPoint,cache){
      * used for reading or assignment? We determine that here by checking
      * if the field is used in an assignment expression in the body of the class
      */
-    async function getFieldUsageMode(apexClasses){
+    async function getFieldInfoForClass(apexClasses){
 
         //i.e field_name__c without the object prefix
         let refCustomField = entryPoint.name.split('.')[1];
@@ -165,16 +253,16 @@ function usageApi(connection,entryPoint,cache){
         
         apexClasses.forEach(ac => {
 
-            //by default we assume that the mode is read only
-            ac.fieldMode = 'read';
-
             let body = classBodyById.get(ac.id);
             if(body){
                 //remove all white space/new lines
                 body = body.replace(/\s/g,'');
 
                 if(body.match(assignmentExp)){
-                    ac.fieldMode = 'write';
+                    ac.pills.push({label:'write',color:getColor('red')});
+                }
+                else{
+                    ac.pills.push({label:'read',color:getColor('green')});
                 }
             }
         });
@@ -375,6 +463,21 @@ function usageApi(connection,entryPoint,cache){
     }
 
     return {getUsage}
+}
+
+function getColor(color){
+
+    //default grey color
+    let hex = '#7f766c';
+
+    if(color == 'red'){
+        hex = '#d63031';
+    }
+    else if(color == 'green'){
+        hex = '#3c9662';
+    }
+    
+    return hex;
 }
 
 

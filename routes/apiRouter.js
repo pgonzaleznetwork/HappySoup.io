@@ -89,9 +89,25 @@ apiRouter.route('/usage')
         try {
 
             let entryPoint = {...req.query};
+            entryPoint.options = JSON.parse(entryPoint.options);
+
+            //a job to get the usage of a metadata item is different
+            //if the client passed options on the job
+            //therefore we create a string concatenating all the options
+            //that were passed as true
+            //this way if the job is submitted again but with one option set
+            //to false, we don't return the previously cached response but instead
+            //create a brand new job with a unique key
+            let optionsString = '';
+
+            for (const property in entryPoint.options) {
+                if(entryPoint.options[property] == true){
+                    optionsString += property;
+                }
+            }
 
             let cache = cacheApi(req.session.cache);
-            let cacheKey = `usage-${entryPoint.id}`;
+            let cacheKey = `usage-${entryPoint.id}${optionsString}`;
           
             let cachedData = cache.getUsage(cacheKey);
 
@@ -143,7 +159,6 @@ apiRouter.route('/metadata')
             let cachedData = cache.getMetadataList(cacheKey);
 
             if(cachedData){
-                console.log('retrieved from cache!');
                 res.status(202).json(cachedData);
             }
             else{

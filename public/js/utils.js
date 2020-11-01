@@ -59,6 +59,23 @@ function createWarning(text,options){
     return clone;
 }
 
+function filterOptions(){
+
+    let queryTypeDropDown = byId('query-type');
+    let mdDropDown = byId('md-type-select');
+    let optionsContainer = byId('options');
+
+    let selectedQueryType = queryTypeDropDown.value;
+    let mdType = mdDropDown.value;
+    if(selectedQueryType == 'usage' && mdType == 'CustomField'){
+        optionsContainer.style.display = 'block';
+    }
+    else{
+        optionsContainer.style.display = 'none';
+    }
+}
+
+
 function showHelpText(name,type){
     let helpText = byId(`${type}-help`);
     helpText.style.display = 'block';
@@ -129,5 +146,6 @@ export const utils = {
     createWarning,
     showHelpText,
     hideHelpText,
-    byId
+    byId,
+    filterOptions
 }

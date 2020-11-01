@@ -221,13 +221,23 @@ canvas{
     100% { transform: rotate(360deg); }
   }
 
-.form select, .form input, .form button{
+.form select, .form input[type=text], .form button{
     width: 60%;
     height:30px;
     padding:5px;
     margin-left:0;
     text-align: center;
     font-size:14px;
+}
+
+#options{
+    font-size:13px;
+    margin-top: 15px;
+    display:none;
+}
+
+#options a{
+    text-decoration:underline;
 }
 
 /*.form input{
@@ -470,22 +480,14 @@ select {
 }
 
 
-.class-info{
+.pill{
     border: 1px solid white;
     border-radius: 50px;
     padding-left: 5px;
     padding-right: 5px;
     margin-left: 5px;
-    padding-top: 0px;
+    padding-top: 1px;
     padding-bottom: 1px;
     font-size: 11px;
-}
-
-.write{
-    background-color: #d63031;
-}
-
-.read{
-    background-color: #3c9662;
 }
 

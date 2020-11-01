@@ -2,7 +2,7 @@
 import {foldersApi} from './folders.js';
 import {autocompleteApi} from './autocompleteLib.js';
 import {treeApi} from './tree.js';
-import {utils} from './utils.js'
+import {utils as UI} from './utils.js'
 import {byId} from './utils.js';
 import {handleError} from './errors.js';
 
@@ -26,6 +26,7 @@ const SFDM = function(){
         let excelButton = byId('excel-button');
         let canvasContainer = byId('canvas-container');
         let canvas = byId('stats');
+        let optionsContainer = byId('options');
         let barChart;
         let memberIdsByName = new Map();
         let lastApiResponse;
@@ -39,6 +40,7 @@ const SFDM = function(){
         collapseButon.onclick = collapseFolders;
         expandButton.onclick = expandFolders;
         mdDropDown.onchange = getMetadataMembers;
+        queryTypeDropDown.onchange = UI.filterOptions;
         packageButton.onclick = downloadPackageXml;
         searchButton.onclick = doSearch;
         csvButton.onclick = copyFile;
@@ -49,6 +51,7 @@ const SFDM = function(){
             getIdentityInfo();
             getInstanceURL();
         }
+
 
         function switchTheme(event){
 
@@ -131,10 +134,11 @@ const SFDM = function(){
 
         async function getMetadataMembers(event){
 
-            utils.showProgressBar();
-            utils.toggleDropdown(mdDropDown,true);
-            utils.disableInputField(inputField);
-            utils.disableButton(searchButton);
+            UI.filterOptions();
+            UI.showProgressBar();
+            UI.toggleDropdown(mdDropDown,true);
+            UI.disableInputField(inputField);
+            UI.disableButton(searchButton);
 
             selectedMetadataType = event.target.value;
 
@@ -149,8 +153,8 @@ const SFDM = function(){
 
             else if(json.error){
                 handleError(json);
-                utils.toggleDropdown(mdDropDown,false);
-                utils.hideProgressBar();
+                UI.toggleDropdown(mdDropDown,false);
+                UI.hideProgressBar();
             }
             else{
 
@@ -169,9 +173,9 @@ const SFDM = function(){
                 let selectedOption = mdDropDown.options[mdDropDown.selectedIndex];
                 selectedOption.label = `${selectedOption.innerText} (${members.length})`;
     
-                utils.enableInputField(inputField,selectedMetadataType);
-                utils.toggleDropdown(mdDropDown,false);
-                utils.hideProgressBar();
+                UI.enableInputField(inputField,selectedMetadataType);
+                UI.toggleDropdown(mdDropDown,false);
+                UI.hideProgressBar();
             }   
         }
 
@@ -204,7 +208,16 @@ const SFDM = function(){
 
         async function findUsage(selectedMember,selectedMemberId,selectedMetadataType){
 
-            let url = `api/usage?name=${selectedMember}&id=${selectedMemberId}&type=${selectedMetadataType}`;
+            let inputOptions = Array.from(optionsContainer.getElementsByTagName('input'));
+            let options = {};
+
+            inputOptions.forEach(option => {
+                options[option.id] =  option.checked;
+            });
+
+            options = JSON.stringify(options);
+
+            let url = `api/usage?name=${selectedMember}&id=${selectedMemberId}&type=${selectedMetadataType}&options=${options}`;
 
             let response = await fetch(url);
             let json = await response.json();
@@ -219,7 +232,7 @@ const SFDM = function(){
 
             else{
                 
-                utils.hideLoader();
+                UI.hideLoader();
 
                 let isEmpty = (Object.keys(json.usageTree).length === 0);
                 
@@ -227,20 +240,20 @@ const SFDM = function(){
                 if(!isEmpty){
                     displayStats(json.stats,'usage');
                     treeApi.createUsageTree(json.usageTree,usageTreePlaceholder);
-                    utils.showHelpText(json.entryPoint.name,'usage');
+                    UI.showHelpText(json.entryPoint.name,'usage');
                     lastApiResponse = json;
                 }
                 else{
-                    usageTreePlaceholder.appendChild(utils.createWarning(`No results. There are 3 main reasons for this:
+                    usageTreePlaceholder.appendChild(UI.createWarning(`No results. There are 3 main reasons for this:
                     1) This metadata is not used anywhere.
                     2) This metadata is part of a managed package.
                     3) This metadata type is not fully supported by the MetadataComponentDependency API.
                     `));
                 }
 
-                utils.toggleDropdown(mdDropDown,false);
-                utils.enableButton(searchButton);
-                setTimeout(utils.scrollTo,200,byId('usage-help'));
+                UI.toggleDropdown(mdDropDown,false);
+                UI.enableButton(searchButton);
+                setTimeout(UI.scrollTo,200,byId('usage-help'));
             }
         }
 
@@ -261,7 +274,7 @@ const SFDM = function(){
 
             else{
 
-                utils.hideLoader();
+                UI.hideLoader();
 
                let isEmpty = (Object.keys(json.dependencyTree).length === 0);
                 
@@ -269,20 +282,20 @@ const SFDM = function(){
                 if(!isEmpty){
                     displayStats(json.stats,'deps');
                     treeApi.createDependencyTree(json.dependencyTree,dependencyTreePlaceholder);
-                    utils.showHelpText(json.entryPoint.name,'deps');
+                    UI.showHelpText(json.entryPoint.name,'deps');
                     lastApiResponse = json;
                 }
                 else{
-                    dependencyTreePlaceholder.appendChild(utils.createWarning(`No results. There are 3 main reasons for this:
+                    dependencyTreePlaceholder.appendChild(UI.createWarning(`No results. There are 3 main reasons for this:
                     1) This metadata does not reference/use any other metadata.
                     2) This metadata is part of a managed package.
                     3) This metadata type is not fully supported by the MetadataComponentDependency API.
                     `));
                 }
 
-                utils.toggleDropdown(mdDropDown,false);
-                utils.enableButton(searchButton);
-                setTimeout(utils.scrollTo,200,byId('deps-help'));
+                UI.toggleDropdown(mdDropDown,false);
+                UI.enableButton(searchButton);
+                setTimeout(UI.scrollTo,200,byId('deps-help'));
             }
         }
 
@@ -369,7 +382,7 @@ const SFDM = function(){
             }
             else if(state == 'failed' && !latestInvertalDone){
                 stopPolling();
-                utils.toggleDropdown(mdDropDown,false);
+                UI.toggleDropdown(mdDropDown,false);
                 handleError(error);
             }
         }
@@ -431,12 +444,12 @@ const SFDM = function(){
 
         function displayLoadingUI(){
             
-            utils.hideTrees();
-            utils.hideHelpText();
-            utils.disableButton(searchButton);
-            utils.toggleDropdown(mdDropDown,true);
-            utils.showLoader();
-            utils.hideChart();
+            UI.hideTrees();
+            UI.hideHelpText();
+            UI.disableButton(searchButton);
+            UI.toggleDropdown(mdDropDown,true);
+            UI.showLoader();
+            UI.hideChart();
         }
     }
 
