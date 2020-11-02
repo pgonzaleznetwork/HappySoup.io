@@ -25,14 +25,14 @@ if (process.env.REDIS_URL){
 require('dotenv').config();
 
 /**
- * The expire time for both the cookie and the server side session is set to 8 hours. This is because the salesforce connected app
- * is also configured to expire the access token in 8 hours. The idea is that we shouldn't let sessions linger for longer than their
+ * The expire time for both the cookie and the server side session is set to 2 hours. This is because the salesforce connected app
+ * is also configured to expire the access token in 2 hours. The idea is that we shouldn't let sessions linger for longer than their
  * actual usable time. 
  * The dependenciesRouter file is anyway configured to destroy the session if the oauth token has expired, but this configuration here
- * (the 8 hours timeout value) is a best effort to keep the server session sort of in sync with the oauth token
+ * (the 2 hours timeout value) is a best effort to keep the server session sort of in sync with the oauth token
  * 
  */
-const EXPIRE_TIME = 28800000;
+const EXPIRE_TIME = 7200000;
 
 let sessionStore = new RedisStore({
   host: redisHost, 

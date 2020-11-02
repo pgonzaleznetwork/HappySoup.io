@@ -71,13 +71,14 @@ async function listMetadataJob(job){
 
     return {
       newCache:session.cache,
+      response:results
     }
   }
     
 
 async function usageJob(job){
 
-    let {entryPoint,cacheKey,sessionId} = job.data;
+    let {entryPoint,sessionId} = job.data;
     let session = await getSession(sessionId);
 
     let cache = cacheApi(session.cache);
@@ -86,16 +87,15 @@ async function usageJob(job){
     let api = usageApi(connection,entryPoint,cache);
     let response = await api.getUsage();
 
-    cache.cacheUsage(cacheKey,response);
-
     return {
       newCache:session.cache,
+      response
     }
   }
 
 async function dependencyJob(job){
 
-    let {entryPoint,cacheKey,sessionId} = job.data;
+    let {entryPoint,sessionId} = job.data;
     let session = await getSession(sessionId);
 
     let cache = cacheApi(session.cache);
@@ -104,10 +104,9 @@ async function dependencyJob(job){
     let api = dependencyApi(connection,entryPoint,cache);
     let response = await api.getDependencies();
  
-    cache.cacheDependency(cacheKey,response);
-
     return {
       newCache:session.cache,
+      response
     }
 
 }

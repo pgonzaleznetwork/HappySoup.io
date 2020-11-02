@@ -39,7 +39,7 @@ const SFDM = function(){
         logoutButton.onclick = logout;
         collapseButon.onclick = collapseFolders;
         expandButton.onclick = expandFolders;
-        mdDropDown.onchange = getMetadataMembers;
+        mdDropDown.onchange = submitGetMembersJob;
         queryTypeDropDown.onchange = UI.filterOptions;
         packageButton.onclick = downloadPackageXml;
         searchButton.onclick = doSearch;
@@ -131,8 +131,9 @@ const SFDM = function(){
             });
         }
 
+        async function submitGetMembersJob(event){
 
-        async function getMetadataMembers(event){
+            let callback = processGetMembersResponse;
 
             UI.filterOptions();
             UI.showProgressBar();
@@ -148,7 +149,7 @@ const SFDM = function(){
             let {jobId} = json;
 
             if(jobId){
-                callItselfWhenJobIsDone(jobId,getMetadataMembers,arguments);
+                registerPolling(jobId,callback)
             }     
 
             else if(json.error){
@@ -157,29 +158,32 @@ const SFDM = function(){
                 UI.hideProgressBar();
             }
             else{
-
-                //if
-
-                let members = [];
-
-                json.forEach(metadata => {
-                    members.push(metadata.name);
-                    memberIdsByName.set(metadata.name,metadata.id);
-                })
-                
-                autocompleteApi.autocomplete(inputField, members);
-
-                //rename the selected option to display the number of metadata members
-                let selectedOption = mdDropDown.options[mdDropDown.selectedIndex];
-                selectedOption.label = `${selectedOption.innerText} (${members.length})`;
-    
-                UI.enableInputField(inputField,selectedMetadataType);
-                UI.toggleDropdown(mdDropDown,false);
-                UI.hideProgressBar();
-            }   
+                //we got cached data
+                callback(json);
+            }
         }
 
-    
+        async function processGetMembersResponse(response){
+
+            let members = [];
+
+            response.forEach(metadata => {
+                members.push(metadata.name);
+                memberIdsByName.set(metadata.name,metadata.id);
+            })
+            
+            autocompleteApi.autocomplete(inputField, members);
+
+            //rename the selected option to display the number of metadata members
+            let selectedOption = mdDropDown.options[mdDropDown.selectedIndex];
+            selectedOption.label = `${selectedOption.innerText} (${members.length})`;
+
+            UI.enableInputField(inputField,selectedMetadataType);
+            UI.toggleDropdown(mdDropDown,false);
+            UI.hideProgressBar();
+        }
+
+        
         async function doSearch(){
 
             let selectedMember = inputField.value;
@@ -199,14 +203,14 @@ const SFDM = function(){
             displayLoadingUI();
 
             if(selectedQueryType == 'deps'){
-                findDependencies(selectedMember,selectedMemberId,selectedMetadataType);
+                submitDepsJob(selectedMember,selectedMemberId,selectedMetadataType);
             }
             else if(selectedQueryType == 'usage'){
-                findUsage(selectedMember,selectedMemberId,selectedMetadataType);
+                submitUsageJob(selectedMember,selectedMemberId,selectedMetadataType);
             }    
         }
 
-        async function findUsage(selectedMember,selectedMemberId,selectedMetadataType){
+        async function submitUsageJob(selectedMember,selectedMemberId,selectedMetadataType){
 
             let inputOptions = Array.from(optionsContainer.getElementsByTagName('input'));
             let options = {};
@@ -225,39 +229,42 @@ const SFDM = function(){
             let {jobId} = json;
 
             if(jobId){
-                callItselfWhenJobIsDone(jobId,findUsage,arguments);
-            }    
-            
-            else if(json.error) handleError(response);
-
-            else{
-                
-                UI.hideLoader();
-
-                let isEmpty = (Object.keys(json.usageTree).length === 0);
-                
-                //if the response contains results
-                if(!isEmpty){
-                    displayStats(json.stats,'usage');
-                    treeApi.createUsageTree(json.usageTree,usageTreePlaceholder);
-                    UI.showHelpText(json.entryPoint.name,'usage');
-                    lastApiResponse = json;
-                }
-                else{
-                    usageTreePlaceholder.appendChild(UI.createWarning(`No results. There are 3 main reasons for this:
-                    1) This metadata is not used anywhere.
-                    2) This metadata is part of a managed package.
-                    3) This metadata type is not fully supported by the MetadataComponentDependency API.
-                    `));
-                }
-
-                UI.toggleDropdown(mdDropDown,false);
-                UI.enableButton(searchButton);
-                setTimeout(UI.scrollTo,200,byId('usage-help'));
+                let callback = processUsageResponse;
+                registerPolling(jobId,callback);
             }
+
+            else if(json.error) handleError(json);
+              
         }
 
-        async function findDependencies(selectedMember,selectedMemberId,selectedMetadataType){
+        async function processUsageResponse(response){
+
+            UI.hideLoader();
+
+            let isEmpty = (Object.keys(response.usageTree).length === 0);
+            
+            //if the response contains results
+            if(!isEmpty){
+                displayStats(response.stats,'usage');
+                treeApi.createUsageTree(response.usageTree,usageTreePlaceholder);
+                UI.showHelpText(response.entryPoint.name,'usage');
+                lastApiResponse = response;
+            }
+            else{
+                usageTreePlaceholder.appendChild(UI.createWarning(`No results. There are 3 main reasons for this:
+                1) This metadata is not used anywhere.
+                2) This metadata is part of a managed package.
+                3) This metadata type is not fully supported by the MetadataComponentDependency API.
+                `));
+            }
+
+            UI.toggleDropdown(mdDropDown,false);
+            UI.enableButton(searchButton);
+            setTimeout(UI.scrollTo,200,byId('usage-help'));
+        }
+
+        
+        async function submitDepsJob(selectedMember,selectedMemberId,selectedMetadataType){
 
             let url = `api/dependencies?name=${selectedMember}&id=${selectedMemberId}&type=${selectedMetadataType}`;
 
@@ -267,36 +274,37 @@ const SFDM = function(){
             let {jobId} = json;
 
             if(jobId){
-                callItselfWhenJobIsDone(jobId,findDependencies,arguments);
+                let callback = processDepsResponse;
+                registerPolling(jobId,callback)
             }    
-            
+
             else if(json.error) handleError(response);
+        }
 
-            else{
+        async function processDepsResponse(response){
 
-                UI.hideLoader();
+            UI.hideLoader();
 
-               let isEmpty = (Object.keys(json.dependencyTree).length === 0);
-                
-                //if the response contains results
-                if(!isEmpty){
-                    displayStats(json.stats,'deps');
-                    treeApi.createDependencyTree(json.dependencyTree,dependencyTreePlaceholder);
-                    UI.showHelpText(json.entryPoint.name,'deps');
-                    lastApiResponse = json;
-                }
-                else{
-                    dependencyTreePlaceholder.appendChild(UI.createWarning(`No results. There are 3 main reasons for this:
-                    1) This metadata does not reference/use any other metadata.
-                    2) This metadata is part of a managed package.
-                    3) This metadata type is not fully supported by the MetadataComponentDependency API.
-                    `));
-                }
-
-                UI.toggleDropdown(mdDropDown,false);
-                UI.enableButton(searchButton);
-                setTimeout(UI.scrollTo,200,byId('deps-help'));
+            let isEmpty = (Object.keys(response.dependencyTree).length === 0);
+            
+            //if the response contains results
+            if(!isEmpty){
+                displayStats(response.stats,'deps');
+                treeApi.createDependencyTree(response.dependencyTree,dependencyTreePlaceholder);
+                UI.showHelpText(response.entryPoint.name,'deps');
+                lastApiResponse = response;
             }
+            else{
+                dependencyTreePlaceholder.appendChild(UI.createWarning(`No results. There are 3 main reasons for this:
+                1) This metadata does not reference/use any other metadata.
+                2) This metadata is part of a managed package.
+                3) This metadata type is not fully supported by the MetadataComponentDependency API.
+                `));
+            }
+
+            UI.toggleDropdown(mdDropDown,false);
+            UI.enableButton(searchButton);
+            setTimeout(UI.scrollTo,200,byId('deps-help'));
         }
 
         function displayStats(stats,type){
@@ -359,26 +367,24 @@ const SFDM = function(){
             }); 
         }
 
-        async function callItselfWhenJobIsDone(jobId,originalFunction,params){
+        async function registerPolling(jobId,callback){
 
-            params = Array.from(params);
-
-            let details = {jobId,originalFunction,params};
+            let details = {jobId,callback};
                 
             latestInvertalDone = false;
             latestIntervalId = window.setInterval(checkJobStatus,2000,details);
         }
 
-        async function checkJobStatus({jobId,originalFunction,params}){
+        async function checkJobStatus({jobId,callback}){
 
             let res = await fetch(`/api/job/${jobId}`);
             let result = await res.json();
 
-            let {state,error} = result;
+            let {state,error,response} = result;
 
             if(state == 'completed' && !latestInvertalDone){
                 stopPolling();
-                await originalFunction(...params);
+                await callback(response);
             }
             else if(state == 'failed' && !latestInvertalDone){
                 stopPolling();

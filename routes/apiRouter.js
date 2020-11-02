@@ -41,27 +41,17 @@ apiRouter.route('/dependencies')
 
             let entryPoint = {...req.query};
 
-            let cacheKey = `deps-${entryPoint.id}`;
-            
-            let cache = cacheApi(req.session.cache);
-            let cachedData = cache.getDependency(cacheKey);
-
-            if(cachedData) res.status(202).json(cachedData);
-
-            else{
-
-                let jobDetails = {
-                    cacheKey,
-                    entryPoint,
-                    sessionId:getSessionKey(req),
-                    jobType:'DEPENDENCIES'
-                }
-
-                let jobId = `${req.session.identity.username}:${cacheKey}${Date.now()}`
-      
-                let job = await workQueue.add(jobDetails,{jobId});
-                res.status(200).json({jobId:job.id});   
+            let jobDetails = {
+                entryPoint,
+                sessionId:getSessionKey(req),
+                jobType:'DEPENDENCIES'
             }
+
+            let jobId = `${req.session.identity.username}:deps-${entryPoint.id}-${entryPoint.type}${Date.now()}`
+    
+            let job = await workQueue.add(jobDetails,{jobId});
+            res.status(200).json({jobId:job.id});   
+            
 
         } catch (error) {
             next(error);
@@ -91,43 +81,18 @@ apiRouter.route('/usage')
             let entryPoint = {...req.query};
             entryPoint.options = JSON.parse(entryPoint.options);
 
-            //a job to get the usage of a metadata item is different
-            //if the client passed options on the job
-            //therefore we create a string concatenating all the options
-            //that were passed as true
-            //this way if the job is submitted again but with one option set
-            //to false, we don't return the previously cached response but instead
-            //create a brand new job with a unique key
-            let optionsString = '';
-
-            for (const property in entryPoint.options) {
-                if(entryPoint.options[property] == true){
-                    optionsString += property;
-                }
+            let jobDetails = {
+                entryPoint,
+                sessionId:getSessionKey(req),
+                jobType:'USAGE'
             }
 
-            let cache = cacheApi(req.session.cache);
-            let cacheKey = `usage-${entryPoint.id}${optionsString}`;
-          
-            let cachedData = cache.getUsage(cacheKey);
+            let jobId = `${req.session.identity.username}:usage-${entryPoint.id}-${entryPoint.type}${Date.now()}`
 
-            if(cachedData) res.status(202).json(cachedData);
+            let job = await workQueue.add(jobDetails,{jobId});
+            res.status(200).json({jobId:job.id});   
+
             
-            else{
-
-                let jobDetails = {
-                    cacheKey,
-                    entryPoint,
-                    sessionId:getSessionKey(req),
-                    jobType:'USAGE'
-                }
-
-                let jobId = `${req.session.identity.username}:${cacheKey}${Date.now()}`
-
-                let job = await workQueue.add(jobDetails,{jobId});
-                res.status(200).json({jobId:job.id});   
- 
-            }
         } catch (error) {
             next(error);
         }     
@@ -246,19 +211,32 @@ apiRouter.route('/job/:id')
         response.jobId = jobId;
         response.state = await job.getState();
 
-        if(response.state == 'completed'){
+        if(response.state != 'completed'){
+            res.status(200).json(response);
+        }
+
+        else if(response.state == 'completed'){
+
             let jobResult = job.returnvalue;
+
             req.session.cache = jobResult.newCache;
-            setTimeout(deleteJobInfo,30000,jobId);
+            response.response = jobResult.response;
+
+            setTimeout(deleteJobInfo,10000,jobId);
+
+            res.status(200).json(response);
+            
         }
         
-        if(job.failedReason){
+        else if(job.failedReason){
             response.error = {};
             response.error.message = job.failedReason;
             response.error.stack = job.stacktrace[0];
+            res.status(200).json(response);
         }
-
-        res.status(200).json(response);
+        else{
+            next();
+        }  
     }
 
 })
