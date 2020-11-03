@@ -174,7 +174,7 @@ function usageApi(connection,entryPoint,cache){
             //as a single json object
             //if the report is in a private folder, the response comes in an array format
             if(!Array.isArray(rep)){
-                reportsMetadataById.set(rep.attributes.reportId,rep);
+                if(rep) reportsMetadataById.set(rep.attributes.reportId,rep);
             }
         });
 
@@ -194,7 +194,7 @@ function usageApi(connection,entryPoint,cache){
                 if(reportMetadata.reportMetadata.reportFilters){
                     reportMetadata.reportMetadata.reportFilters.forEach(filter => {
                         if(filter.column == fullFieldName){
-                            report.pills.push({label:'Filter Condition',color:getColor('red')});
+                            report.pills.push({label:`Filter: ${filter.operator} ${filter.value}`,color:getColor('red')});
                         }
                     })
                 }
