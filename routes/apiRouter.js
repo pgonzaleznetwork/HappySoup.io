@@ -4,6 +4,7 @@ let serverSessions = require('../services/serverSessions');
 let parser = require('body-parser');
 let cors = require('cors');
 let {ErrorHandler} = require('../services/errorHandling');
+let logError = require('../services/logging');
 let Queue = require('bull');
 let REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 const QUEUE_NAME = 'happy-soup';
@@ -117,8 +118,6 @@ apiRouter.route('/metadata')
 
         try{
 
-            console.log('HAPPY SOUP ERROR: Dummy error to test log monitoring');
-
             let {mdtype} = req.query;
             let cache = cacheApi(req.session.cache);
             let cacheKey = `list-${mdtype}`;
@@ -213,7 +212,7 @@ apiRouter.route('/job/:id')
         response.jobId = jobId;
         response.state = await job.getState();
 
-        if(response.state != 'completed'){
+        if(response.state != 'completed' && response.state != 'failed'){
             res.status(200).json(response);
         }
 
@@ -234,6 +233,7 @@ apiRouter.route('/job/:id')
             response.error = {};
             response.error.message = job.failedReason;
             response.error.stack = job.stacktrace[0];
+            logError(`Failed job with reason "${job.failedReason}"`,job.data);
             res.status(200).json(response);
         }
         else{

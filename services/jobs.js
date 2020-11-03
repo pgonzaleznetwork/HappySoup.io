@@ -8,6 +8,7 @@ let dependencyApi = require('../sfdc_apis/dependencies');
 let usageApi = require('../sfdc_apis/usage');
 let toolingAPI = require('../sfdc_apis/tooling');
 let {ErrorHandler} = require('../services/errorHandling');
+let logError = require('../services/logging');
 
 
 
@@ -29,7 +30,7 @@ async function listMetadataJob(job){
 
       if(!jsonResponse){
         let responseString = JSON.stringify(jsonResponse);
-        console.log('HAPPY SOUP ERROR tooling: ',responseString);
+        logError(`Tooling API call failed`,{soqlQuery,responseString});
         throw new ErrorHandler(404,`Fault response from Tooling API query: ${responseString}`,'Fault response from listMetadata()'); 
       }
   
