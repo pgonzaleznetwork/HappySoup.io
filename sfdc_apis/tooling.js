@@ -3,6 +3,7 @@ require('dotenv').config();
 let {ErrorHandler} = require('../services/errorHandling');
 let endpoints = require('./endpoints');
 let utils = require('../services/utils');
+let logError = require('../services/logging');
 
 
 function toolingAPI(connection){
@@ -38,8 +39,7 @@ function toolingAPI(connection){
                 }
 
                 else {
-                    console.log('HAPPY SOUP ERROR - when sending the following request ',request);
-                    console.log('HAPPY SOUP ERROR - got the following response ',res);
+                    logError(`Tooling API call failed`,{request,res});
                     throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
                 } 
             }
@@ -49,7 +49,7 @@ function toolingAPI(connection){
                 jsonResponse = await res.json();
 
                 if(isFailedResponse(jsonResponse)){
-                    console.log('HAPPY SOUP ERROR: ',jsonResponse);
+                    logError(`Tooling API call failed`,{request,jsonResponse});
                     throw createApiError(jsonResponse);
                 }
     

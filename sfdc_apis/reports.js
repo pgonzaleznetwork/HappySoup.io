@@ -1,5 +1,6 @@
 let fetch = require('node-fetch');
 require('dotenv').config();
+let logError = require('../services/logging');
 let endpoints = require('./endpoints');
 
 
@@ -22,7 +23,7 @@ function reportsAPI(connection){
                 } catch (error) {
                     //if one report throws an error here, we can move on to the next
                     //one because this is not critical functionality
-                    console.log('HAPPY SOUP ERROR - when querying report metadata: ',error);
+                    logError(`Report API call failed`,{request,error});
                 }
                 
                 
