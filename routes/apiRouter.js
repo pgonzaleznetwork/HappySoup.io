@@ -117,6 +117,8 @@ apiRouter.route('/metadata')
 
         try{
 
+            console.log('HAPPY SOUP ERROR: Dummy error to test log monitoring');
+
             let {mdtype} = req.query;
             let cache = cacheApi(req.session.cache);
             let cacheKey = `list-${mdtype}`;
