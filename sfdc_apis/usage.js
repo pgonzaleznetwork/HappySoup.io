@@ -161,9 +161,29 @@ function usageApi(connection,entryPoint,cache){
         //client side did not enable this option
         if(!options.enhancedReportData) return reports;
 
+        //because the report API only allows for querying one report
+        //at a time, we need to limit the amount of reports we can query 
+        //in a single transaction to protect performance for both the app
+        //server and the salesforce instance (i.e too many api calls
+        //result in ECONNREFUSED ERRORS)
+        //so the enhanced report data is only available on the first 200 reports
+        const MAX_REPORT_COUNT = 200;
+
+        let includedReports = [];
+        let excludedReports = [];
+
+        for (let index = 0; index < reports.length; index++) {
+            if(index < MAX_REPORT_COUNT){
+                includedReports.push(reports[index]);
+            }
+            else{
+                excludedReports.push(reports[index]);
+            }
+        }
+
         let reportsApi = reportsAPI(connection);
 
-        let ids = reports.map(r => r.id);
+        let ids = includedReports.map(r => r.id);
         let reportsMetadata = await reportsApi.getReportsMetadata(ids);
 
         let reportsMetadataById = new Map();
@@ -180,7 +200,7 @@ function usageApi(connection,entryPoint,cache){
 
         let fullFieldName = entryPoint.name;
 
-        reports.forEach(report => {
+        includedReports.forEach(report => {
 
             let reportMetadata = reportsMetadataById.get(report.id);
 
@@ -214,7 +234,15 @@ function usageApi(connection,entryPoint,cache){
             }
         });
 
-        return reports;
+        excludedReports.forEach(report => {
+            report.pills.push({label:'Not Calculated - Too many reports',color:getColor()});
+        })
+
+        let allReports = [];
+        allReports.push(...includedReports);
+        allReports.push(...excludedReports);
+
+        return allReports;
 
     }
 

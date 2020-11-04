@@ -234,6 +234,7 @@ canvas{
     font-size:13px;
     margin-top: 15px;
     display:none;
+    width:365px;
 }
 
 #options a{
