@@ -372,7 +372,7 @@ const SFDM = function(){
             let details = {jobId,callback};
                 
             latestInvertalDone = false;
-            latestIntervalId = window.setInterval(checkJobStatus,2000,details);
+            latestIntervalId = window.setInterval(checkJobStatus,4000,details);
         }
 
         async function checkJobStatus({jobId,callback}){
