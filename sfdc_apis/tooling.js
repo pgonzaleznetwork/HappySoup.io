@@ -39,8 +39,18 @@ function toolingAPI(connection){
                 }
 
                 else {
-                    logError(`Tooling API call failed`,{request,res});
-                    throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
+                    jsonResponse = await res.json();
+
+                    //we throw the error but don't log it, let the caller deal with it. This is to prevent our logs
+                    //to be flooded with access errors
+                    if(isAccessError(jsonResponse)){
+                        throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
+                    }
+                    else{
+                        //other type of errors should be logged and thrown
+                        logError(`Tooling API call failed`,{request,jsonResponse});
+                        throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
+                    }  
                 } 
             }
 
@@ -50,6 +60,7 @@ function toolingAPI(connection){
 
                 if(isFailedResponse(jsonResponse)){
                     logError(`Tooling API call failed`,{request,jsonResponse});
+                    console.log('here')
                     throw createApiError(jsonResponse);
                 }
     
@@ -210,6 +221,19 @@ function getFetchOptions(token){
             'Authorization': `Bearer ${token}`
           }
     }
+}
+
+//when querying email templates or reports, it's possible for these items to be in a private
+//folder that the running user doesn't have access to, here we inspect the error and determine
+//if it's indeed this kind of error
+//the caller will then decide if this error needs a specific action
+function isAccessError(jsonResponse){
+
+    if(Array.isArray(jsonResponse) && jsonResponse[0]?.message == `Cannot retrieve documents in a user's private folder; move the document to a named folder`){
+        return true;
+    }
+
+    return false;
 }
 
 function isFailedResponse(json){
