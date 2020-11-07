@@ -3,6 +3,7 @@ let reportsAPI = require('../sfdc_apis/reports');
 let utils = require('../services/utils');
 let stats = require('../services/stats');
 let format = require('../services/fileFormats');
+const logError = require('../services/logging');
 
 
 function usageApi(connection,entryPoint,cache){
@@ -17,7 +18,7 @@ function usageApi(connection,entryPoint,cache){
         let callers = query.getResults();
 
         if(lacksDependencyApiSupport(entryPoint)){
-            let additionalReferences = await seachAdditionalReferences(connection,entryPoint);
+            let additionalReferences = await seachAdditionalReferences(connection,entryPoint,cache);
             callers.push(...additionalReferences);
         }
             
@@ -46,6 +47,8 @@ function usageApi(connection,entryPoint,cache){
 
         sortedCallers.push(...unsortedCallers);
         callers = sortedCallers;
+
+        
 
         let files = format(entryPoint,callers,'usage');
 
@@ -122,14 +125,14 @@ function usageApi(connection,entryPoint,cache){
             //for the following metadata types, we only need to enhance their data when the entry point is 
             //a custom field, this is because fields can be used by these metadata types in different ways
             //for example a field can be used in a report for its filter conditions or only for viewing 
-            else if(entryPoint.type.toUpperCase() == 'CUSTOMFIELD'){
-                if(type == 'APEXCLASS'){
-                    apexClasses.push(metadata);
-                }
-                else if(type == 'REPORT'){
-                    reports.push(metadata);
-                }
+            else if(entryPoint.type.toUpperCase() == 'CUSTOMFIELD' && type == 'APEXCLASS'){
+                    apexClasses.push(metadata);   
             }
+
+            else if(entryPoint.type.toUpperCase() == 'CUSTOMFIELD' && type == 'REPORT'){
+                reports.push(metadata);
+            }
+
             else{
                 otherMetadata.push(metadata);
             }
@@ -458,7 +461,7 @@ function usageApi(connection,entryPoint,cache){
      * EmailTemplate object, which is when queried, does not return WorkflowAlerts that reference the template
      */
     function lacksDependencyApiSupport(entryPoint){
-        return ['EmailTemplate'].includes(entryPoint.type);
+        return ['EmailTemplate','CustomField'].includes(entryPoint.type);
     }
 
     async function seachAdditionalReferences(connection,entryPoint){
@@ -466,8 +469,22 @@ function usageApi(connection,entryPoint,cache){
         let additionalReferences = [];
 
         if(entryPoint.type == 'EmailTemplate'){
-            let findTemplateRefs =  require('./metadata-types/EmailTemplate');
-            additionalReferences = await findTemplateRefs(connection,entryPoint);
+
+            try {
+                let findTemplateRefs =  require('./metadata-types/EmailTemplate');
+                additionalReferences = await findTemplateRefs(connection,entryPoint);
+            } catch (error) {
+                logError('Error when searching for template references',{entryPoint,error});
+            }
+        }
+        else if(entryPoint.type == 'CustomField'){
+
+            try {
+                let findFieldRefs =  require('./metadata-types/CustomField');
+                additionalReferences = await findFieldRefs(connection,entryPoint,cache);
+            } catch (error) {
+                logError('Error when searching for custom field references',{entryPoint,error});
+            }  
         }
 
         return additionalReferences;
