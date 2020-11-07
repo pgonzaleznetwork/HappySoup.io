@@ -22,8 +22,30 @@ function usageApi(connection,entryPoint,cache){
         }
             
         callers = await enhanceData(callers);
+        
+        //some callers will have a specific sortOrder property 
+        //defined by one of the private functions in enhanceData
+        //this determines the order in which the items should be displayed
+        //in the UI.
+        //for those elements that don't have a specific sortOrder, we
+        //just sort them alphabetically
+        let unsortedCallers = [];
+        let sortedCallers = [];
+
+        callers.forEach(caller => {
+            if(caller.sortOrder){
+                sortedCallers.push(caller);
+            }
+            else{
+                unsortedCallers.push(caller);
+            }
+        })
+
         //sort alphabetically
-        callers.sort((a,b) => (a.name > b.name) ? 1 : -1 );
+        unsortedCallers.sort((a,b) => (a.name > b.name) ? 1 : -1 );
+
+        sortedCallers.push(...unsortedCallers);
+        callers = sortedCallers;
 
         let files = format(entryPoint,callers,'usage');
 
@@ -208,6 +230,7 @@ function usageApi(connection,entryPoint,cache){
                 //if the report has groupings and one of the groupings uses the field in question
                 if(reportMetadata.reportExtendedMetadata.groupingColumnInfo && reportMetadata.reportExtendedMetadata.groupingColumnInfo[fullFieldName]){
                     report.pills.push({label:'Grouping',color:getColor('red')});
+                    report.sortOrder = 2;
                 }
 
                 //if the report has filters and uses the field as a filter criteria
@@ -215,6 +238,7 @@ function usageApi(connection,entryPoint,cache){
                     reportMetadata.reportMetadata.reportFilters.forEach(filter => {
                         if(filter.column == fullFieldName){
                             report.pills.push({label:`Filter: ${filter.operator} ${filter.value}`,color:getColor('red')});
+                            report.sortOrder = 1;
                         }
                     })
                 }
@@ -223,7 +247,8 @@ function usageApi(connection,entryPoint,cache){
                 //if there isn't a match here is because the response for this report
                 //came in an array format, which means that the report is in a private folder
                 //and its metadata is not available to the running user
-                report.pills.push({label:'Unavailable - Report is in private folder',color:getColor()});
+                report.pills.push({label:'Unavailable - Report is in private folder',color:getColor('brown')});
+                report.sortOrder = 4;
             }
 
             //if we reach this point and there are no pills on this report, it means that the report
@@ -231,16 +256,17 @@ function usageApi(connection,entryPoint,cache){
             //it is only used for view
             if(report.pills.length < 1){
                 report.pills.push({label:'View only',color:'green'});
+                report.sortOrder = 3;
             }
         });
 
         excludedReports.forEach(report => {
             report.pills.push({label:'Not Calculated - Too many reports',color:getColor()});
-        })
+            report.sortOrder = 5;
+        });
 
-        let allReports = [];
-        allReports.push(...includedReports);
-        allReports.push(...excludedReports);
+        let allReports = [...includedReports,...excludedReports];
+        allReports.sort((a,b) => (a.sortOrder > b.sortOrder) ? 1 : -1 );
 
         return allReports;
 
@@ -288,12 +314,16 @@ function usageApi(connection,entryPoint,cache){
 
                 if(body.match(assignmentExp)){
                     ac.pills.push({label:'write',color:getColor('red')});
+                    ac.sortOrder = 1;
                 }
                 else{
                     ac.pills.push({label:'read',color:getColor('green')});
+                    ac.sortOrder = 2;
                 }
             }
         });
+
+        apexClasses.sort((a,b) => (a.sortOrder > b.sortOrder) ? 1 : -1 );
 
         return apexClasses;
     }
@@ -503,6 +533,9 @@ function getColor(color){
     }
     else if(color == 'green'){
         hex = '#3c9662';
+    }
+    else if(color == 'brown'){
+        hex = '#925202';
     }
     
     return hex;
