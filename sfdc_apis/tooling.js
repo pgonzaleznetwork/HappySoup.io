@@ -60,7 +60,6 @@ function toolingAPI(connection){
 
                 if(isFailedResponse(jsonResponse)){
                     logError(`Tooling API call failed`,{request,jsonResponse});
-                    console.log('here')
                     throw createApiError(jsonResponse);
                 }
     
