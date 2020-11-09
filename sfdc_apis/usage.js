@@ -98,6 +98,7 @@ function usageApi(connection,entryPoint,cache){
         let lookupFilters = [];
         let apexClasses = [];
         let reports = [];
+        let flows = [];
         let otherMetadata = [];
 
         metadataArray.forEach(metadata => {
@@ -122,6 +123,9 @@ function usageApi(connection,entryPoint,cache){
             else if(type == 'LOOKUPFILTER'){ 
                 lookupFilters.push(metadata);
             }
+            else if(type == 'FLOW'){ 
+                flows.push(metadata);
+            }
             //for the following metadata types, we only need to enhance their data when the entry point is 
             //a custom field, this is because fields can be used by these metadata types in different ways
             //for example a field can be used in a report for its filter conditions or only for viewing 
@@ -139,7 +143,13 @@ function usageApi(connection,entryPoint,cache){
         });
 
         if(customFields.length){
-            customFields = await addParentNamePrefix(customFields,'TableEnumOrId');
+
+            try {
+                customFields = await addParentNamePrefix(customFields,'TableEnumOrId');
+            } catch (error) {
+                logError('Error while adding parentNamePrefix to custom fields',{error,customFields});
+            }
+
         }
         if(validationRules.length){
             /**
@@ -149,19 +159,57 @@ function usageApi(connection,entryPoint,cache){
              * 
              * So here we force the API call to be made against the 33.0 version so that we can use the 18 digit TableEnumOrId
              */
-            validationRules = await addParentNamePrefix(validationRules,'TableEnumOrId','33.0');
+            try {
+                validationRules = await addParentNamePrefix(validationRules,'TableEnumOrId','33.0');
+            } catch (error) {
+                logError('Error while adding parentNamePrefix to validation rules',{error,validationRules});
+            }
+            
         }
         if(layouts.length){
-            layouts = await addParentNamePrefix(layouts,'TableEnumOrId');
+
+            try {
+                layouts = await addParentNamePrefix(layouts,'TableEnumOrId');
+            } catch (error) {
+                logError('Error while adding parentNamePrefix to page layouts',{error,layouts});
+            }
         }
+
         if(lookupFilters.length){
-            lookupFilters = await getLookupFilterDetails(lookupFilters);
+
+            try {
+                lookupFilters = await getLookupFilterDetails(lookupFilters);
+            } catch (error) {
+                logError('Error while getting lookup filter details',{error,lookupFilters});
+            }
+            
         }
         if(apexClasses.length){
-            apexClasses = await getFieldInfoForClass(apexClasses);
+
+            try {
+                apexClasses = await getFieldInfoForClass(apexClasses);
+            } catch (error) {
+                logError('Error while getting field info for apex classes',{error,apexClasses});
+            }
+            
         }
         if(reports.length){
-            reports = await getFieldInfoForReport(reports);
+
+            try {
+                reports = await getFieldInfoForReport(reports);
+            } catch (error) {
+                logError('Error while getting field info for reports',{error,reports});
+            }
+            
+        }
+        if(flows.length){
+
+            try {
+                flows = await getFlowVersionAndStatus(flows);
+            } catch (error) {
+                logError('Error while getting flow version info',{error,flows});
+            }
+            
         }
 
         otherMetadata.push(...customFields);
@@ -170,9 +218,48 @@ function usageApi(connection,entryPoint,cache){
         otherMetadata.push(...lookupFilters);
         otherMetadata.push(...apexClasses);
         otherMetadata.push(...reports);
+        otherMetadata.push(...flows);
 
         return otherMetadata;
 
+    }
+
+    /**
+     * 
+     * When a field is used in a flow, the API returns all the flow versions.
+     * It's difficult to tell which version is active and which version you are actually
+     * looking at because the version number is not included in the name
+     * Here we query the flow details so that we can display their version and status in the UI 
+     */
+    async function getFlowVersionAndStatus(flows){
+
+        let ids = utils.filterableId(flows.map(f => f.id));
+        let query = `SELECT Id, VersionNumber, Status FROM flow WHERE Id IN ('${ids}')`;
+        let soql = {query,filterById:true};
+
+        let results = await toolingApi.query(soql);
+
+        let flowInfoById = new Map();
+    
+        results.records.forEach(rec => {
+            let flowInfo = {version:rec.VersionNumber,status:rec.Status};
+            flowInfoById.set(rec.Id,flowInfo);
+        });
+
+        flows.forEach(flow => {
+
+            let flowInfo = flowInfoById.get(flow.id);
+            if(flowInfo){
+                if(flowInfo.status == 'Active'){
+                    flow.pills.push({label:`version ${flowInfo.version} - Active`,color:getColor('green')});
+                }
+                else{
+                    flow.pills.push({label:`version ${flowInfo.version} - ${flowInfo.status}`,color:getColor()});
+                }
+            }
+        });
+
+        return flows;
     }
 
     /**
