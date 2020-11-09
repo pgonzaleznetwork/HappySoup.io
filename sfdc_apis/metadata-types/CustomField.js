@@ -1,6 +1,7 @@
 let toolingAPI = require('../tooling');
 let metadataAPI = require('../../sfdc_apis/metadata');
 const logError = require('../../services/logging');
+let utils = require('../../services/utils');
 
 
 async function findReferences(connection,entryPoint,cache){
@@ -9,11 +10,76 @@ async function findReferences(connection,entryPoint,cache){
     let toolingApi = toolingAPI(connection);
     let mdapi = metadataAPI(connection);
 
+    let workflowRules = [];
+    let workflowFieldUpdates = [];
+
+    try {
+        workflowRules = await findWorkflowRules();
+    } catch (error) {
+        logError('Error while finding workflow rules',{entryPoint,error});
+    }
+
+    try {
+        workflowFieldUpdates = await findWorkflowFieldUpdates();
+    } catch (error) {
+        logError('Error while finding workflow field updates',{entryPoint,error});
+    }
+
     references.push(
-        ...await findWorkflowRules()
+        ...workflowRules,
+        ...workflowFieldUpdates
     );
 
     return references;
+
+    async function findWorkflowFieldUpdates(){
+
+        //field updates tied to a specific field can be found
+        //by looking at the FieldDefinitionId field which comes in
+        //the following format FieldDefinitionId  = '01I3h000000ewd0.00N3h00000DAO0J'
+        //The first id is the EntityId of the object that the field is linked to
+        //for standard objects, this would be 'Account.00N3h00000DAO0J'
+        //the 2nd id is the 15 digit version of the custom field id
+
+        let fieldId = utils.filterableId(entryPoint.id);
+        let query = `SELECT EntityDefinitionId FROM CustomField WHERE Id IN ('${fieldId}')`;
+        let soql = {query,filterById:true};
+
+        let rawResults = await toolingApi.query(soql);
+
+        let entityDefinitionId = rawResults.records[0].EntityDefinitionId;
+        let shortFieldId = entryPoint.id.substring(0,15);
+
+        let fieldDefinitionId = utils.filterableId(`${entityDefinitionId}.${shortFieldId}`);
+
+        query = `SELECT Id,name FROM WorkflowFieldUpdate WHERE FieldDefinitionId IN ('${fieldDefinitionId}')`;
+        soql = {query,filterById:true};
+
+        rawResults = await toolingApi.query(soql);
+
+        let objectName = entryPoint.name.split('.')[0];
+
+        let fieldUpdates = rawResults.records.map(fieldUpdate => {
+
+            //we guess the API name by replacing spaces with underscores
+            //to get the real API name we'd have to query each field update
+            //1 by 1 and it's not really worth it
+            let apiName = fieldUpdate.Name.replace(/ /g,"_");
+
+            let simplified = {
+                name:`${objectName}.${apiName}`,
+                type:'WorkflowFieldUpdate',
+                id: fieldUpdate.Id,
+                url:`${connection.url}/${fieldUpdate.Id}`,
+                notes:null,       
+            }
+    
+            return simplified;
+        });
+
+        return fieldUpdates;
+
+    }
 
     async function findWorkflowRules(){
 
@@ -114,7 +180,7 @@ async function findReferences(connection,entryPoint,cache){
                     }                
                 }
             } catch (error) {
-                logError('Error when processing workflow rule',wf);
+                logError('Error when processing workflow rule',{wf,error});
             }
 
             
