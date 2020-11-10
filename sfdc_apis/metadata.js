@@ -53,7 +53,7 @@ function metadataAPI(connection){
 
         });
        
-        let data = await parallelFetch(soapURL,allFetchOptions);
+        let data = await parallelFetch(type,soapURL,allFetchOptions);
 
         let allData = [];
 
@@ -146,7 +146,7 @@ function splitInBatchesOf(items,batchSize){
 
 }
 
-async function parallelFetch(url,fetchOptions){
+async function parallelFetch(type,url,fetchOptions){
 
     let data = await Promise.all(
         fetchOptions.map(async (fo) => {
@@ -157,7 +157,12 @@ async function parallelFetch(url,fetchOptions){
                 let json = xmlParser.parse(xml);
 
                 if(soapUtils.isSoapFailure(json)){
-                    logError('Failed SOAP response while doing parallelFetch on metadata API',{fetchOptions,json});
+                    let errorDetails = {
+                        numberOfBatches:fetchOptions.length,
+                        actualResponse:json,
+                        sObjectType:type
+                    };
+                    logError('Failed SOAP response when calling metadataAPI.readMetadata()',errorDetails);
                     throw new ErrorHandler(404,'no-sfdc-connection','Fault response from readMetadata()');    
                 }
                 else{
@@ -177,7 +182,7 @@ async function parallelFetch(url,fetchOptions){
                     return records;
                 }
             } catch (error) {
-                logError('Error while doing parallelFetch on metadata API',{fetchOptions,error});
+                //logError('Error while doing parallelFetch on metadata API',{fetchOptions,error});
                 throw new ErrorHandler(404,'no-sfdc-connection','Fetch failed on readMetadata()');    
             }       
         })
