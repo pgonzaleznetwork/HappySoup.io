@@ -4,6 +4,7 @@ var xmlParser = require('fast-xml-parser');
 let endpoints = require('./endpoints')
 let {ErrorHandler} = require('../services/errorHandling');
 let soapUtils = require('./soapUtils');
+const logError = require('../services/logging');
 
 function metadataAPI(connection){
 
@@ -22,6 +23,7 @@ function metadataAPI(connection){
         
             //fetch didn't fail but the API response is invalid
             if(soapUtils.isSoapFailure(json)){
+                logError('Failed SOAP response while calling listMetadata() on metadata API',{fetchOptions,json});
                 throw new ErrorHandler(404,'no-sfdc-connection','Fault response from listMetadata()');  
             }
             else{
@@ -30,6 +32,7 @@ function metadataAPI(connection){
             }        
 
         } catch (error) {//fetch failed
+            logError('Error while calling listMetadata() on metadata API',{fetchOptions,error});
             throw new ErrorHandler(404,'no-sfdc-connection','Fetch failed on listMetadata()');  
         }  
     }
@@ -63,30 +66,6 @@ function metadataAPI(connection){
         listMetadata:listMetadata,
         readMetadata:readMetadata
     }
-
-}
-
-function splitInBatchesOf(items,batchSize){
-
-    let remainingItems = items.length;
-    let indexSoFar = 0;
-    let batches = [];
-
-    while (remainingItems > batchSize) {
-        
-        let batch = [];
-
-        for (let x = 0; x < batchSize; x++,indexSoFar++) {
-            batch.push(items[indexSoFar]);       
-        }
-
-        batches.push(batch);
-        remainingItems -= batchSize;
-    }
-
-    if(remainingItems > 0) batches.push(items.slice(indexSoFar));
-
-    return batches;
 
 }
 
@@ -178,6 +157,7 @@ async function parallelFetch(url,fetchOptions){
                 let json = xmlParser.parse(xml);
 
                 if(soapUtils.isSoapFailure(json)){
+                    logError('Failed SOAP response while doing parallelFetch on metadata API',{fetchOptions,json});
                     throw new ErrorHandler(404,'no-sfdc-connection','Fault response from readMetadata()');    
                 }
                 else{
@@ -197,6 +177,7 @@ async function parallelFetch(url,fetchOptions){
                     return records;
                 }
             } catch (error) {
+                logError('Error while doing parallelFetch on metadata API',{fetchOptions,error});
                 throw new ErrorHandler(404,'no-sfdc-connection','Fetch failed on readMetadata()');    
             }       
         })
