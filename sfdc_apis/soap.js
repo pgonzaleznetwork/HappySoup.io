@@ -1,7 +1,6 @@
 let fetch = require('node-fetch');
 require('dotenv').config();
 var xmlParser = require('fast-xml-parser');
-let fs = require('fs');
 let endpoints = require('./endpoints');
 let {ErrorHandler} = require('../services/errorHandling');
 let soapUtils = require('./soapUtils');

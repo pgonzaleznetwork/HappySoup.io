@@ -13,7 +13,7 @@ function logError(text,details){
         details.error = error;
     }
 
-    console.log(`HAPPY SOUP ERROR: ${text}`,JSON.stringify(details,null,2));
+    console.log(`HAPPY SOUP ERROR: ${text}`,JSON.stringify(details));
 }
 
 module.exports = logError;
