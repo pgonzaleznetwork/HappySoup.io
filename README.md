@@ -368,7 +368,7 @@ Your Salesforce `username`, `email` and `display name` will be captured when you
 
 This information is used to display your username details on the header of the Happy Soup app so that you can easy know which org you are logged into.
 
-Your username is also used as a key to submit asynchronous jobs to Happy Soup's app server. This allows us to group all your requests in a single area of the database.
+Your Salesforce Org Id and User Id (not the username/email) is also used as a key to submit asynchronous jobs to Happy Soup's app server. This allows us to group all your requests in a single area of the database.
 
 **Your Salesforce Org's Metadata**
 
@@ -406,6 +406,13 @@ We use cookies and local storage the following information:
 
 * Your session id cookie
 * The Salesforce domain you used. This will help you quickly log in the next time you use the app.
+
+**Third Party Apps/Providers**
+
+Happy Soup uses the following software:
+
+* Heroku Redis: Used to store your session and to process all the jobs that are submitted to the app.
+* Logentries: Logging and monitoring software. Logs are stored for 7 days and some logs may include the names of your metadata. For example, when submitted a job to see the usage of a custom field, the custom field name is appended to the URL. This URL will be in the logs for a maximum of 7 days. 
 
 ## Your Rights
 
