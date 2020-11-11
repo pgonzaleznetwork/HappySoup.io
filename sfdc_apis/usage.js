@@ -278,8 +278,8 @@ function usageApi(connection,entryPoint,cache){
         //in a single transaction to protect performance for both the app
         //server and the salesforce instance (i.e too many api calls
         //result in ECONNREFUSED ERRORS)
-        //so the enhanced report data is only available on the first 200 reports
-        const MAX_REPORT_COUNT = 200;
+        //so the enhanced report data is only available on the first 100 reports
+        const MAX_REPORT_COUNT = 100;
 
         let includedReports = [];
         let excludedReports = [];

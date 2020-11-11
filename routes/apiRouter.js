@@ -48,7 +48,7 @@ apiRouter.route('/dependencies')
                 jobType:'DEPENDENCIES'
             }
 
-            let jobId = `${req.session.identity.username}:deps-${entryPoint.id}-${entryPoint.type}${Date.now()}`
+            let jobId = `${getIdentityKey(req)}:deps-${entryPoint.id}-${entryPoint.type}${Date.now()}`
     
             let job = await workQueue.add(jobDetails,{jobId});
             res.status(200).json({jobId:job.id});   
@@ -88,7 +88,7 @@ apiRouter.route('/usage')
                 jobType:'USAGE'
             }
 
-            let jobId = `${req.session.identity.username}:usage-${entryPoint.id}-${entryPoint.type}${Date.now()}`
+            let jobId = `${getIdentityKey(req)}:usage-${entryPoint.id}-${entryPoint.type}${Date.now()}`
 
             let job = await workQueue.add(jobDetails,{jobId});
             res.status(200).json({jobId:job.id});   
@@ -136,7 +136,7 @@ apiRouter.route('/metadata')
                     sessionId:getSessionKey(req)
                 };
 
-                let jobId = `${req.session.identity.username}:${cacheKey}${Date.now()}`
+                let jobId = `${getIdentityKey(req)}:${cacheKey}${Date.now()}`
                 
                 let job = await workQueue.add(jobDetails,{jobId});
                 res.status(200).json({jobId:job.id});
@@ -317,6 +317,10 @@ function deleteJobInfo(jobId){
 
 function getSessionKey(req){
     return `sfhs-sess:${req.sessionID}`;
+}
+
+function getIdentityKey(req){
+    return `${req.session.identity.orgId}.${req.session.identity.userId}`;
 }
 
 module.exports = apiRouter;

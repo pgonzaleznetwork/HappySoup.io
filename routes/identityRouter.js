@@ -18,12 +18,14 @@ identityRouter.route('/')
                 let oauthInfo = req.session.oauthInfo;
 
                 let json = await getIdentity(oauthInfo.id,oauthInfo.access_token);
-    
+
                 let env = oauthInfo.id.includes('test.salesforce.com') ? 'Sandbox' : 'Production';
     
                 req.session.identity = {
                     username:json.username,
                     name:json.display_name,
+                    orgId:json.organization_id,
+                    userId:json.user_id,
                     env
                 }
             }
