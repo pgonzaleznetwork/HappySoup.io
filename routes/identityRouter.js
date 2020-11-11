@@ -19,8 +19,6 @@ identityRouter.route('/')
 
                 let json = await getIdentity(oauthInfo.id,oauthInfo.access_token);
 
-                console.log(JSON.stringify(json,null,2));
-    
                 let env = oauthInfo.id.includes('test.salesforce.com') ? 'Sandbox' : 'Production';
     
                 req.session.identity = {
