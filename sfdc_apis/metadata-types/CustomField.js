@@ -113,8 +113,12 @@ async function findReferences(connection,entryPoint,cache){
             let mappedData = [];
     
             rawResults.records.forEach(record => {
+
+                //workflow rule names allow for following characters < > &, which must be escapted to valid XML before we read
+                //the metadata using the metadata API, as it is XML-based
+                let escapedName = record.Name.replace(/&/g,"&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     
-                let fullWfName = `${objectName}.${record.Name}`;
+                let fullWfName = `${objectName}.${escapedName}`;
                 idsByWorkflowName.set(fullWfName,record.Id);
                 mappedData.push(`${fullWfName}:${record.Id}`);
     
