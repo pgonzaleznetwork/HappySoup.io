@@ -247,21 +247,126 @@ apiRouter.route('/job/:id')
 
 function getSupportedMetadataTypes(){
 
+    let defaultDeploymentBoundaryLabel = 'What it depends on / Deployment Boundary';
+    let defaultImpactAnalysisLabel = 'Where is this used / Impact Analysis';
+
+    let defaultSupportedQueries = [
+        {
+            type:'usage',
+            label:defaultImpactAnalysisLabel
+        },
+        {
+            type:'deps',
+            label:defaultDeploymentBoundaryLabel
+        }
+        
+    ];
+
     return [
-        {label:'Apex Class',value:'ApexClass'},
-        {label:'Visualforce Page',value:'ApexPage'},
-        {label:'Visualforce Component',value:'ApexComponent'},
-        {label:'Apex Trigger',value:'ApexTrigger'},
-        {label:'Page Layout',value:'Layout'},
-        {label:'Custom Button',value:'WebLink'},
-        {label:'Custom Field',value:'CustomField'},
-        {label:'Field Set',value:'FieldSet'},
-        {label:'Custom Label',value:'CustomLabel'},
-        {label:'Validation Rule',value:'ValidationRule'},
-        {label:'Flow / Process',value:'Flow'},
-        {label:'Email Template',value:'EmailTemplate'},
-        {label:'Lightning Component (Aura)',value:'AuraDefinitionBundle'},
-        {label:'Lightning Web Component',value:'LightningComponentBundle'}
+        {
+            label:'Apex Class',
+            value:'ApexClass',
+            supportedQueries : defaultSupportedQueries
+        },
+        {
+            "label":"Visualforce Page",
+            "value":"ApexPage",
+            supportedQueries : defaultSupportedQueries
+         },
+         {
+            "label":"Visualforce Component",
+            "value":"ApexComponent",
+            supportedQueries : defaultSupportedQueries
+         },
+         {
+            "label":"Apex Trigger",
+            "value":"ApexTrigger",
+            supportedQueries : [
+                {
+                    type:'deps',
+                    label:defaultDeploymentBoundaryLabel
+                }
+            ]
+         },
+         {
+            "label":"Page Layout",
+            "value":"Layout",
+            supportedQueries : [
+                {
+                    type:'deps',
+                    label:'Fields used in layout / Deployment Boundary'
+                }
+            ]
+         },
+         {
+            "label":"Custom Button",
+            "value":"WebLink",
+            supportedQueries : [
+                {
+                    type:'usage',
+                    label:'Layouts using this button / Impact Analysis'
+                },
+            ]
+         },
+         {
+            "label":"Custom Field",
+            "value":"CustomField",
+            supportedQueries : [
+                {
+                    type:'deps',
+                    label:'Fields referenced by this field / Deployment Boundary'
+                },
+                {
+                    type:'usage',
+                    label:defaultImpactAnalysisLabel
+                },
+            ]
+         },
+         {
+            "label":"Field Set",
+            "value":"FieldSet",
+            supportedQueries : defaultSupportedQueries
+         },
+         {
+            "label":"Custom Label",
+            "value":"CustomLabel",
+            supportedQueries : [
+                {
+                    type:'usage',
+                    label:defaultImpactAnalysisLabel
+                }
+            ]
+         },
+         {
+            "label":"Validation Rule",
+            "value":"ValidationRule",
+            supportedQueries : [
+                {
+                    type:'deps',
+                    label:'Fields used in validation rule / Deployment Boundary'
+                }
+            ]
+         },
+         {
+            "label":"Flow / Process",
+            "value":"Flow",
+            supportedQueries : defaultSupportedQueries
+         },
+         {
+            "label":"Email Template",
+            "value":"EmailTemplate",
+            supportedQueries : defaultSupportedQueries
+         },
+         {
+            "label":"Lightning Component (Aura)",
+            "value":"AuraDefinitionBundle",
+            supportedQueries : defaultSupportedQueries
+         },
+         {
+            "label":"Lightning Web Component",
+            "value":"LightningComponentBundle",
+            supportedQueries : defaultSupportedQueries
+         }
     ];
 }
 

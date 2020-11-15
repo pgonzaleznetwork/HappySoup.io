@@ -102,9 +102,24 @@ const SFDM = function(){
             let types = await res.json();
 
             types.forEach(type => {
+
                 let option = document.createElement('option');
                 option.value = type.value;
                 option.innerText = type.label;
+
+                type.supportedQueries.forEach(queryType => {
+
+                    if(queryType.type == 'deps'){
+                        option.dataset.supportsDeps = true;
+                        option.dataset.depsLabel = queryType.label;
+                    }
+                    if(queryType.type == 'usage'){
+                        option.dataset.supportsUsage = true;
+                        option.dataset.usageLabel = queryType.label;
+                    }
+
+                });
+
                 mdDropDown.appendChild(option);
             })
         }
@@ -135,6 +150,9 @@ const SFDM = function(){
 
             let callback = processGetMembersResponse;
 
+            let selectedOption = mdDropDown.options[mdDropDown.selectedIndex];
+
+            UI.filterQueryType(selectedOption);
             UI.filterOptions();
             UI.showProgressBar();
             UI.toggleDropdown(mdDropDown,true);
