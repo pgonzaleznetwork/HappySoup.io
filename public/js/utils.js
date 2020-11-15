@@ -75,6 +75,28 @@ function filterOptions(){
     }
 }
 
+function filterQueryType(selectedOption){
+
+    let queryTypeDropDown = byId('query-type');
+    queryTypeDropDown.classList.remove('disabled-input');
+    //remove any previously added options
+    queryTypeDropDown.innerHTML = '';
+
+    if(selectedOption.dataset.supportsUsage){
+        let option = document.createElement('option');
+        option.value = 'usage';
+        option.innerText = selectedOption.dataset.usageLabel;
+        queryTypeDropDown.appendChild(option);
+    }
+
+    if(selectedOption.dataset.supportsDeps){
+        let option = document.createElement('option');
+        option.value = 'deps';
+        option.innerText = selectedOption.dataset.depsLabel;
+        queryTypeDropDown.appendChild(option);
+    }
+}
+
 
 function showHelpText(name,type){
     let helpText = byId(`${type}-help`);
@@ -138,6 +160,7 @@ export const utils = {
     scrollTo,
     enableButton,
     disableButton,
+    filterQueryType,
     showLoader,
     hideLoader,
     toggleDropdown,
