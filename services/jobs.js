@@ -54,7 +54,7 @@ async function listMetadataJob(job){
           results = jsonResponse.map(record => {
             return {
               name:record.fullName,
-              id:record.id
+              id:record.id || record.fullName//standard objects use their name as the id
             }
           });
         }
