@@ -289,6 +289,16 @@ function getSupportedMetadataTypes(){
             ]
          },
          {
+            "label":"Custom Object/Setting/Metadata Type",
+            "value":"CustomObject",
+            supportedQueries : [
+                {
+                    type:'usage',
+                    label:'Where is this used / Impact Analysis'
+                },
+            ]
+         },
+         {
             "label":"Page Layout",
             "value":"Layout",
             supportedQueries : [
@@ -391,9 +401,6 @@ function validateParams(req,res,next){
         }else{
             if(!isSupported(type)){
                 throw new ErrorHandler(404,'Unsupported type','Unsupported type on dependency API');
-            }
-            if(id.length != 18){
-                throw new ErrorHandler(404,'Invalid Id length','Invalid Id length on dependency API');
             }
             if(name === ''){
                 throw new ErrorHandler(404,'Invalid name','Invalid name on dependency API');
