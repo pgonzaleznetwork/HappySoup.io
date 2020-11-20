@@ -10,7 +10,8 @@ function initCache(){
             fields:{},
             fieldNames:[],
             customObjects:[],
-            workflowRules:{}
+            workflowRules:{},
+            mdTypesFieldDefinition:[]
         },
         dependencies:{},
         usage:{},
@@ -54,6 +55,14 @@ function cacheApi(cache){
         return cache.orgMetadata.customObjects;
     }
 
+    function cacheMetadataTypesWithFieldDefinitions(mdTypes){
+        cache.orgMetadata.mdTypesFieldDefinition = mdTypes;
+    }
+
+    function getMetadataTypesWithFieldDefinitions(mdTypes){
+        return cache.orgMetadata.mdTypesFieldDefinition;
+    }
+
     function cacheWorkflowRules(objectType,data){
         cache.orgMetadata.workflowRules[objectType] = data;
     }
@@ -91,7 +100,7 @@ function cacheApi(cache){
 
     return {initCache,cacheDependency,getDependency,cacheMetadataList,getMetadataList,
         cacheCustomObjects,getCustomObjects,isFieldCached,cacheFieldNames,getFieldNames,cacheField,getField,
-    cacheUsage,getUsage,cacheWorkflowRules,getWorkflowRules};
+    cacheUsage,getUsage,cacheWorkflowRules,getWorkflowRules,cacheMetadataTypesWithFieldDefinitions,getMetadataTypesWithFieldDefinitions};
 
 }
 
