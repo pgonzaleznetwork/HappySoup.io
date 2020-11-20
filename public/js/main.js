@@ -26,7 +26,8 @@ const SFDM = function(){
         let excelButton = byId('excel-button');
         let canvasContainer = byId('canvas-container');
         let canvas = byId('stats');
-        let optionsContainer = byId('options');
+        let optionInputs = byId('options');
+        let optionsToggler = byId('options-toggler');
         let barChart;
         let memberIdsByName = new Map();
         let lastApiResponse;
@@ -45,6 +46,7 @@ const SFDM = function(){
         searchButton.onclick = doSearch;
         csvButton.onclick = copyFile;
         excelButton.onclick = copyFile;
+        optionsToggler.onclick = toggleOptions;
 
         function loadServerInfo(){
             getSupportedMetadataTypes();
@@ -52,6 +54,16 @@ const SFDM = function(){
             getInstanceURL();
         }
 
+        function toggleOptions(event){
+            let link = event.target;
+            if(link.innerText.includes('Choose')){
+                link.innerText = 'Hide toppings';
+            }
+            else{
+                link.innerText = 'Choose your toppings';
+            }
+            optionInputs.classList.toggle('base-remove');
+        }
 
         function switchTheme(event){
 
@@ -230,7 +242,7 @@ const SFDM = function(){
 
         async function submitUsageJob(selectedMember,selectedMemberId,selectedMetadataType){
 
-            let inputOptions = Array.from(optionsContainer.getElementsByTagName('input'));
+            let inputOptions = Array.from(optionInputs.getElementsByTagName('input'));
             let options = {};
 
             inputOptions.forEach(option => {
