@@ -230,21 +230,20 @@ canvas{
     font-size:14px;
 }
 
-#options{
+#options-container{
+    display:none;
     font-size:13px;
     margin-top: 15px;
-    display:none;
+    margin-left: 4px;
     width:365px;
 }
 
-#options a{
+
+#options-container a{
+    cursor:pointer;
     text-decoration:underline;
 }
 
-/*.form input{
-   margin-top:10px;
-   margin-bottom: 10px;
-}*/
 
 .controls,.form{
     background-color:#34495e;

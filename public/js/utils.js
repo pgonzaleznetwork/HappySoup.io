@@ -63,7 +63,7 @@ function filterOptions(){
 
     let queryTypeDropDown = byId('query-type');
     let mdDropDown = byId('md-type-select');
-    let optionsContainer = byId('options');
+    let optionsContainer = byId('options-container');
 
     let selectedQueryType = queryTypeDropDown.value;
     let mdType = mdDropDown.value;
