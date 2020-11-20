@@ -1,17 +1,22 @@
 let toolingAPI = require('../tooling');
 let metadataAPI = require('../../sfdc_apis/metadata');
+let restAPI = require('../../sfdc_apis/rest');
 const logError = require('../../services/logging');
 let utils = require('../../services/utils');
 
 
-async function findReferences(connection,entryPoint,cache){
+async function findReferences(connection,entryPoint,cache,options){
 
     let references = [];
     let toolingApi = toolingAPI(connection);
     let mdapi = metadataAPI(connection);
+    let restApi = restAPI(connection);
 
     let workflowRules = [];
     let workflowFieldUpdates = [];
+    let metadataTypeRecords = [];
+
+    let entitiyDefinitionFormat = await getEntityDefinitionFormat(toolingApi,entryPoint.id);
 
     try {
         workflowRules = await findWorkflowRules();
@@ -25,12 +30,171 @@ async function findReferences(connection,entryPoint,cache){
         logError('Error while finding workflow field updates',{entryPoint,error});
     }
 
+    try {
+        metadataTypeRecords = await findMetadataTypeRecords();
+    } catch (error) {
+        logError('Error while finding metadata type records',{entryPoint,error});
+    }
+
     references.push(
         ...workflowRules,
-        ...workflowFieldUpdates
+        ...workflowFieldUpdates,
+        ...metadataTypeRecords
     );
 
     return references;
+
+    async function findMetadataTypeRecords(){
+
+        let metadataTypesUsingField = [];
+
+        if(!options.fieldInMetadataTypes) return metadataTypesUsingField;
+
+        let searchValue = `${entitiyDefinitionFormat.entityDefinitionId}.${entitiyDefinitionFormat.shortFieldId}`;
+
+        let cachedData = cache.getMetadataTypesWithFieldDefinitions();
+
+        if(cachedData.length){
+
+            cachedData.forEach(record => {
+
+                Object.keys(record).forEach(key => {
+                    if(typeof record[key] === 'string' && record[key] == searchValue){
+                        let simplified = {
+                            name: `${record.DeveloperName} (${record.attributes.type})`,
+                            type: 'Custom Metadata Record',
+                            id: record.Id,
+                            url:`${connection.url}/${record.Id}`,
+                            notes:null,       
+                        }
+                        metadataTypesUsingField.push(simplified);
+                    }
+                })
+            })   
+            
+            return metadataTypesUsingField;
+        }
+
+    
+        let sObjects = await restApi.getSObjectsDescribe();
+        let customMetadataTypes = [];
+        
+        sObjects.forEach(sobj => {
+            if(sobj.name.includes('__mdt')){
+                let index = sobj.name.indexOf('__mdt');
+                let name = sobj.name.substring(0,index);
+                customMetadataTypes.push(name);
+            }
+        });
+
+        if(customMetadataTypes.length){
+
+            let filterNames = utils.filterableId(customMetadataTypes);
+
+            let query = `SELECT Id,DeveloperName FROM CustomObject WHERE DeveloperName  IN ('${filterNames}')`;
+
+            let soql = {query,filterById:false};
+
+            let rawResults = await toolingApi.query(soql);
+
+            let metadataTypesById = new Map();
+
+            rawResults.records.map(obj => {
+                metadataTypesById.set(obj.Id,obj.DeveloperName);
+            });
+
+            let filterTableOrEnumIds = utils.filterableId(Array.from(metadataTypesById.keys()));
+
+            query = `SELECT Id,DeveloperName,TableEnumOrId FROM CustomField WHERE TableEnumOrId  IN ('${filterTableOrEnumIds}')`;
+            //console.log(query);
+            soql = {query,filterById:false};
+
+            rawResults = await toolingApi.query(soql);
+
+            let fullFieldNames = [];
+
+            rawResults.records.forEach(field => {
+                let metadataTypeName = metadataTypesById.get(field.TableEnumOrId);
+                metadataTypeName += '__mdt';
+                let fullFieldName = `${metadataTypeName}.${field.DeveloperName}__c`;
+                fullFieldNames.push(fullFieldName);
+            });
+
+            let customFieldsMetadata = await mdapi.readMetadata('CustomField',fullFieldNames);
+
+            let fieldsThatReferenceFieldDefinition = [];
+
+            customFieldsMetadata.forEach(fieldMd => {
+                if(fieldMd.referenceTo && fieldMd.referenceTo == 'FieldDefinition'){
+                    fieldsThatReferenceFieldDefinition.push(fieldMd.fullName);
+                }
+            });
+
+            //now we need to group by custom object
+
+            let fieldsByObjectName = new Map();
+
+            fieldsThatReferenceFieldDefinition.forEach(field => {
+
+                let [objectName,fieldName] = field.split('.');
+                
+                if(fieldsByObjectName.get(objectName)){
+                    fieldsByObjectName.get(objectName).push(fieldName);
+                }
+                else{
+                    fieldsByObjectName.set(objectName,[fieldName]);
+                }
+
+            });
+
+            let queries = [];
+
+            for (let [objectName, fields] of fieldsByObjectName) {
+     
+                //we need to build on query per field because you can't use OR in custom metadata
+                //types SOQL
+                fields.forEach(field => {
+                    let query = `SELECT Id , ${field}, DeveloperName FROM ${objectName} WHERE ${field} != null`;
+                    queries.push(query);
+                });
+            }
+
+
+            let data = await Promise.all(
+
+                queries.map(async (query) => {
+                    let soql = {query,filterById:false}
+                    let rawResults = await restApi.query(soql);
+                    
+                    return rawResults.records;
+                })
+            )
+
+            let allData = [];
+
+            data.forEach(d => allData.push(...d));
+
+            cache.cacheMetadataTypesWithFieldDefinitions(allData);
+
+            allData.forEach(record => {
+
+                Object.keys(record).forEach(key => {
+                    if(typeof record[key] === 'string' && record[key] == searchValue){
+                        let simplified = {
+                            name: `${record.DeveloperName} (${record.attributes.type})`,
+                            type: 'Custom Metadata Record',
+                            id: record.Id,
+                            url:`${connection.url}/${record.Id}`,
+                            notes:null,       
+                        }
+                        metadataTypesUsingField.push(simplified);
+                    }
+                })
+            })            
+        }
+        return metadataTypesUsingField;
+    
+    }
 
     async function findWorkflowFieldUpdates(){
 
@@ -41,21 +205,12 @@ async function findReferences(connection,entryPoint,cache){
         //for standard objects, this would be 'Account.00N3h00000DAO0J'
         //the 2nd id is the 15 digit version of the custom field id
 
-        let fieldId = utils.filterableId(entryPoint.id);
-        let query = `SELECT EntityDefinitionId FROM CustomField WHERE Id IN ('${fieldId}')`;
+        let fieldDefinitionId = utils.filterableId(`${entitiyDefinitionFormat.entityDefinitionId}.${entitiyDefinitionFormat.shortFieldId}`);
+
+        let query = `SELECT Id,name FROM WorkflowFieldUpdate WHERE FieldDefinitionId IN ('${fieldDefinitionId}')`;
         let soql = {query,filterById:true};
 
         let rawResults = await toolingApi.query(soql);
-
-        let entityDefinitionId = rawResults.records[0].EntityDefinitionId;
-        let shortFieldId = entryPoint.id.substring(0,15);
-
-        let fieldDefinitionId = utils.filterableId(`${entityDefinitionId}.${shortFieldId}`);
-
-        query = `SELECT Id,name FROM WorkflowFieldUpdate WHERE FieldDefinitionId IN ('${fieldDefinitionId}')`;
-        soql = {query,filterById:true};
-
-        rawResults = await toolingApi.query(soql);
 
         let objectName = entryPoint.name.split('.')[0];
 
@@ -209,6 +364,18 @@ async function findReferences(connection,entryPoint,cache){
     }   
 }
 
+async function getEntityDefinitionFormat(toolingApi,id){
 
+    let fieldId = utils.filterableId(id);
+    let query = `SELECT EntityDefinitionId FROM CustomField WHERE Id IN ('${fieldId}')`;
+    let soql = {query,filterById:true};
+
+    let rawResults = await toolingApi.query(soql);
+
+    let entityDefinitionId = rawResults.records[0].EntityDefinitionId;
+    let shortFieldId = id.substring(0,15);
+
+    return {entityDefinitionId,shortFieldId}
+}
 
 module.exports = findReferences;

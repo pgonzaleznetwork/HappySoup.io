@@ -54,7 +54,12 @@
             <select id="query-type" class="disabled-input">
             </select>
             <div id="options">
-                <input id="enhancedReportData" type="checkbox"/> <label for="enhancedReportData">Show whether the field is used in report filters, groupings or columns (<span style="font-weight: bold;">only available for the first 100 reports, this limit protects performance</span>) </label><a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#enhanced-report-data" target="_blank">Learn more</a> <i class="fa fa-external-link"></i>
+                <div>
+                    <input id="enhancedReportData" type="checkbox"/> <label for="enhancedReportData">Show whether the field is used in report filters, groupings or columns (<span style="font-weight: bold;">only available for the first 100 reports, this limit protects performance</span>) </label><a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#enhanced-report-data" target="_blank">Learn more</a> <i class="fa fa-external-link"></i>
+                </div>
+                <div>
+                    <input id="fieldInMetadataTypes" type="checkbox"/> <label for="fieldInMetadataTypes">Show whether the field referenced in the FieldDefinition of Custom Metadata Types (<span style="font-weight: bold;">Affects performance, only use if you know what this means</span>) </label>
+                </div>
             </div>
         </div>
         <div>

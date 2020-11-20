@@ -568,7 +568,7 @@ function usageApi(connection,entryPoint,cache){
 
             try {
                 let findFieldRefs =  require('./metadata-types/CustomField');
-                additionalReferences = await findFieldRefs(connection,entryPoint,cache);
+                additionalReferences = await findFieldRefs(connection,entryPoint,cache,options);
             } catch (error) {
                 logError('Error when searching for custom field references',{entryPoint,error});
             }  
