@@ -1,4 +1,4 @@
-let toolingAPI = require('./tooling');
+let restAPI = require('./rest');
 let metadataAPI = require('./metadata');
 require('dotenv').config();
 let stats = require('../services/stats');
@@ -8,7 +8,7 @@ let format = require('../services/fileFormats');
 
 function dependencyApi(connection,entryPoint,cache){
 
-    let toolingApi = toolingAPI(connection);
+    let restApi = restAPI(connection);
 
     async function getDependencies(){
 
@@ -275,7 +275,7 @@ function dependencyApi(connection,entryPoint,cache){
     
             let soqlQuery = createDependencyQuery(ids);    
 
-            let rawResults = await toolingApi.query(soqlQuery);
+            let rawResults = await restApi.query(soqlQuery);
             let dependencies = simplifyResults(rawResults);
     
             /**
@@ -639,7 +639,7 @@ function dependencyApi(connection,entryPoint,cache){
     
         let soqlQuery = createCustomFieldQuery(customFieldIds);
         
-        let results = await toolingApi.query(soqlQuery);
+        let results = await restApi.query(soqlQuery);
         let customFieldIdToEntityId = new Map();
     
         results.records.forEach(rec => {
@@ -659,7 +659,7 @@ function dependencyApi(connection,entryPoint,cache){
         FROM CustomField 
         WHERE Id IN ('${ids}') ORDER BY EntityDefinitionId`;
 
-        return {query,filterById:true};
+        return {query,filterById:true,useToolingApi:true};
     }
     
     
@@ -675,7 +675,7 @@ function dependencyApi(connection,entryPoint,cache){
         FROM MetadataComponentDependency 
         WHERE MetadataComponentId IN ('${ids}') AND MetadataComponentType != 'FlexiPage' ORDER BY MetadataComponentName, RefMetadataComponentType`;
 
-        return {query,filterById:true};
+        return {query,filterById:true,useToolingApi:true};
     }
 
 
