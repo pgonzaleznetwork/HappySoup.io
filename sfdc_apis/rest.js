@@ -8,9 +8,11 @@ let {ErrorHandler} = require('../services/errorHandling');
 
 function restAPI(connection){
 
+    let restEndpoint = endpoints.restApi;
+
     async function getSObjectsDescribe(){
 
-        let request = `${connection.url}${endpoints.restApi}sobjects/`; 
+        let request = `${connection.url}${restEndpoint}sobjects/`; 
         let options = getFetchOptions(connection.token);
         let json;
 
@@ -31,20 +33,23 @@ function restAPI(connection){
     async function query(soqlQuery){
 
         let jsonResponse;
-        let endpoint;
+        let endpoint = restEndpoint;
+
+        if(soqlQuery.useToolingApi){
+            endpoint += `tooling/`;
+        }
 
         if(soqlQuery.apiVersionOverride){
-            let versionEndpoint = overrideApiVersion(endpoints.restApi,soqlQuery.apiVersionOverride);
+            let versionEndpoint = overrideApiVersion(endpoint,soqlQuery.apiVersionOverride);
             endpoint = connection.url+versionEndpoint;
         }
         else{
-            endpoint = connection.url+endpoints.restApi;
+            endpoint = connection.url+endpoint;
         }
 
         endpoint += `query/?q=`;
 
         let request = endpoint+encodeURIComponent(soqlQuery.query); 
-        console.log(request);
         let options = getFetchOptions(connection.token);    
 
         if(soqlQuery.filterById && tooManyIds(soqlQuery.query)){

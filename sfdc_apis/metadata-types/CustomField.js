@@ -1,6 +1,5 @@
-let toolingAPI = require('../tooling');
-let metadataAPI = require('../../sfdc_apis/metadata');
-let restAPI = require('../../sfdc_apis/rest');
+let restAPI = require('../rest');
+let metadataAPI = require('../metadata');
 const logError = require('../../services/logging');
 let utils = require('../../services/utils');
 
@@ -8,15 +7,14 @@ let utils = require('../../services/utils');
 async function findReferences(connection,entryPoint,cache,options){
 
     let references = [];
-    let toolingApi = toolingAPI(connection);
-    let mdapi = metadataAPI(connection);
     let restApi = restAPI(connection);
+    let mdapi = metadataAPI(connection);
 
     let workflowRules = [];
     let workflowFieldUpdates = [];
     let metadataTypeRecords = [];
 
-    let entitiyDefinitionFormat = await getEntityDefinitionFormat(toolingApi,entryPoint.id);
+    let entitiyDefinitionFormat = await getEntityDefinitionFormat(restApi,entryPoint.id);
 
     try {
         workflowRules = await findWorkflowRules();
@@ -93,9 +91,9 @@ async function findReferences(connection,entryPoint,cache,options){
 
             let query = `SELECT Id,DeveloperName FROM CustomObject WHERE DeveloperName  IN ('${filterNames}')`;
 
-            let soql = {query,filterById:false};
+            let soql = {query,filterById:false,useToolingApi:true};
 
-            let rawResults = await toolingApi.query(soql);
+            let rawResults = await restApi.query(soql);
 
             let metadataTypesById = new Map();
 
@@ -106,10 +104,9 @@ async function findReferences(connection,entryPoint,cache,options){
             let filterTableOrEnumIds = utils.filterableId(Array.from(metadataTypesById.keys()));
 
             query = `SELECT Id,DeveloperName,TableEnumOrId FROM CustomField WHERE TableEnumOrId  IN ('${filterTableOrEnumIds}')`;
-            //console.log(query);
-            soql = {query,filterById:false};
+            soql = {query,filterById:false,useToolingApi:true};
 
-            rawResults = await toolingApi.query(soql);
+            rawResults = await restApi.query(soql);
 
             let fullFieldNames = [];
 
@@ -208,9 +205,9 @@ async function findReferences(connection,entryPoint,cache,options){
         let fieldDefinitionId = utils.filterableId(`${entitiyDefinitionFormat.entityDefinitionId}.${entitiyDefinitionFormat.shortFieldId}`);
 
         let query = `SELECT Id,name FROM WorkflowFieldUpdate WHERE FieldDefinitionId IN ('${fieldDefinitionId}')`;
-        let soql = {query,filterById:true};
+        let soql = {query,filterById:true,useToolingApi:true};
 
-        let rawResults = await toolingApi.query(soql);
+        let rawResults = await restApi.query(soql);
 
         let objectName = entryPoint.name.split('.')[0];
 
@@ -259,9 +256,9 @@ async function findReferences(connection,entryPoint,cache,options){
         else{
 
             let query = `SELECT name, Id FROM WorkflowRule WHERE TableEnumOrId = '${objectName}'`;
-            let soql = {query,filterById:false};
+            let soql = {query,filterById:false,useToolingApi:true};
     
-            let rawResults = await toolingApi.query(soql);
+            let rawResults = await restApi.query(soql);
 
             //maps cannot be cached on redis so we create a mirror
             //of the below map in array format so that we can cache it
@@ -364,13 +361,13 @@ async function findReferences(connection,entryPoint,cache,options){
     }   
 }
 
-async function getEntityDefinitionFormat(toolingApi,id){
+async function getEntityDefinitionFormat(restApi,id){
 
     let fieldId = utils.filterableId(id);
     let query = `SELECT EntityDefinitionId FROM CustomField WHERE Id IN ('${fieldId}')`;
-    let soql = {query,filterById:true};
+    let soql = {query,filterById:true,useToolingApi:true};
 
-    let rawResults = await toolingApi.query(soql);
+    let rawResults = await restApi.query(soql);
 
     let entityDefinitionId = rawResults.records[0].EntityDefinitionId;
     let shortFieldId = id.substring(0,15);

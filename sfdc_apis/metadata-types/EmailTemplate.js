@@ -1,11 +1,11 @@
 let utils = require('../../services/utils');
-let toolingAPI = require('../tooling');
+let restAPI = require('../rest');
 
 
 async function findReferences(connection,entryPoint){
 
     let references = [];
-    let toolingApi = toolingAPI(connection);
+    let restApi = restAPI(connection);
 
     references.push(
         ...await findWorkflowAlerts(),
@@ -26,13 +26,13 @@ async function findReferences(connection,entryPoint){
         let query = `SELECT FullName
         FROM EmailTemplate WHERE Id IN ('${ids}')`;
     
-        let soql = {query,filterById:true};
+        let soql = {query,filterById:true,useToolingApi:true};
 
         let templateFullName;
 
         //this can throw an error if the email template is in a private user's folder
         try {
-            let rawResults = await toolingApi.query(soql);
+            let rawResults = await restApi.query(soql);
             templateFullName = rawResults.records[0].FullName;
             //remove the folder part of the name
             templateFullName = templateFullName.substr(templateFullName.indexOf('/')+1);
@@ -48,9 +48,9 @@ async function findReferences(connection,entryPoint){
         query = `SELECT Id, Name , NamespacePrefix FROM 
         externalString WHERE value IN ('${entryPoint.name}','${entryPoint.id}','${templateFullName}')`
 
-        soql =  {query,filterById:false};
+        soql =  {query,filterById:false,useToolingApi:true};
 
-        let rawResults = await toolingApi.query(soql);
+        let rawResults = await restApi.query(soql);
 
         let customLabels = rawResults.records.map(record => {
     
@@ -78,9 +78,9 @@ async function findReferences(connection,entryPoint){
     
         //we use a lower version of the API to be able to query the TableEnumOrId
         //as this field is only available on lower versions
-        let soql = {query,filterById:false,apiVersionOverride:'32.0'};
+        let soql = {query,filterById:false,apiVersionOverride:'32.0',useToolingApi:true};
 
-        let rawResults = await toolingApi.query(soql);
+        let rawResults = await restApi.query(soql);
 
         let wfAlerts = rawResults.records.map(record => {
     
@@ -111,9 +111,9 @@ async function findReferences(connection,entryPoint){
         //we use this specific version of the API because on this version the RefMetadataComponentId field
         //can be filtered by the string 'EmailTemplate'. We want to be able to run this query even if the API
         //evolves or 'fixes' this
-        let soql = {query,filterById:false,apiVersionOverride:'48.0'};
+        let soql = {query,filterById:false,apiVersionOverride:'48.0',useToolingApi:true};
 
-        let rawResults = await toolingApi.query(soql);
+        let rawResults = await restApi.query(soql);
 
         let apexClasses = rawResults.records.map(record => {
     

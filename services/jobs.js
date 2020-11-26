@@ -6,7 +6,7 @@ let serverSessions = require('./serverSessions');
 let {cacheApi} = require('./caching')
 let dependencyApi = require('../sfdc_apis/dependencies');
 let usageApi = require('../sfdc_apis/usage');
-let toolingAPI = require('../sfdc_apis/tooling');
+let restAPI = require('../sfdc_apis/rest');
 let {ErrorHandler} = require('../services/errorHandling');
 let logError = require('../services/logging');
 
@@ -21,12 +21,12 @@ async function listMetadataJob(job){
 
     if(shouldUseToolingApi(mdtype)){
 
-      let toolingApi = toolingAPI(serverSessions.getConnection(session));
+      let restApi = restAPI(serverSessions.getConnection(session));
 
       let query = `SELECT Id,Name FROM ${mdtype}`;
-      let soqlQuery = {query,filterById:false};
+      let soqlQuery = {query,filterById:false,useToolingApi:true};
   
-      let jsonResponse = await toolingApi.query(soqlQuery);
+      let jsonResponse = await restApi.query(soqlQuery);
 
       if(!jsonResponse){
         let responseString = JSON.stringify(jsonResponse);

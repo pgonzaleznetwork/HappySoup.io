@@ -1,4 +1,4 @@
-let toolingAPI = require('../sfdc_apis/tooling');
+let restAPI = require('../sfdc_apis/rest');
 let reportsAPI = require('../sfdc_apis/reports');
 let utils = require('../services/utils');
 let stats = require('../services/stats');
@@ -8,7 +8,7 @@ const logError = require('../services/logging');
 
 function usageApi(connection,entryPoint,cache){
 
-    let toolingApi = toolingAPI(connection);
+    let restApi = restAPI(connection);
     let {options} = entryPoint;
 
     async function getUsage(){
@@ -77,7 +77,7 @@ function usageApi(connection,entryPoint,cache){
         async function exec(){
 
             let soqlQuery = createUsageQuery(entryPoint.id);
-            let rawResults = await toolingApi.query(soqlQuery);
+            let rawResults = await restApi.query(soqlQuery);
             result = simplifyResults(rawResults);
         }
 
@@ -235,9 +235,9 @@ function usageApi(connection,entryPoint,cache){
 
         let ids = utils.filterableId(flows.map(f => f.id));
         let query = `SELECT Id, VersionNumber, Status FROM flow WHERE Id IN ('${ids}')`;
-        let soql = {query,filterById:true};
+        let soql = {query,filterById:true,useToolingApi:true};
 
-        let results = await toolingApi.query(soql);
+        let results = await restApi.query(soql);
 
         let flowInfoById = new Map();
     
@@ -384,9 +384,9 @@ function usageApi(connection,entryPoint,cache){
         ids = utils.filterableId(ids);
 
         let query = `SELECT Id,Name,Body FROM ApexClass WHERE Id IN ('${ids}')`;
-        let soqlQuery = {query,filterById:true};
+        let soqlQuery = {query,filterById:true,useToolingApi:true};
     
-        let results = await toolingApi.query(soqlQuery);
+        let results = await restApi.query(soqlQuery);
 
         let classBodyById = new Map();
     
@@ -440,7 +440,7 @@ function usageApi(connection,entryPoint,cache){
         });
 
         let soqlQuery = createParentIdQuery(Array.from(metadataRecordToEntityMap.keys()),'CustomField','DeveloperName');
-        let results = await toolingApi.query(soqlQuery);
+        let results = await restApi.query(soqlQuery);
 
         let developerNamesByFieldId = new Map();
     
@@ -484,7 +484,7 @@ function usageApi(connection,entryPoint,cache){
         let soqlQuery = createParentIdQuery(ids,type,parentIdField);
 
         if(apiVersionOverride) soqlQuery.apiVersionOverride = apiVersionOverride;
-        let results = await toolingApi.query(soqlQuery);
+        let results = await restApi.query(soqlQuery);
 
         let metadataRecordToEntityMap = new Map();
     
@@ -607,7 +607,7 @@ function usageApi(connection,entryPoint,cache){
         FROM ${type} 
         WHERE Id IN ('${ids}') `;
 
-        return {query,filterById:true};
+        return {query,filterById:true,useToolingApi:true};
 
     }
 
@@ -620,7 +620,7 @@ function usageApi(connection,entryPoint,cache){
         FROM MetadataComponentDependency 
         WHERE RefMetadataComponentId  = '${id}' ORDER BY MetadataComponentType`;
 
-        return {query,filterById:true};
+        return {query,filterById:true,useToolingApi:true};
 
     }
 
