@@ -548,7 +548,7 @@ function usageApi(connection,entryPoint,cache){
      * EmailTemplate object, which is when queried, does not return WorkflowAlerts that reference the template
      */
     function lacksDependencyApiSupport(entryPoint){
-        return ['EmailTemplate','CustomField'].includes(entryPoint.type);
+        return ['EmailTemplate','CustomField','ApexClass'].includes(entryPoint.type);
     }
 
     async function seachAdditionalReferences(connection,entryPoint){
@@ -571,6 +571,15 @@ function usageApi(connection,entryPoint,cache){
                 additionalReferences = await findFieldRefs(connection,entryPoint,cache,options);
             } catch (error) {
                 logError('Error when searching for custom field references',{entryPoint,error});
+            }  
+        }
+        else if(entryPoint.type == 'ApexClass'){
+
+            try {
+                let findFieldRefs =  require('./metadata-types/ApexClass');
+                additionalReferences = await findFieldRefs(connection,entryPoint,cache,options);
+            } catch (error) {
+                logError('Error when searching for apex class references',{entryPoint,error});
             }  
         }
 
