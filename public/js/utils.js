@@ -63,13 +63,13 @@ function filterOptions(){
 
     let selectedQueryType = byId('query-type').value;
 
-    if(selectedQueryType == 'usage'){
+    let mdType = byId('md-type-select').value;
+    let optionsContainer = byId('options-container');
 
-        let mdType = byId('md-type-select').value;
-        let optionsContainer = byId('options-container');
+    //clean up whatever options are currently displayed
+    optionsContainer.style.display = 'none';
 
-        //clean up whatever options are currently displayed
-        optionsContainer.style.display = 'none';
+    if(selectedQueryType == 'usage'){     
 
         let optionGroups = Array.from(optionsContainer.querySelectorAll('.options-group'));
         optionGroups.forEach(group => {
