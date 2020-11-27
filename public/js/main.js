@@ -26,7 +26,7 @@ const SFDM = function(){
         let excelButton = byId('excel-button');
         let canvasContainer = byId('canvas-container');
         let canvas = byId('stats');
-        let optionInputs = byId('options');
+        let optionsSubcontainer = byId('options-subcontainer');
         let optionsToggler = byId('options-toggler');
         let barChart;
         let memberIdsByName = new Map();
@@ -62,7 +62,7 @@ const SFDM = function(){
             else{
                 link.innerText = 'Choose your toppings';
             }
-            optionInputs.classList.toggle('base-remove');
+            optionsSubcontainer.classList.toggle('base-remove');
         }
 
         function switchTheme(event){
@@ -242,11 +242,15 @@ const SFDM = function(){
 
         async function submitUsageJob(selectedMember,selectedMemberId,selectedMetadataType){
 
-            let inputOptions = Array.from(optionInputs.getElementsByTagName('input'));
+            let inputOptions = Array.from(optionsSubcontainer.getElementsByTagName('input'));
             let options = {};
 
             inputOptions.forEach(option => {
-                options[option.id] =  option.checked;
+                
+                //only send the options relevant to this metadata type
+                if(option.parentElement.parentElement.dataset.metadatatype == selectedMetadataType){
+                    options[option.id] =  option.checked;
+                } 
             });
 
             options = JSON.stringify(options);
