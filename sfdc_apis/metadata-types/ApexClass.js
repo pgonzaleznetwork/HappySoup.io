@@ -162,8 +162,6 @@ async function findReferences(connection,entryPoint,cache,options){
             let allData = [];
             data.forEach(d => allData.push(...d));
 
-            cache.cacheMetadataTypesWithFieldDefinitions(allData);
-
             allData.forEach(record => {
 
                 //now we go through the results
