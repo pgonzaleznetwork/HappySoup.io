@@ -576,8 +576,8 @@ function usageApi(connection,entryPoint,cache){
         else if(entryPoint.type == 'ApexClass'){
 
             try {
-                let findFieldRefs =  require('./metadata-types/ApexClass');
-                additionalReferences = await findFieldRefs(connection,entryPoint,cache,options);
+                let findClassReferences =  require('./metadata-types/ApexClass');
+                additionalReferences = await findClassReferences(connection,entryPoint,cache,options);
             } catch (error) {
                 logError('Error when searching for apex class references',{entryPoint,error});
             }  
