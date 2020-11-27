@@ -61,17 +61,31 @@ function createWarning(text,options){
 
 function filterOptions(){
 
-    let queryTypeDropDown = byId('query-type');
-    let mdDropDown = byId('md-type-select');
-    let optionsContainer = byId('options-container');
+    let selectedQueryType = byId('query-type').value;
 
-    let selectedQueryType = queryTypeDropDown.value;
-    let mdType = mdDropDown.value;
-    if(selectedQueryType == 'usage' && mdType == 'CustomField'){
-        optionsContainer.style.display = 'block';
-    }
-    else{
+    if(selectedQueryType == 'usage'){
+
+        let mdType = byId('md-type-select').value;
+        let optionsContainer = byId('options-container');
+
+        //clean up whatever options are currently displayed
         optionsContainer.style.display = 'none';
+
+        let optionGroups = Array.from(optionsContainer.querySelectorAll('.options-group'));
+        optionGroups.forEach(group => {
+            group.style.display = 'none';
+        })
+
+        for (let index = 0; index < optionGroups.length; index++) {
+
+            let group = optionGroups[index];
+
+            if(group.dataset.metadatatype == mdType){
+                optionsContainer.style.display = 'block';
+                group.style.display = 'block';
+                break;
+            }
+        }
     }
 }
 
