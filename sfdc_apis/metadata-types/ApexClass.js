@@ -144,7 +144,7 @@ async function findReferences(connection,entryPoint,cache,options){
             let fieldsThatReferenceClasses = [];
             //we assume that any field that has any of these identifiers
             //in its name, could possibly hold a value that matches the apex class name
-            let classIndentifiers = ['class','handler','type','instance'];
+            let classIndentifiers = ['class','handler','type','instance','trigger'];
 
             fullFieldNames.forEach(field => {
 
