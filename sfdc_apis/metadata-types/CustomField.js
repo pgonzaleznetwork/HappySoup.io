@@ -50,8 +50,8 @@ async function findReferences(connection,entryPoint,cache,options){
         function parseMetadataTypeRecord(record){
 
             let simplified = {
-                name: `${record.DeveloperName} (${record.attributes.type})`,
-                type: 'Custom Metadata Record',
+                name: record.DeveloperName,
+                type: record.attributes.type,
                 id: record.Id,
                 url:`${connection.url}/${record.Id}`,
                 notes:null,       

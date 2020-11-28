@@ -70,8 +70,8 @@ function restAPI(connection){
                     jsonResponse = await res.json();
 
                     //we throw the error but don't log it, let the caller deal with it. This is to prevent our logs
-                    //to be flooded with access errors
-                    if(isAccessError(jsonResponse)){
+                    //to be flooded with these errors
+                    if(isAccessError(jsonResponse) || isInvalidFieldError(jsonResponse)){
                         throw new ErrorHandler(res.status,res.statusText,'Fetch failed on Tooling API query');
                     }
                     else{
@@ -122,6 +122,7 @@ function createApiError(jsonResponse){
     apiError.message = jsonResponse[0].message;
     return apiError;
 }
+
 
 
 function getQueryMoreRequest(){
@@ -257,6 +258,17 @@ function getSOQLWithoutIds(queryString){
 function isAccessError(jsonResponse){
 
     if(Array.isArray(jsonResponse) && jsonResponse[0]?.message == `Cannot retrieve documents in a user's private folder; move the document to a named folder`){
+        return true;
+    }
+
+    return false;
+}
+
+//when querying certain fields dynamically, sometimes we get long text area fields which cannot be filtered
+//in a soql query. We ignore this error and continue to query other records
+function isInvalidFieldError(jsonResponse){
+
+    if(Array.isArray(jsonResponse) && jsonResponse[0]?.message.includes('can not be filtered in a query call')){
         return true;
     }
 
