@@ -30,8 +30,8 @@ async function findReferences(connection,entryPoint,cache,options){
         function parseMetadataTypeRecord(record){
 
             let simplified = {
-                name: `${record.DeveloperName} (${record.attributes.type})`,
-                type: 'Custom Metadata Record',
+                name: record.DeveloperName,
+                type: record.attributes.type,
                 id: record.Id,
                 url:`${connection.url}/${record.Id}`,
                 notes:null,       
@@ -45,13 +45,48 @@ async function findReferences(connection,entryPoint,cache,options){
         //out which ones are actually custom metadata types
         let sObjects = await restApi.getSObjectsDescribe();
         let customMetadataTypes = [];
+
+        let prefixInfoByObjectKey = new Map();
         
         sObjects.forEach(sobj => {
             //metadata types end with __mdt
             if(sobj.name.includes('__mdt')){
-                //when using it in queries though, we don't need the __mdt suffix
-                let index = sobj.name.indexOf('__mdt');
-                let name = sobj.name.substring(0,index);
+
+                //once we have identified a custom metadata type, we need to find its id
+                //by querying the customObject object of the tooling API
+
+                //for some reason this API expects the object name to be passed without
+                //a namespace prefix and without the __mdt suffix, so we have to remove
+                //both of this here
+
+                //however, in subsequent query calls, the API does expect both
+                //the prefix and suffix, so we have to keep track of them in a map
+                //for later use
+
+                let name;
+                let indexOfPrefix = sobj.name.indexOf('__');
+                let indexOfSuffix = sobj.name.indexOf('__mdt');
+
+                if(indexOfPrefix == indexOfSuffix){
+                    //if it's the same, there there's only 1, which by
+                    //default would be the suffix, so we remove it
+                    name = sobj.name.substring(0,indexOfSuffix);
+                }
+                else{
+
+                    //if they are different, then the first one is a namespace prefix
+                    //which needs to be removed for now, but we need to keep track of it
+                    //as the API expects it to be included in SOQL queries                    
+                    let prefix = sobj.name.substring(0,indexOfPrefix+2);
+                    //remove the suffix
+                    name = sobj.name.substring(0,indexOfSuffix);     
+                    //remove the prefix
+                    name = name.substring(indexOfPrefix+2);
+
+                    //keep track of the prefix
+                    prefixInfoByObjectKey.set(name,prefix);
+                }
+
                 customMetadataTypes.push(name);
             }
         });
@@ -90,27 +125,41 @@ async function findReferences(connection,entryPoint,cache,options){
             //the tooling API doesn't allow queries on the fullName if the query returns
             //more than one result
             rawResults.records.forEach(field => {
+
                 let metadataTypeName = metadataTypesById.get(field.TableEnumOrId);
+
+                //here's where we finally add the prefix again, as subsequent
+                //api calls expect it to be present
+                let prefix = prefixInfoByObjectKey.get(metadataTypeName);
+                if(prefix){
+                    metadataTypeName = prefix+metadataTypeName;
+                    field.DeveloperName = prefix+field.DeveloperName;
+                }
+                //and finally we add the suffix
                 metadataTypeName += '__mdt';
                 let fullFieldName = `${metadataTypeName}.${field.DeveloperName}__c`;
                 fullFieldNames.push(fullFieldName);
             });
 
-            //now that we have the full names, we issue a readMetadata call to inspect the
-            //details of each custom field
-            //let customFieldsMetadata = await mdapi.readMetadata('CustomField',fullFieldNames);
-
             let fieldsThatReferenceClasses = [];
-            let classIndentifiers = ['class','handler','type','instance'];
+            //we assume that any field that has any of these identifiers
+            //in its name, could possibly hold a value that matches the apex class name
+            let classIndentifiers = ['class','handler','type','instance','trigger'];
 
             fullFieldNames.forEach(field => {
 
-                field = field.toLowerCase();
+                //when checking if the field has any of the identifiers, we need
+                //to check only the field name, excluding the object name
+                //this prevents false positives like trigger_handler__mdt.not_valid__c
+                //where it's the object name that matches the identifier, as opposed to the
+                //actual field nae
+                let fieldName = field.split('.')[1].toLowerCase();
 
                 let fieldHasIndentifier = classIndentifiers.some(ci => {
-                    return field.includes(ci);
+                    return fieldName.includes(ci);
                 });
                 if(fieldHasIndentifier){
+                    //however here, we push the entire field name
                     fieldsThatReferenceClasses.push(field);
                 }
             })
@@ -152,10 +201,17 @@ async function findReferences(connection,entryPoint,cache,options){
             let data = await Promise.all(
 
                 queries.map(async (query) => {
+
                     let soql = {query,filterById:false}
-                    let rawResults = await restApi.query(soql);
-                    
-                    return rawResults.records;
+                    try {
+                        //sometimes a query can fail for example if we try to filter via
+                        //a long text area field. We ignore these errors and move on to quers
+                        //other records
+                        let rawResults = await restApi.query(soql); 
+                        return rawResults.records;
+                    } catch (error) {
+                        return [];
+                    }
                 })
             )
 
@@ -168,7 +224,7 @@ async function findReferences(connection,entryPoint,cache,options){
                 //if the record has a key, whos value matches the search value, we 
                 //consider this a match
                 //we do this because as explained earlier, a single record can have multiple
-                //fields of type field definition. So rather than keeping track of all the
+                //fields that hold an apex class name. So rather than keeping track of all the
                 //fields per object, we just check if a key value matches the search value
                 Object.keys(record).forEach(key => {
                     if(typeof record[key] === 'string' && record[key].toLowerCase() == searchValue){
@@ -179,9 +235,7 @@ async function findReferences(connection,entryPoint,cache,options){
         }
         return metadataTypesUsingClass;
 
-    }
-
-    
+    } 
 }
 
 
