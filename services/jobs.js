@@ -23,7 +23,7 @@ async function listMetadataJob(job){
 
       let restApi = restAPI(serverSessions.getConnection(session));
 
-      let query = `SELECT Id,Name FROM ${mdtype}`;
+      let query = `SELECT Id,Name,NamespacePrefix FROM ${mdtype}`;
       let soqlQuery = {query,filterById:false,useToolingApi:true};
   
       let jsonResponse = await restApi.query(soqlQuery);
@@ -37,10 +37,15 @@ async function listMetadataJob(job){
       //the response from the tooling api always returns a records array even if it's empty
       //so this operation is safe
       results = jsonResponse.records.map(record => {
-          return {
-            name:record.Name,
-            id:record.Id
-          }
+
+        if(record.NamespacePrefix){
+          record.Name = `${record.NamespacePrefix}.${record.Name}`;
+        }
+
+        return {
+          name:record.Name,
+          id:record.Id
+        }
       });
     }
     //for any other metadata type, we use the Metadata API
