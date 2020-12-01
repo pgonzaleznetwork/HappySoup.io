@@ -30,7 +30,7 @@ async function findReferences(connection,entryPoint,cache,options){
         function parseMetadataTypeRecord(record){
 
             let simplified = {
-                name: record.DeveloperName,
+                name: `${record.DeveloperName} (from ${record.matchingField})` ,
                 type: record.attributes.type,
                 id: record.Id,
                 url:`${connection.url}/${record.Id}`,
@@ -113,7 +113,7 @@ async function findReferences(connection,entryPoint,cache,options){
             let filterTableOrEnumIds = utils.filterableId(Array.from(metadataTypesById.keys()));
 
             //now we query all the custom fields belonging to custom metadata types
-            query = `SELECT Id,DeveloperName,TableEnumOrId FROM CustomField WHERE TableEnumOrId  IN ('${filterTableOrEnumIds}')`;
+            query = `SELECT Id,DeveloperName,TableEnumOrId,NamespacePrefix FROM CustomField WHERE TableEnumOrId  IN ('${filterTableOrEnumIds}')`;
             soql = {query,filterById:false,useToolingApi:true};
 
             rawResults = await restApi.query(soql);
@@ -130,10 +130,19 @@ async function findReferences(connection,entryPoint,cache,options){
 
                 //here's where we finally add the prefix again, as subsequent
                 //api calls expect it to be present
-                let prefix = prefixInfoByObjectKey.get(metadataTypeName);
-                if(prefix){
-                    metadataTypeName = prefix+metadataTypeName;
-                    field.DeveloperName = prefix+field.DeveloperName;
+                let objectPrefix = prefixInfoByObjectKey.get(metadataTypeName);
+                if(objectPrefix){
+                    metadataTypeName = objectPrefix+metadataTypeName;
+                }
+                //the reason we add the field prefix using the field object itself and not the
+                //the prefix from the prefixInfoByObjectKey map is because the field may not have
+                //the same prefix as its owning metadata type. This can happen if the metadata type
+                //is from an unlocked package, but the field was created manually on top of that metadata type
+                //which would result in the field not having a namespace
+                //so we add the namespace based on the actual namespace of the field and not under the assumption
+                //that it has the same namespace as its parent
+                if(field.NamespacePrefix){
+                    field.DeveloperName = `${field.NamespacePrefix}__${field.DeveloperName}`;
                 }
                 //and finally we add the suffix
                 metadataTypeName += '__mdt';
@@ -228,6 +237,7 @@ async function findReferences(connection,entryPoint,cache,options){
                 //fields per object, we just check if a key value matches the search value
                 Object.keys(record).forEach(key => {
                     if(typeof record[key] === 'string' && record[key].toLowerCase() == searchValue){
+                        record.matchingField = key;
                         metadataTypesUsingClass.push(parseMetadataTypeRecord(record));
                     }
                 })
