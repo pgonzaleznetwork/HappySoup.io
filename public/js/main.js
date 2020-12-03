@@ -225,6 +225,11 @@ const SFDM = function(){
                 return;
             }
 
+            if(!selectedMemberId){
+                window.alert(`${selectedMember} is not a valid name. You must choose a metadata member from the list`);
+                return;
+            }
+
             if(selectedQueryType == ''){
                 window.alert('Please select a query type');
                 return;
