@@ -6,9 +6,9 @@ let cors = require('cors');
 let {ErrorHandler} = require('../services/errorHandling');
 let logError = require('../services/logging');
 let Queue = require('bull');
-let REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+let {url} = require('../services/redisConfig');
 const QUEUE_NAME = 'happy-soup';
-let workQueue = new Queue(QUEUE_NAME, REDIS_URL);
+let workQueue = new Queue(QUEUE_NAME, url);
 let redisOps = require('../services/redisOps');
 
 let whitelist = process.env.CORS_DOMAINS.split(',');

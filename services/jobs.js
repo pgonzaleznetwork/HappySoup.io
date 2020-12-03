@@ -1,5 +1,3 @@
-//let redis = require('redis');
-//let { promisify } = require("util");
 let redisOps = require('../services/redisOps');
 let metadataApi = require('../sfdc_apis/metadata');
 let serverSessions = require('./serverSessions');
