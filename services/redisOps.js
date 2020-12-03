@@ -1,19 +1,10 @@
 let redis = require('redis');
 let { promisify } = require("util");
+let redisConfig = require('../services/redisConfig');
 
-let redisClient;
-
-//if running on heroku
-if (process.env.REDIS_URL){
-
-  let redisUrl = require("url").parse(process.env.REDIS_URL);
-  redisClient = redis.createClient(redisUrl.port, redisUrl.hostname);
-
-  redisClient.auth(redisUrl.auth.split(":")[1]);
-
-} else {
-  //running locally
-  redisClient = redis.createClient();
+let redisClient = redis.createClient(redisConfig.port,redisConfig.host);
+if(redisConfig.password){
+  redisClient.auth(redisConfig.password);
 }
 
 let redisGet = promisify(redisClient.get).bind(redisClient);

@@ -1,9 +1,7 @@
 let throng = require('throng');
 let Queue = require("bull");
 let jobs = require('./jobs');
-
-// Connect to a local redis instance locally, and the Heroku-provided URL in production
-const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+let {url} = require('../services/redisConfig');
 
 // Spin up multiple processes to handle jobs to take advantage of more CPU cores
 // See: https://devcenter.heroku.com/articles/node-concurrency for more info
@@ -17,7 +15,7 @@ const maxJobsPerWorker = 50;
 
 function start() {
   // Connect to the named work queue
-  let workQueue = new Queue('happy-soup', REDIS_URL);
+  let workQueue = new Queue('happy-soup', url);
 
   workQueue.process(maxJobsPerWorker, async (job) => {
 
