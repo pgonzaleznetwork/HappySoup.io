@@ -6,7 +6,7 @@
     "start": "heroku local",
     "debug": "node --inspect ./bin/www",
     "semantic-release": "semantic-release",
-    "build": "docker-compose up --build",
+    "dc-build": "docker-compose up --build",
     "local":" parallelshell 'node ./bin/www' 'node ./services/worker.js' ",
     "commit": "git-cz"
   },
