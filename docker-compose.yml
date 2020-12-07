@@ -4,16 +4,32 @@ services:
   redis:
     image: 'redis'
   webapp:
-    build: .
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
     ports:
       - "3000:3000"
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - OAUTH_CLIENT_ID=3MVG9I5UQ_0k_hTmZuUMosHPf.2zqzHBqd0j.GMmnThrGhd53n4prfPpHNqSAPRrWzc7Hb0ul.s2m4VYoiWyZ
-      - OAUTH_CLIENT_SECRET=
+      - OAUTH_CLIENT_SECRET=934DB30A5380514968DC292A07E6C9808884DE14CF9A175B475EBEB67F462CE9
       - SFDC_API_VERSION=49.0
-      - SESSION_SECRET=
+      - SESSION_SECRET=whatever
+      - PORT=3000
+      - CORS_DOMAINS=http://localhost,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
+      - ENFORCE_SSL=false
+  worker:
+    build:
+      context: .
+      dockerfile: ./docker/worker/Dockerfile
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - OAUTH_CLIENT_ID=3MVG9I5UQ_0k_hTmZuUMosHPf.2zqzHBqd0j.GMmnThrGhd53n4prfPpHNqSAPRrWzc7Hb0ul.s2m4VYoiWyZ
+      - OAUTH_CLIENT_SECRET=934DB30A5380514968DC292A07E6C9808884DE14CF9A175B475EBEB67F462CE9
+      - SFDC_API_VERSION=49.0
+      - SESSION_SECRET=whatever
       - PORT=3000
       - CORS_DOMAINS=http://localhost,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
       - ENFORCE_SSL=false
