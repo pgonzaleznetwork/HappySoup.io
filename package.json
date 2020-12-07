@@ -6,6 +6,8 @@
     "start": "heroku local",
     "debug": "node --inspect ./bin/www",
     "semantic-release": "semantic-release",
+    "build": "docker-compose up --build",
+    "local":" parallelshell 'node ./bin/www' 'node ./services/worker.js' ",
     "commit": "git-cz"
   },
   "engines": {
@@ -36,6 +38,7 @@
     "cz-conventional-changelog": "^3.2.1",
     "eslint": "^7.7.0",
     "nodemon": "^2.0.4",
+    "parallelshell": "3.0.2",
     "semantic-release": "^17.1.1",
     "semantic-release-cli": "^5.4.0"
   },
