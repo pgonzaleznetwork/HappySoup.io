@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  redis:
+    image: 'redis'
+  webapp:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - OAUTH_CLIENT_ID=3MVG9I5UQ_0k_hTmZuUMosHPf.2zqzHBqd0j.GMmnThrGhd53n4prfPpHNqSAPRrWzc7Hb0ul.s2m4VYoiWyZ
+      - OAUTH_CLIENT_SECRET=
+      - SFDC_API_VERSION=49.0
+      - SESSION_SECRET=
+      - PORT=3000
+      - CORS_DOMAINS=http://localhost,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
+      - ENFORCE_SSL=false
