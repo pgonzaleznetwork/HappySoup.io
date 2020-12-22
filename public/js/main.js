@@ -34,6 +34,37 @@ const SFDM = function(){
         let selectedMetadataType;
         let latestIntervalId;
         let latestInvertalDone = false;
+        let filterFunctionsByMetadataType = new Map();
+
+        /**
+         * These functions are used to filter certain metadata members from the UI.
+         * In particular, custom objects and standard objects use the same
+         * underlying metadata type "CustomObject" but they shouldn't be displayed
+         * in the same dropdown option.
+         * 
+         * So here we create filter functions to remove non-standard objects from the view
+         * when the selected metadata type is "Standard Objects". The same is true the other
+         * way around i.e remove standard objects when the selected option is "Custom Objects..."
+         * 
+         * This keeps the backend API clean and unaware of this UI concern. 
+         * 
+         * Finally, this is implemented in a map to avoid multiple IF branches, as it's not
+         * unreasonable to think we might have similar requirements in the future.
+         * 
+         * And, the way we know an object is standard is by checking if the id matches the name.
+         * Only standard objects have this functionality.
+         */
+        filterFunctionsByMetadataType.set('Standard Objects',value => {
+            if(value.id == value.name){
+                return value;
+            }
+        });
+
+        filterFunctionsByMetadataType.set('Custom Object/Setting/Metadata Type',value => {
+            if(value.id != value.name){
+                return value;
+            }
+        })
 
         document.addEventListener('DOMContentLoaded', loadServerInfo);
         themeSwitcher.onclick = switchTheme;
@@ -48,6 +79,7 @@ const SFDM = function(){
         excelButton.onclick = copyFile;
         optionsToggler.onclick = toggleOptions;
 
+        
         function loadServerInfo(){
             getSupportedMetadataTypes();
             getIdentityInfo();
@@ -193,9 +225,18 @@ const SFDM = function(){
             }
         }
 
+        
         async function processGetMembersResponse(response){
 
             let members = [];
+
+            let selectedOption = mdDropDown.options[mdDropDown.selectedIndex];
+            let filterFunction = filterFunctionsByMetadataType.get(selectedOption.innerText);
+
+            //do we need to filter some members from the UI?
+            if(filterFunction){
+                response = response.filter(filterFunction);
+            }
 
             response.forEach(metadata => {
                 members.push(metadata.name);
@@ -205,7 +246,6 @@ const SFDM = function(){
             autocompleteApi.autocomplete(inputField, members);
 
             //rename the selected option to display the number of metadata members
-            let selectedOption = mdDropDown.options[mdDropDown.selectedIndex];
             selectedOption.label = `${selectedOption.innerText} (${members.length})`;
 
             UI.enableInputField(inputField,selectedMetadataType);
