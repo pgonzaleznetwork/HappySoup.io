@@ -299,6 +299,16 @@ function getSupportedMetadataTypes(){
             ]
          },
          {
+            "label":"Standard Objects",
+            "value":"CustomObject",
+            supportedQueries : [
+                {
+                    type:'usage',
+                    label:'Where is this used / Impact Analysis'
+                },
+            ]
+         },
+         {
             "label":"Page Layout",
             "value":"Layout",
             supportedQueries : [
