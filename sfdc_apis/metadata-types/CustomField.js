@@ -1,3 +1,9 @@
+/**
+ * This module is for finding references to custom fields that are not (at the time of this writing) supported
+ * by the MetadataComponentDependency object. In other words, these are references that we find manually by
+ * matching the field id in other metadata types. 
+ */
+
 let restAPI = require('../rest');
 let metadataAPI = require('../metadata');
 const logError = require('../../services/logging');
@@ -42,228 +48,52 @@ async function findReferences(connection,entryPoint,cache,options){
 
     return references;
 
+    /**
+     * Custom Metadata Types can reference custom fields using a special field type known as FieldDefinition lookup.
+     * Here we try to manually find those references by finding which objects are metadata types and then
+     * querying some of their fields to see if any of them match on the field id.
+     */
     async function findMetadataTypeRecords(){
 
         let metadataTypesUsingField = [];
         if(!options.fieldInMetadataTypes) return metadataTypesUsingField;
 
-        function parseMetadataTypeRecord(record){
+        let mdTypeUtils = require('../metadata-types/utils/CustomMetadataTypes');
 
-            let simplified = {
-                name: record.DeveloperName,
-                type: record.attributes.type,
-                id: record.Id,
-                url:`${connection.url}/${record.Id}`,
-                notes:null,       
-            }
-            return simplified;
-        }
+        let metadataTypeCustomFields = await mdTypeUtils.getCustomMetadataTypeFields(connection);
 
-        let searchValue = `${edf.entityDefinitionId}.${edf.shortFieldId}`;
+        if(!metadataTypeCustomFields.length) return metadataTypesUsingField;
 
-        let cachedData = cache.getMetadataTypesWithFieldDefinitions();
+        //we need to do a metadata retrieve of all these custom fields so that we can inspect them
+        //and see which ones are of the type FieldDefinition
+        let customFieldsMetadata = await mdapi.readMetadata('CustomField',metadataTypeCustomFields);
 
-        if(cachedData.length){
+        let fieldDefinitionFields = [];
 
-            cachedData.forEach(record => {
-
-                Object.keys(record).forEach(key => {
-                    if(typeof record[key] === 'string' && record[key] == searchValue){
-                        metadataTypesUsingField.push(parseMetadataTypeRecord(record));
-                    }
-                })
-            })   
-            
-            return metadataTypesUsingField;
-        }
-
-        //we need to get all the objects in the org to find
-        //out which ones are actually custom metadata types
-        let sObjects = await restApi.getSObjectsDescribe();
-        let customMetadataTypes = [];
-      
-        sObjects.forEach(sobj => {
-            //metadata types end with __mdt
-            if(sobj.name.includes('__mdt')){
-
-                //once we have identified a custom metadata type, we need to find its id
-                //by querying the customObject object of the tooling API
-
-                //for some reason this API expects the object name to be passed without
-                //a namespace prefix and without the __mdt suffix, so we have to remove
-                //both of this here
-
-                let name;
-                let indexOfPrefix = sobj.name.indexOf('__');
-                let indexOfSuffix = sobj.name.indexOf('__mdt');
-
-                if(indexOfPrefix == indexOfSuffix){
-                    //if it's the same, there there's only 1, which by
-                    //default would be the suffix, so we remove it
-                    name = sobj.name.substring(0,indexOfSuffix);
-                }
-                else{
-
-                    //if they are different, then the first one is a namespace prefix
-                    //which needs to be removed for now
-
-                    //remove the suffix
-                    name = sobj.name.substring(0,indexOfSuffix);     
-                    //remove the prefix
-                    name = name.substring(indexOfPrefix+2);
-                }
-
-                customMetadataTypes.push(name);
+        customFieldsMetadata.forEach(fieldMd => {
+            if(fieldMd.referenceTo && fieldMd.referenceTo == 'FieldDefinition'){
+                fieldDefinitionFields.push(fieldMd.fullName);
             }
         });
-        
 
-        //it's possible that the org doesn't have metadata types
-        //so we exit early
-        if(customMetadataTypes.length){
+        if(!fieldDefinitionFields.length) return metadataTypesUsingField;
 
-            let filterNames = utils.filterableId(customMetadataTypes);
+        //field definition fields hold the value of a custom field using this special format
+        let searchValue = `${edf.entityDefinitionId}.${edf.shortFieldId}`;
 
-            //the sobjects describe call from the rest API that we did earlier doesn't include
-            //the object id, so we need to query it here manually
-            //this will then be used to query all the custom fields that belong to a specific metadata type
-            let query = `SELECT Id,DeveloperName,NamespacePrefix FROM CustomObject WHERE DeveloperName  IN ('${filterNames}')`;
-            let soql = {query,filterById:false,useToolingApi:true};
-            let rawResults = await restApi.query(soql);
+        metadataTypesUsingField = await mdTypeUtils.queryMetadataTypeForValue(connection,fieldDefinitionFields,searchValue);
 
-            let metadataTypesById = new Map();
-
-            rawResults.records.map(obj => {
-                if(obj.NamespacePrefix){
-                    obj.DeveloperName = `${obj.NamespacePrefix}__${obj.DeveloperName}`;
-                }
-                obj.DeveloperName += '__mdt';
-                metadataTypesById.set(obj.Id,obj.DeveloperName);
-            });
-
-            let filterTableOrEnumIds = utils.filterableId(Array.from(metadataTypesById.keys()));
-
-            //now we query all the custom fields belonging to custom metadata types
-            query = `SELECT Id,DeveloperName,TableEnumOrId,NamespacePrefix FROM CustomField WHERE TableEnumOrId  IN ('${filterTableOrEnumIds}')`;
-            soql = {query,filterById:false,useToolingApi:true};
-
-            rawResults = await restApi.query(soql);
-
-            let fullFieldNames = [];
-
-            //once we have all the fields, we build their full name using the metadata type
-            //id map. Ideally we would've queried the full name in the previous query but
-            //the tooling API doesn't allow queries on the fullName if the query returns
-            //more than one result
-            rawResults.records.forEach(field => {
-
-                 //the reason we add the field prefix using the field object itself and not the
-                //the prefix from owning metadata type is because the field may not have
-                //the same prefix as its owning metadata type. This can happen if the metadata type
-                //is from an unlocked package, but the field was created manually on top of that metadata type
-                //which would result in the field not having a namespace
-                //so we add the namespace based on the actual namespace of the field and not under the assumption
-                //that it has the same namespace as its parent*/
-
-                let metadataTypeName = metadataTypesById.get(field.TableEnumOrId);
-                
-                if(field.NamespacePrefix){
-                    field.DeveloperName = `${field.NamespacePrefix}__${field.DeveloperName}`;
-                }
-
-                let fullFieldName = `${metadataTypeName}.${field.DeveloperName}__c`;
-                fullFieldNames.push(fullFieldName);
-            });
-
-            //now that we have the full names, we issue a readMetadata call to inspect the
-            //details of each custom field
-            let customFieldsMetadata = await mdapi.readMetadata('CustomField',fullFieldNames);
-
-            let fieldsThatReferenceFieldDefinition = [];
-
-            //finally here, we determine if the field is a lookup to a fieldDefinition
-            customFieldsMetadata.forEach(fieldMd => {
-                if(fieldMd.referenceTo && fieldMd.referenceTo == 'FieldDefinition'){
-                    fieldsThatReferenceFieldDefinition.push(fieldMd.fullName);
-                }
-            });
-
-            //now we have the objects and fields that point to a custom field
-            //The next step is to query each individual object, checking if the field in question
-            //matches the search value
-            //to do that, we map the fields by the object name
-            //note that a single metadata type can have multiple fields that point to field definitions
-            let fieldsByObjectName = new Map();
-
-            fieldsThatReferenceFieldDefinition.forEach(field => {
-
-                let [objectName,fieldName] = field.split('.');
-                
-                if(fieldsByObjectName.get(objectName)){
-                    fieldsByObjectName.get(objectName).push(fieldName);
-                }
-                else{
-                    fieldsByObjectName.set(objectName,[fieldName]);
-                }
-
-            });
-
-            let queries = [];
-
-            //we need to build on query per field because you can't use OR in custom metadata
-            //types SOQL
-            for (let [objectName, fields] of fieldsByObjectName) {
-     
-                fields.forEach(field => {
-                    let query = `SELECT Id , ${field}, DeveloperName FROM ${objectName} WHERE ${field} != null`;
-                    queries.push(query);
-                });
-            }
-
-            //once we have all the queries, we 
-            //execute them in parallel
-            let data = await Promise.all(
-
-                queries.map(async (query) => {
-                    let soql = {query,filterById:false}
-                    let rawResults = await restApi.query(soql);
-                    
-                    return rawResults.records;
-                })
-            )
-
-            let allData = [];
-            data.forEach(d => allData.push(...d));
-
-            cache.cacheMetadataTypesWithFieldDefinitions(allData);
-
-            allData.forEach(record => {
-
-                //now we go through the results
-                //if the record has a key, whos value matches the search value, we 
-                //consider this a match
-                //we do this because as explained earlier, a single record can have multiple
-                //fields of type field definition. So rather than keeping track of all the
-                //fields per object, we just check if a key value matches the search value
-                Object.keys(record).forEach(key => {
-                    if(typeof record[key] === 'string' && record[key] == searchValue){
-                        metadataTypesUsingField.push(parseMetadataTypeRecord(record));
-                    }
-                })
-            })            
-        }
         return metadataTypesUsingField;
-
     }
 
+    /**
+    * field updates tied to a specific field can be found
+    * by looking at the FieldDefinitionId field which comes in
+    * the following format FieldDefinitionId  = '01I3h000000ewd0.00N3h00000DAO0J'
+    * The first id is the EntityId of the object that the field is linked to
+    * for standard objects, this would be 'Account.00N3h00000DAO0J'
+    * the 2nd id is the 15 digit version of the custom field id*/
     async function findWorkflowFieldUpdates(){
-
-        //field updates tied to a specific field can be found
-        //by looking at the FieldDefinitionId field which comes in
-        //the following format FieldDefinitionId  = '01I3h000000ewd0.00N3h00000DAO0J'
-        //The first id is the EntityId of the object that the field is linked to
-        //for standard objects, this would be 'Account.00N3h00000DAO0J'
-        //the 2nd id is the 15 digit version of the custom field id
 
         let fieldDefinitionId = utils.filterableId(`${edf.entityDefinitionId}.${edf.shortFieldId}`);
 
@@ -339,6 +169,8 @@ async function findReferences(connection,entryPoint,cache,options){
     
             });
     
+            //we do a metadata retrieve on the workflow rules to inspect them and see if they
+            //reference the field in question
             workflowRuleMetadata = await mdapi.readMetadata('WorkflowRule',Array.from(idsByWorkflowName.keys()));
 
             //we don't need to store all the data in the cache
@@ -423,6 +255,15 @@ async function findReferences(connection,entryPoint,cache,options){
     }   
 }
 
+/**
+ * Most of the references to custom fields use this special format
+ * where Account.My_Field__c is translated to Account.0345000345465 (15 digit id)
+ * or My_Object__c.my_Field__c to 00554567576.24565766477 (object and field id)
+ * 
+ * So here we pass the field id and get an object that has both the object id
+ * and the short field id. Subsequent API calls within this module will use
+ * any of these 2 values as needed.
+ */
 async function getEntityDefinitionFormat(restApi,id){
 
     let fieldId = utils.filterableId(id);
