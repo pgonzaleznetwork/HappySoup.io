@@ -1,3 +1,13 @@
+/**
+ * This module is for providing a small internal API to find custom metadata type fields and being able to query certain fields
+ * as well.
+ * 
+ * Multiple modules use this module to check if a particular metadata type is referenced in the custom field of a custom
+ * metadata type.
+ * 
+ * For example, the ApexClass,CustomField and CustomObject modules all use this module. 
+ */
+
 let restAPI = require('../../rest');
 let utils = require('../../../services/utils');
 
