@@ -555,42 +555,15 @@ function usageApi(connection,entryPoint,cache){
 
         let additionalReferences = [];
 
-        if(entryPoint.type == 'EmailTemplate'){
-
-            try {
-                let findTemplateRefs =  require('./metadata-types/EmailTemplate');
-                additionalReferences = await findTemplateRefs(connection,entryPoint);
-            } catch (error) {
-                logError('Error when searching for template references',{entryPoint,error});
+        try {
+            //we dynamically import the required module, matching on the metadata type name
+            let findReferencesFunction =  require(`./metadata-types/${entryPoint.type}`);
+            if(findReferencesFunction){
+                additionalReferences = await findReferencesFunction(connection,entryPoint,cache,options);
             }
-        }
-        else if(entryPoint.type == 'CustomField'){
-
-            try {
-                let findFieldRefs =  require('./metadata-types/CustomField');
-                additionalReferences = await findFieldRefs(connection,entryPoint,cache,options);
-            } catch (error) {
-                logError('Error when searching for custom field references',{entryPoint,error});
-            }  
-        }
-        else if(entryPoint.type == 'ApexClass'){
-
-            try {
-                let findClassRefs =  require('./metadata-types/ApexClass');
-                additionalReferences = await findClassRefs(connection,entryPoint,cache,options);
-            } catch (error) {
-                logError('Error when searching for apex class references',{entryPoint,error});
-            }  
-        }
-
-        else if(entryPoint.type == 'CustomObject'){
-
-            try {
-                let findObjectRefs =  require('./metadata-types/CustomObject');
-                additionalReferences = await findObjectRefs(connection,entryPoint,cache,options);
-            } catch (error) {
-                logError('Error when searching for custom object references',{entryPoint,error});
-            }  
+            
+        } catch (error) {
+            logError('Error when searching additional references',{entryPoint,error});
         }
 
         return additionalReferences;
