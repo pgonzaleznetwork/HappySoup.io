@@ -32,8 +32,11 @@ function createUsageTree(tree,targetElement){
 
     metadataTypesList.appendChild(metadataTypeNode);
 
-    metadataTypeNode.appendChild(foldersApi.createFolderIcon());
-    metadataTypeNode.appendChild(document.createTextNode(` ${metadataType}`));
+    let folderIcon = foldersApi.createFolderIcon();
+    folderIcon.appendChild(document.createTextNode(` ${metadataType}`));
+
+    metadataTypeNode.appendChild(folderIcon);
+    //metadataTypeNode.appendChild(document.createTextNode(` ${metadataType}`));
 
     tree[metadataType].forEach(member => {
       createMemberNode(metadataTypeNode,member);
