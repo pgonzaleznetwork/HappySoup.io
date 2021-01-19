@@ -29,14 +29,15 @@ function createUsageTree(tree,targetElement){
   for(let metadataType in tree){
 
     let metadataTypeNode = document.createElement('li');
-
+    
     metadataTypesList.appendChild(metadataTypeNode);
 
     let folderIcon = foldersApi.createFolderIcon();
-    folderIcon.appendChild(document.createTextNode(` ${metadataType}`));
 
     metadataTypeNode.appendChild(folderIcon);
-    //metadataTypeNode.appendChild(document.createTextNode(` ${metadataType}`));
+    metadataTypeNode.appendChild(document.createTextNode(` ${metadataType}`));
+
+    metadataTypeNode.addEventListener('click',() => folderIcon.click());
 
     tree[metadataType].forEach(member => {
       createMemberNode(metadataTypeNode,member);
