@@ -343,6 +343,16 @@ function getSupportedMetadataTypes(){
             ]
          },
          {
+            "label":"Standard Picklist Field",
+            "value":"StandardPicklistField",
+            supportedQueries : [
+                {
+                    type:'usage',
+                    label:defaultImpactAnalysisLabel
+                },
+            ]
+         },
+         {
             "label":"Field Set",
             "value":"FieldSet",
             supportedQueries : defaultSupportedQueries

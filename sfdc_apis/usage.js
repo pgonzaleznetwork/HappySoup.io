@@ -75,10 +75,17 @@ function usageApi(connection,entryPoint,cache){
         let result = [];
 
         async function exec(){
+            
 
-            let soqlQuery = createUsageQuery(entryPoint.id);
-            let rawResults = await restApi.query(soqlQuery);
-            result = simplifyResults(rawResults);
+            if(requiresCustomCode(entryPoint.type)){
+                let rawResults = await findReferencesManually(entryPoint);
+                result = simplifyResults(rawResults);
+            }
+            else{
+                let soqlQuery = createUsageQuery(entryPoint.id);
+                let rawResults = await restApi.query(soqlQuery);
+                result = simplifyResults(rawResults);
+            }
         }
 
         return {
@@ -588,7 +595,6 @@ function usageApi(connection,entryPoint,cache){
         });
 
         return callers;
-
     }
     
     function createParentIdQuery(ids,type,selectFields){
@@ -616,6 +622,19 @@ function usageApi(connection,entryPoint,cache){
 
     }
 
+    async function findReferencesManually(entryPoint){
+
+        let callers = [];
+
+        //we dynamically import the required module, matching on the metadata type name
+        let findReferencesFunction =  require(`./metadata-types/${entryPoint.type}`);
+        if(findReferencesFunction){
+            callers = await findReferencesFunction(connection,entryPoint,cache,options);
+        }
+
+        return callers;
+    }
+
     return {getUsage}
 }
 
@@ -636,6 +655,19 @@ function getColor(color){
     
     return hex;
 }
+
+/**
+ * Some metadata types like standard fields are not supported by the MetadataComponentDependency API. For these types, we might
+ * have "custom code" that searches for the references manually by inspecting the XML files of other metadata types.
+ * Here we store the list of metadata types that require custom code.
+ */
+function requiresCustomCode(type){
+
+    let types = ['StandardPicklistField'];
+  
+    return types.includes(type);
+  
+  }
 
 
 

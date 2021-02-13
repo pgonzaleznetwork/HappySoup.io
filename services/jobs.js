@@ -17,7 +17,13 @@ async function listMetadataJob(job){
 
     let results = [];
 
-    if(shouldUseToolingApi(mdtype)){
+    if(requiresCustomCode(mdtype)){
+
+      results.push(...[{name:'Opportunity Stage',id:'Opportunity.StageName'}]);
+
+    }
+
+    else if(shouldUseToolingApi(mdtype)){
 
       let restApi = restAPI(serverSessions.getConnection(session));
 
@@ -134,6 +140,19 @@ async function getSession(sessionId){
 function shouldUseToolingApi(type){
 
   let types = ['ApexClass','EmailTemplate'];
+
+  return types.includes(type);
+
+}
+
+/**
+ * Some metadata types like standard fields are not supported by the MetadataComponentDependency API. For these types, we might
+ * have "custom code" that searches for the references manually by inspecting the XML files of other metadata types.
+ * Here we store the list of metadata types that require custom code.
+ */
+function requiresCustomCode(type){
+
+  let types = ['StandardPicklistField'];
 
   return types.includes(type);
 
