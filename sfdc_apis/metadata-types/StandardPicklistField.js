@@ -4,62 +4,14 @@ let restAPI = require('../rest');
 
 async function findReferences(connection,entryPoint,cache,options){
 
-    async function searchFieldInApexClass(parentObjectName,fieldApiName,apexClasses){
-
-        let fieldNameRegex = new RegExp(`${fieldApiName}`,'gi');
-    
-        let ids = apexClasses.map(ac => ac.id);
-        ids = utils.filterableId(ids);
-    
-        let query = `SELECT Id,Name,Body FROM ApexClass WHERE Id IN ('${ids}')`;
-        let soqlQuery = {query,filterById:true,useToolingApi:true};
-    
-        let rawResults  = await restApi.query(soqlQuery);
-    
-        let classBodyById = new Map();
-    
-        rawResults.records.forEach(rec => {
-            classBodyById.set(rec.Id,rec.Body);
-        });
-    
-        //console.log(classBodyById);
-    
-        let classesThatUseField = [];
-        
-        apexClasses.forEach(ac => {
-    
-            let body = classBodyById.get(ac.MetadataComponentId);
-            if(body){
-                //remove all white space/new lines
-                body = body.replace(/\s/g,'');
-    
-                console.log('body',body);
-    
-                if(body.match(fieldNameRegex)){
-                    console.log('MATCH');
-                    classesThatUseField.push(ac);
-                }
-            }
-        });
-    }
-
-    
-    async function searchFieldInApexTrigger(apexTriggers){
-        //something
-    }
-
-    let functionsByMetadataType = new Map();
-    functionsByMetadataType.set('ApexClass',searchFieldInApexClass);
-    functionsByMetadataType.set('ApexTrigger',searchFieldInApexTrigger);
-
     let metadataUsingField = [];
 
     let restApi = restAPI(connection);
 
     let standardPicklistName = entryPoint.id;
-    let [parentObjectName,fieldApiName] = standardPicklistName.split('.');
+    let [object,field] = standardPicklistName.split('.');
 
-    let metadataUsingObject = await queryDependeciesByObjectName(parentObjectName);
+    let metadataUsingObject = await queryDependeciesByObjectName(object);
 
     let metadataByType = new Map();
 
@@ -73,21 +25,27 @@ async function findReferences(connection,entryPoint,cache,options){
         }
     });
 
+    let functionsByMetadataType = getFunctionsByMetadataType();
+
     for (let [metadataType, metadata] of metadataByType) {
         
         let callback = functionsByMetadataType.get(metadataType);
+
         if(callback){
-            let results = callback(parentObjectName,fieldApiName,metadata);
+
+            let params = {
+                object,
+                field,
+                metadata,
+            }
+
+            let results = await callback(params);
             metadataUsingField.push(...results);
-        }
+        }    
     }
 
-    
-    console.log('classes!',classesThatUseField);
+    return metadataUsingField;
 
-    rawResults.records = classesThatUseField;
-
-    return rawResults;
 
     async function queryDependeciesByObjectName(parentObjectName){
 
@@ -123,10 +81,73 @@ async function findReferences(connection,entryPoint,cache,options){
         return callers;
     }
 
+    async function searchFieldInApexClass({object,field,metadata}){
+
+        let apexClasses = metadata;
+
+        let fieldNameRegex = new RegExp(`${field}`,'gi');
     
+        let ids = apexClasses.map(ac => ac.id);
+        ids = utils.filterableId(ids);
     
+        let query = `SELECT Id,Name,Body,NamespacePrefix FROM ApexClass WHERE Id IN ('${ids}')`;
+        let soqlQuery = {query,filterById:true,useToolingApi:true};
     
+        let rawResults  = await restApi.query(soqlQuery);
     
+        let classBodyById = new Map();
+    
+        rawResults.records.forEach(rec => {
+            classBodyById.set(rec.Id,rec.Body);
+        });
+        
+        let classesUsingField = [];
+        
+        apexClasses.forEach(ac => {
+    
+            let body = classBodyById.get(ac.id);
+            if(body){
+                //remove all white space/new lines
+                body = body.replace(/\s/g,'');
+        
+                if(body.match(fieldNameRegex)){
+                    classesUsingField.push(ac);
+                }
+            }
+        });
+
+        classesUsingField = classesUsingField.map(ac => {
+    
+            let simplified = {
+                name:ac.name,
+                type:'ApexClass',
+                id: ac.id,
+                url:`${connection.url}/${ac.id}`,
+                notes:null,      
+            }
+    
+            return simplified;          
+        });
+
+        //console.log(classesUsingField);
+
+        return classesUsingField;
+    }
+
+    
+    async function searchFieldInApexTrigger(apexTriggers){
+        //something
+    }
+
+    function getFunctionsByMetadataType(){
+
+        let functionsByMetadataType = new Map();
+        functionsByMetadataType.set('ApexClass',searchFieldInApexClass);
+       // functionsByMetadataType.set('ApexTrigger',searchFieldInApexTrigger);
+
+        return functionsByMetadataType;
+    }
+   
 }
 
 

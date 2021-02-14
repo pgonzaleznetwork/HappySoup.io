@@ -21,6 +21,8 @@ function usageApi(connection,entryPoint,cache){
             let additionalReferences = await seachAdditionalReferences(connection,entryPoint,cache);
             callers.push(...additionalReferences);
         }
+
+        console.log('what are the callers',callers);
             
         callers = await enhanceData(callers);
         
@@ -78,8 +80,7 @@ function usageApi(connection,entryPoint,cache){
             
 
             if(requiresCustomCode(entryPoint.type)){
-                let rawResults = await findReferencesManually(entryPoint);
-                result = simplifyResults(rawResults);
+                result = await findReferencesManually(entryPoint);
             }
             else{
                 let soqlQuery = createUsageQuery(entryPoint.id);
@@ -115,6 +116,7 @@ function usageApi(connection,entryPoint,cache){
             metadata.pills = [];
 
             let {type} = metadata;
+
             type = type.toUpperCase();
 
             if(type == 'CUSTOMFIELD'){
