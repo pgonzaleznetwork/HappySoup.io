@@ -343,8 +343,8 @@ function getSupportedMetadataTypes(){
             ]
          },
          {
-            "label":"Standard Picklist Field",
-            "value":"StandardPicklistField",
+            "label":"Standard Field",
+            "value":"StandardField",
             supportedQueries : [
                 {
                     type:'usage',

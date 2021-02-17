@@ -138,7 +138,7 @@ function usageApi(connection,entryPoint,cache){
             //for the following metadata types, we only need to enhance their data when the entry point is 
             //a custom field, this is because fields can be used by these metadata types in different ways
             //for example a field can be used in a report for its filter conditions or only for viewing 
-            else if(entryPoint.type.toUpperCase() == 'CUSTOMFIELD' && type == 'APEXCLASS'){
+            else if(['CUSTOMFIELD','STANDARDFIELD'].includes(entryPoint.type.toUpperCase()) && type == 'APEXCLASS'){
                     apexClasses.push(metadata);   
             }
 
@@ -665,7 +665,7 @@ function getColor(color){
  */
 function requiresCustomCode(type){
 
-    let types = ['StandardPicklistField'];
+    let types = ['StandardField'];
   
     return types.includes(type);
   
