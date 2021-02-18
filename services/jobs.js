@@ -20,7 +20,7 @@ async function listMetadataJob(job){
     if(requiresCustomCode(mdtype)){
 
       results.push(...[
-        {name:'Opportunity.Stage',id:'Opportunity.StageName'},
+        {name:'Opportunity.StageName',id:'Opportunity.StageName'},
         {name:'Opportunity.Amount',id:'Opportunity.Amount'},
         {name:'Account.Industry',id:'Account.Industry'},
         {name:'Case.Status',id:'Case.Status'}

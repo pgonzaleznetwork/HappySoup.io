@@ -1,5 +1,6 @@
 let utils = require('../../services/utils');
 let restAPI = require('../rest');
+let metadataAPI = require('../metadata');
 
 
 async function findReferences(connection,entryPoint,cache,options){
@@ -7,6 +8,7 @@ async function findReferences(connection,entryPoint,cache,options){
     let metadataUsingField = [];
 
     let restApi = restAPI(connection);
+    let mdapi = metadataAPI(connection);
 
     //let StandardFieldName = entryPoint.id;
     let [object,field] = entryPoint.name.split('.');
@@ -27,22 +29,34 @@ async function findReferences(connection,entryPoint,cache,options){
 
     for (let [metadataType, members] of metadataByType) {
 
+        let params = {
+            object,
+            field,
+            metadataType,
+            members
+        }
+
+        let results = [];
+
         let codeBasedField = getCodeBasedField(metadataType);
 
         if(codeBasedField){
 
-            let params = {
-                object,
-                field,
-                codeBasedField,
-                metadataType,
-                members
-            }
+            params.codeBasedField = codeBasedField;
 
-            let results = await searchFieldInCode(params);
+            results = await searchFieldInCode(params);
             metadataUsingField.push(...results);
 
-        }  
+        }
+        else{
+            let searchFunction = getSearchFunction(metadataType);
+
+            if(searchFunction){
+                results = await searchFunction(params);
+                metadataUsingField.push(...results);
+            }
+        } 
+         
     }
 
     return metadataUsingField;
@@ -135,6 +149,81 @@ async function findReferences(connection,entryPoint,cache,options){
         return metadataUsingField;
     }
 
+    async function searchFieldInEmailTemplate(params){
+
+        let {field,metadataType,members} = params;
+
+        let fieldNameRegex = new RegExp(`${field}`,'gi');
+
+        const EMAIL_TEMPLATE_QUERY_LIMIT = 50;
+        let ids = [];
+
+        //we query a max number of templates to avoid too many API calls
+        for (let index = 0; index < EMAIL_TEMPLATE_QUERY_LIMIT; index++) {
+            if(members[index]){
+                ids.push(members[index].id);
+            }  
+        }
+
+        let idsByName = new Map();
+
+        let fullNames = await Promise.all(
+
+            ids.map(async (id) => {
+
+                let query = `SELECT FullName,Name,NamespacePrefix,Id FROM EmailTemplate WHERE Id = '${id}' `;
+                let soqlQuery = {query,useToolingApi:true};
+    
+                let rawResults = await restApi.query(soqlQuery);
+                let template = rawResults.records[0];
+
+                idsByName.set(template.Name,template.Id);
+            
+                return template.FullName;
+            })
+        );
+
+
+        let readMetadataResult = await mdapi.readMetadata('EmailTemplate',fullNames);
+
+        let templatesUsingField = [];
+
+        readMetadataResult.forEach(template => {
+
+            let buff = new Buffer(template.content, 'base64');
+            let templateContent = buff.toString('ascii');
+
+            //remove all white space/new lines  
+            templateContent = templateContent.replace(/\s/g,'');
+            
+            if(templateContent.match(fieldNameRegex)){
+                
+                let templateId = idsByName.get(template.name);
+
+                let simplified = {
+                    name:template.name,
+                    type:'EmailTemplate',
+                    id: templateId,
+                    url:`${connection.url}/${templateId}`,
+                    notes:null,      
+                }
+
+                templatesUsingField.push(simplified);
+            }
+       });
+
+       return templatesUsingField;
+    }
+
+    function getSearchFunction(metadataType){
+
+        let searchFunctionByMetadataType = new Map();
+        searchFunctionByMetadataType.set('EmailTemplate',searchFieldInEmailTemplate);
+
+        return searchFunctionByMetadataType.get(metadataType);
+    
+    }
+
 }
 
 function getCodeBasedField(metadataType){
@@ -146,6 +235,9 @@ function getCodeBasedField(metadataType){
 
     return codeBasedFieldByMetadataType.get(metadataType);
 }
+
+
+
 
 
 

@@ -4,6 +4,7 @@ let utils = require('../services/utils');
 let stats = require('../services/stats');
 let format = require('../services/fileFormats');
 const logError = require('../services/logging');
+const e = require('express');
 
 
 function usageApi(connection,entryPoint,cache){
@@ -21,8 +22,6 @@ function usageApi(connection,entryPoint,cache){
             let additionalReferences = await seachAdditionalReferences(connection,entryPoint,cache);
             callers.push(...additionalReferences);
         }
-
-        console.log('what are the callers',callers);
             
         callers = await enhanceData(callers);
         
