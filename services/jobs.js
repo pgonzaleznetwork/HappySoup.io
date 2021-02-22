@@ -17,15 +17,8 @@ async function listMetadataJob(job){
 
     let results = [];
 
-    if(requiresCustomCode(mdtype)){
-
-      results.push(...[
-        {name:'Opportunity.StageName',id:'Opportunity.StageName'},
-        {name:'Opportunity.Amount',id:'Opportunity.Amount'},
-        {name:'Account.Industry',id:'Account.Industry'},
-        {name:'Case.Status',id:'Case.Status'}
-      ]);
-
+    if(mdtype == 'StandardField'){
+      results.push(...getStandardFields());
     }
 
     else if(shouldUseToolingApi(mdtype)){
@@ -150,16 +143,31 @@ function shouldUseToolingApi(type){
 
 }
 
-/**
- * Some metadata types like standard fields are not supported by the MetadataComponentDependency API. For these types, we might
- * have "custom code" that searches for the references manually by inspecting the XML files of other metadata types.
- * Here we store the list of metadata types that require custom code.
- */
-function requiresCustomCode(type){
+function getStandardFields(){
 
-  let types = ['StandardField'];
+  let allFields = [];
+  let fieldsByObject = new Map();
 
-  return types.includes(type);
+  fieldsByObject.set('Opportunity',['StageName','Amount','CloseDate','IsClosed','ForecastCategory','HasOpportunityLineItem','Type','Probability','IsWon']);
+  fieldsByObject.set('Account',['Industry','AccountNumber','AnnualRevenue','IsPersonAccount']);
+  fieldsByObject.set('Case',['ClosedDate','Origin','Priority','Status','Type']);
+  fieldsByObject.set('Contact',['Birthdate','LeadSource']);
+  fieldsByObject.set('Lead', ['LeadSource','Industry','Status']);
+
+  for (let [object, fields] of fieldsByObject) {
+    
+    fields.forEach(field => {
+      let fullName = `${object}.${field}`;
+      let fieldObj = {name:fullName,id:fullName};
+      allFields.push(fieldObj);
+    })
+
+  }
+
+  console.log(allFields);
+
+  return allFields;
+
 
 }
 
