@@ -17,7 +17,11 @@ async function listMetadataJob(job){
 
     let results = [];
 
-    if(shouldUseToolingApi(mdtype)){
+    if(mdtype == 'StandardField'){
+      results.push(...getStandardFields());
+    }
+
+    else if(shouldUseToolingApi(mdtype)){
 
       let restApi = restAPI(serverSessions.getConnection(session));
 
@@ -136,6 +140,34 @@ function shouldUseToolingApi(type){
   let types = ['ApexClass','EmailTemplate'];
 
   return types.includes(type);
+
+}
+
+function getStandardFields(){
+
+  let allFields = [];
+  let fieldsByObject = new Map();
+
+  fieldsByObject.set('Opportunity',['StageName','Amount','CloseDate','IsClosed','ForecastCategory','HasOpportunityLineItem','Type','Probability','IsWon']);
+  fieldsByObject.set('Account',['Industry','AccountNumber','AnnualRevenue','IsPersonAccount']);
+  fieldsByObject.set('Case',['ClosedDate','Origin','Priority','Status','Type']);
+  fieldsByObject.set('Contact',['Birthdate','LeadSource']);
+  fieldsByObject.set('Lead', ['LeadSource','Industry','Status']);
+
+  for (let [object, fields] of fieldsByObject) {
+    
+    fields.forEach(field => {
+      let fullName = `${object}.${field}`;
+      let fieldObj = {name:fullName,id:fullName};
+      allFields.push(fieldObj);
+    })
+
+  }
+
+  console.log(allFields);
+
+  return allFields;
+
 
 }
 

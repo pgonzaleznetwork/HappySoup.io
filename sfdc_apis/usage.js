@@ -4,6 +4,7 @@ let utils = require('../services/utils');
 let stats = require('../services/stats');
 let format = require('../services/fileFormats');
 const logError = require('../services/logging');
+const e = require('express');
 
 
 function usageApi(connection,entryPoint,cache){
@@ -75,10 +76,16 @@ function usageApi(connection,entryPoint,cache){
         let result = [];
 
         async function exec(){
+            
 
-            let soqlQuery = createUsageQuery(entryPoint.id);
-            let rawResults = await restApi.query(soqlQuery);
-            result = simplifyResults(rawResults);
+            if(requiresCustomCode(entryPoint.type)){
+                result = await findReferencesManually(entryPoint);
+            }
+            else{
+                let soqlQuery = createUsageQuery(entryPoint.id);
+                let rawResults = await restApi.query(soqlQuery);
+                result = simplifyResults(rawResults);
+            }
         }
 
         return {
@@ -108,6 +115,7 @@ function usageApi(connection,entryPoint,cache){
             metadata.pills = [];
 
             let {type} = metadata;
+
             type = type.toUpperCase();
 
             if(type == 'CUSTOMFIELD'){
@@ -129,7 +137,7 @@ function usageApi(connection,entryPoint,cache){
             //for the following metadata types, we only need to enhance their data when the entry point is 
             //a custom field, this is because fields can be used by these metadata types in different ways
             //for example a field can be used in a report for its filter conditions or only for viewing 
-            else if(entryPoint.type.toUpperCase() == 'CUSTOMFIELD' && type == 'APEXCLASS'){
+            else if(['CUSTOMFIELD','STANDARDFIELD'].includes(entryPoint.type.toUpperCase()) && type == 'APEXCLASS'){
                     apexClasses.push(metadata);   
             }
 
@@ -151,7 +159,7 @@ function usageApi(connection,entryPoint,cache){
             }
 
         }
-        if(validationRules.length){
+        if(validationRules.length && entryPoint.type.toUpperCase() != 'STANDARDFIELD' ){//for standard fields the custom code already populates the prefix
             /**
              * Only the version 33.0 of the tooling API supports the TableEnumOrId column on the ValidationRule object. On higher versions
              * only the EntityDefinitionId is available but this returns the 15 digit Id of the object, whereas everywhere else in the API
@@ -166,6 +174,7 @@ function usageApi(connection,entryPoint,cache){
             }
             
         }
+
         if(layouts.length){
 
             try {
@@ -588,7 +597,6 @@ function usageApi(connection,entryPoint,cache){
         });
 
         return callers;
-
     }
     
     function createParentIdQuery(ids,type,selectFields){
@@ -616,6 +624,19 @@ function usageApi(connection,entryPoint,cache){
 
     }
 
+    async function findReferencesManually(entryPoint){
+
+        let callers = [];
+
+        //we dynamically import the required module, matching on the metadata type name
+        let findReferencesFunction =  require(`./metadata-types/${entryPoint.type}`);
+        if(findReferencesFunction){
+            callers = await findReferencesFunction(connection,entryPoint,cache,options);
+        }
+
+        return callers;
+    }
+
     return {getUsage}
 }
 
@@ -636,6 +657,19 @@ function getColor(color){
     
     return hex;
 }
+
+/**
+ * Some metadata types like standard fields are not supported by the MetadataComponentDependency API. For these types, we might
+ * have "custom code" that searches for the references manually by inspecting the XML files of other metadata types.
+ * Here we store the list of metadata types that require custom code.
+ */
+function requiresCustomCode(type){
+
+    let types = ['StandardField'];
+  
+    return types.includes(type);
+  
+  }
 
 
 

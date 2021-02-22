@@ -263,6 +263,81 @@ function getSupportedMetadataTypes(){
     ];
 
     return [
+
+        {
+            "label":"Custom Field",
+            "value":"CustomField",
+            supportedQueries : [
+                {
+                    type:'deps',
+                    label:'Fields referenced by this field / Deployment Boundary'
+                },
+                {
+                    type:'usage',
+                    label:defaultImpactAnalysisLabel
+                },
+            ]
+         },
+         {
+            "label":"Standard Field",
+            "value":"StandardField",
+            supportedQueries : [
+                {
+                    type:'usage',
+                    label:defaultImpactAnalysisLabel
+                },
+            ]
+         },
+
+         {
+            "label":"Custom Object/Setting/Metadata Type",
+            "value":"CustomObject",
+            supportedQueries : [
+                {
+                    type:'usage',
+                    label:'Where is this used / Impact Analysis'
+                },
+            ]
+         },
+         {
+            "label":"Standard Objects",
+            "value":"CustomObject",
+            supportedQueries : [
+                {
+                    type:'usage',
+                    label:'Where is this used / Impact Analysis'
+                },
+            ]
+         },
+
+        {
+            "label":"Page Layout",
+            "value":"Layout",
+            supportedQueries : [
+                {
+                    type:'deps',
+                    label:'Fields used in layout / Deployment Boundary'
+                }
+            ]
+         },
+         
+        {
+            "label":"Custom Button",
+            "value":"WebLink",
+            supportedQueries : [
+                {
+                    type:'usage',
+                    label:'Layouts using this button / Impact Analysis'
+                },
+            ]
+         },
+         
+         {
+            "label":"Field Set",
+            "value":"FieldSet",
+            supportedQueries : defaultSupportedQueries
+         },
+
         {
             label:'Apex Class',
             value:'ApexClass',
@@ -288,65 +363,8 @@ function getSupportedMetadataTypes(){
                 }
             ]
          },
-         {
-            "label":"Custom Object/Setting/Metadata Type",
-            "value":"CustomObject",
-            supportedQueries : [
-                {
-                    type:'usage',
-                    label:'Where is this used / Impact Analysis'
-                },
-            ]
-         },
-         {
-            "label":"Standard Objects",
-            "value":"CustomObject",
-            supportedQueries : [
-                {
-                    type:'usage',
-                    label:'Where is this used / Impact Analysis'
-                },
-            ]
-         },
-         {
-            "label":"Page Layout",
-            "value":"Layout",
-            supportedQueries : [
-                {
-                    type:'deps',
-                    label:'Fields used in layout / Deployment Boundary'
-                }
-            ]
-         },
-         {
-            "label":"Custom Button",
-            "value":"WebLink",
-            supportedQueries : [
-                {
-                    type:'usage',
-                    label:'Layouts using this button / Impact Analysis'
-                },
-            ]
-         },
-         {
-            "label":"Custom Field",
-            "value":"CustomField",
-            supportedQueries : [
-                {
-                    type:'deps',
-                    label:'Fields referenced by this field / Deployment Boundary'
-                },
-                {
-                    type:'usage',
-                    label:defaultImpactAnalysisLabel
-                },
-            ]
-         },
-         {
-            "label":"Field Set",
-            "value":"FieldSet",
-            supportedQueries : defaultSupportedQueries
-         },
+         
+         
          {
             "label":"Custom Label",
             "value":"CustomLabel",
