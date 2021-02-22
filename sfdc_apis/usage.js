@@ -159,7 +159,7 @@ function usageApi(connection,entryPoint,cache){
             }
 
         }
-        if(validationRules.length){
+        if(validationRules.length && entryPoint.type.toUpperCase() != 'STANDARDFIELD' ){//for standard fields the custom code already populates the prefix
             /**
              * Only the version 33.0 of the tooling API supports the TableEnumOrId column on the ValidationRule object. On higher versions
              * only the EntityDefinitionId is available but this returns the 15 digit Id of the object, whereas everywhere else in the API
@@ -174,6 +174,7 @@ function usageApi(connection,entryPoint,cache){
             }
             
         }
+
         if(layouts.length){
 
             try {
