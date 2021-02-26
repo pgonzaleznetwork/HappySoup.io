@@ -164,8 +164,6 @@ function getStandardFields(){
 
   }
 
-  console.log(allFields);
-
   return allFields;
 
 
