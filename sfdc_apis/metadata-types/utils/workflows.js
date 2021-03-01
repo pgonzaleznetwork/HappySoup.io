@@ -1,17 +1,23 @@
-let utils = require('../../services/utils');
-let restAPI = require('../rest');
-let metadataAPI = require('../metadata');
-const logError = require('../../services/logging');
+let restAPI = require('../../rest');
+let metadataAPI = require('../../metadata');
+const logError = require('../../../services/logging');
 
 
-async function findWorkflowFieldUpdates(){
+/**
+* field updates tied to a specific field can be found
+* by looking at the FieldDefinitionId field which comes in
+* the following format FieldDefinitionId  = '01I3h000000ewd0.00N3h00000DAO0J'
+* The first id is the EntityId of the object that the field is linked to
+* for standard objects, this would be 'Account.00N3h00000DAO0J'
+* the 2nd id is the 15 digit version of the custom field id*/
+async function findWorkflowFieldUpdates(connection,objectName,fieldDefinitionId){
 
-    let query = `SELECT Id,name FROM WorkflowFieldUpdate WHERE FieldDefinitionId = '${entryPoint.name}'`;
+    let query = `SELECT Id,name FROM WorkflowFieldUpdate WHERE FieldDefinitionId = '${fieldDefinitionId}'`;
     let soql = {query,useToolingApi:true};
 
-    let rawResults = await restApi.query(soql);
+    let restApi = restAPI(connection);
 
-    let objectName = entryPoint.name.split('.')[0];
+    let rawResults = await restApi.query(soql);
 
     let fieldUpdates = rawResults.records.map(fieldUpdate => {
 
@@ -35,7 +41,10 @@ async function findWorkflowFieldUpdates(){
 
 }
 
-async function findWorkflowRules(){
+async function findWorkflowRules(connection,entryPoint,cache){
+
+    let restApi = restAPI(connection);
+    let mdapi = metadataAPI(connection);
 
     //the entryPoint name is the full API name i.e Case.My_Custom_Field__c
     //here we split it and get the 2 parts
@@ -61,8 +70,6 @@ async function findWorkflowRules(){
         let soql = {query,filterById:false,useToolingApi:true};
 
         let rawResults = await restApi.query(soql);
-
-        console.log('raw results',rawResults);
 
         //maps cannot be cached on redis so we create a mirror
         //of the below map in array format so that we can cache it
@@ -164,3 +171,5 @@ async function findWorkflowRules(){
 
     return wfsUsingField;
 }   
+
+module.exports = {findWorkflowFieldUpdates,findWorkflowRules}
