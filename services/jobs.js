@@ -1,12 +1,10 @@
 let redisOps = require('../services/redisOps');
-let metadataApi = require('../sfdc_apis/metadata');
+let {metadataAPI,restAPI} = require('sfdc-happy-api')();
 let serverSessions = require('./serverSessions');
 let {cacheApi} = require('./caching')
-let dependencyApi = require('../sfdc_apis/dependencies');
-let usageApi = require('../sfdc_apis/usage');
-let restAPI = require('../sfdc_apis/rest');
 let {ErrorHandler} = require('../services/errorHandling');
 let logError = require('../services/logging');
+const sfdcSoup = require('sfdc-soup');
 
 
 
@@ -23,7 +21,7 @@ async function listMetadataJob(job){
 
     else if(shouldUseToolingApi(mdtype)){
 
-      let restApi = restAPI(serverSessions.getConnection(session));
+      let restApi = restAPI(serverSessions.getConnection(session),logError);
 
       let query = `SELECT Id,Name,NamespacePrefix FROM ${mdtype}`;
       let soqlQuery = {query,filterById:false,useToolingApi:true};
@@ -52,7 +50,7 @@ async function listMetadataJob(job){
     }
     //for any other metadata type, we use the Metadata API
     else {
-      let mdapi = metadataApi(serverSessions.getConnection(session));
+      let mdapi = metadataAPI(serverSessions.getConnection(session),logError);
       let jsonResponse = await mdapi.listMetadata(mdtype);
 
       if(jsonResponse){
@@ -92,8 +90,8 @@ async function usageJob(job){
     let cache = cacheApi(session.cache);
     let connection = serverSessions.getConnection(session);
 
-    let api = usageApi(connection,entryPoint,cache);
-    let response = await api.getUsage();
+    let soupApi = sfdcSoup(connection,entryPoint,cache);
+    let response = await soupApi.getUsage();
 
     return {
       newCache:session.cache,
@@ -109,8 +107,8 @@ async function dependencyJob(job){
     let cache = cacheApi(session.cache);
     let connection = serverSessions.getConnection(session);
 
-    let api = dependencyApi(connection,entryPoint,cache);
-    let response = await api.getDependencies();
+    let soupApi = sfdcSoup(connection,entryPoint,cache);
+    let response = await soupApi.getDependencies();
  
     return {
       newCache:session.cache,
