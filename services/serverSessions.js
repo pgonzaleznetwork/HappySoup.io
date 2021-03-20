@@ -1,5 +1,6 @@
-const soapApi = require('../sfdc_apis/soap');
+const {soapAPI} = require('sfdc-happy-api')();
 let {ErrorHandler} = require('../services/errorHandling');
+require('dotenv').config();
 
 async function validateSessions(req,res,next){
 
@@ -32,7 +33,7 @@ async function isSfdcSessionAlive(connection){
 
     let isAlive = false;
 
-    let api = soapApi(connection);
+    let api = soapAPI(connection);
     let response = await api.getServerTimestamp();
 
     if(response['soapenv:Envelope']['soapenv:Body'].getServerTimestampResponse){
@@ -46,7 +47,8 @@ function getConnection(session){
 
     let connection = {
         token: session.oauthInfo.access_token,
-        url:session.oauthInfo.instance_url
+        url:session.oauthInfo.instance_url,
+        apiVersion:process.env.SFDC_API_VERSION
     }
 
     return connection;
@@ -55,7 +57,7 @@ function getConnection(session){
 async function logout(session){
 
     let connection = getConnection(session);
-    await soapApi(connection).logout();
+    await soapAPI(connection).logout();
     session.destroy();
 }
 
