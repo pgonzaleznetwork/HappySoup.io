@@ -32,8 +32,8 @@
     "node-fetch": "2.6.1",
     "redis": "^3.0.2",
     "throng": "^4.0.0",
-    "sfdc-happy-api": "2.0.0",
-    "sfdc-soup": "3.0.0"
+    "sfdc-happy-api": "latest",
+    "sfdc-soup": "latest"
   },
   "devDependencies": {
     "commitizen": "^4.2.0",
