@@ -339,6 +339,17 @@ function getSupportedMetadataTypes(){
          },
 
         {
+            "label":"Apex Trigger",
+            "value":"ApexTrigger",
+            supportedQueries : [
+                {
+                    type:'deps',
+                    label:defaultDeploymentBoundaryLabel
+                }
+            ]
+        },
+
+        {
             label:'Apex Class',
             value:'ApexClass',
             supportedQueries : defaultSupportedQueries
@@ -353,17 +364,6 @@ function getSupportedMetadataTypes(){
             "value":"ApexComponent",
             supportedQueries : defaultSupportedQueries
          },
-         {
-            "label":"Apex Trigger",
-            "value":"ApexTrigger",
-            supportedQueries : [
-                {
-                    type:'deps',
-                    label:defaultDeploymentBoundaryLabel
-                }
-            ]
-         },
-         
          
          {
             "label":"Custom Label",
@@ -393,6 +393,11 @@ function getSupportedMetadataTypes(){
          {
             "label":"Email Template",
             "value":"EmailTemplate",
+            supportedQueries : defaultSupportedQueries
+         },
+         {
+            "label":"Email Alert",
+            "value":"WorkflowAlert",
             supportedQueries : defaultSupportedQueries
          },
          {
