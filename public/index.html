@@ -11,40 +11,41 @@
     <link rel="stylesheet" href="css/framework.css">
     <link rel="stylesheet" href="css/index.css">
     <script src="js/login.js" type="module"></script>  
+    <script src="https://unpkg.com/vue@next"></script>
     <title>Happy Soup - Salesforce Impact & Dependency Analysis 100% free</title>
 </head>
 
 <body>
+  <main id="grid">
 
-  <template id="warning-template">
-      <div id="warning-template-text">
-      </div>
-  </template>
-
-  <main class="grid">
-
-    <section class="login">
-      <div class="login-inner">
+    <section id="login">
+      <div id="login-inner" >
         <div id="logo">
           <img src="images/logo.png" width="200px" height="100px"/>
         </div>
         <div class="base-x-line"></div>
         <p id="company-tagline">Salesforce Impact & Dependency Analysis 100% free</p>
         <p id="mobile-login">Use the desktop site to log in</p>
+        <section id="vue-form">
         <div class="env-selection">
             <label for="environment">Login Type  </label>
-
-            <select id="environment">
+            <select id="environment" v-model="envSelected" v-on:change="handleEnvChange">
             <option value="test">Sandbox</option>
             <option value="login">Production</option>
             <option value="domain">My Domain</option>
           </select>
         </div> 
-        <div id="domain-input-area" class="base-remove"><input type="text" placeholder="https://your-domain.my.salesforce.com" class="base-input" id="domain-input"></div>
-        <div id=privacy-statement>
-          <input id="privacy-checkbox" type="checkbox"/> <label for="privacy-checkbox">I agree to the Happy Soup </label> <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a> 
+        <div id="domain-input-area" v-if="showDomain">
+          <input type="text" placeholder="https://your-domain.my.salesforce.com" class="base-input" id="domain-input" v-model="domain">
         </div>
-        <button id="login-button" >Log in with Salesforce   <i class="fa fa-sign-in"></i></button>
+        <div id=privacy-statement>
+          <input id="privacy-checkbox" type="checkbox" v-model="privacyAccepted"/> <label for="privacy-checkbox">I agree to the Happy Soup </label> <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a> 
+        </div>
+        <button id="login-button" v-on:click="handleLogin">Log in with Salesforce   <i class="fa fa-sign-in"></i></button>
+        <div v-if="loginError != '' "id="warning-template-text">
+          {{loginError}}
+        </div>
+      </section>
     </div>
     
     <footer>

@@ -119,7 +119,7 @@ const SFDM = function(){
 
                 let instanceURL = json;
 
-                localStorage.setItem('lastUsedDomain',instanceURL);
+                localStorage.setItem('lastDomain',instanceURL);
 
             } catch (error) {
                 //no error handling required because this is not critical to the app functionality

@@ -7,7 +7,7 @@ body{
     line-height: normal;
 }
 
-.grid{
+#grid{
     height: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -30,13 +30,13 @@ body{
     border-radius: 5px;
 }
 
-.login{
+#login{
     text-align: center;
     grid-area: login;
     position:relative;
 }
 
-.login-inner{
+#login-inner{
     
     height: 400px;
     position: absolute;
