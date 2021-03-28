@@ -42,8 +42,8 @@
           <input id="privacy-checkbox" type="checkbox" v-model="privacyAccepted"/> <label for="privacy-checkbox">I agree to the Happy Soup </label> <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a> 
         </div>
         <button id="login-button" v-on:click="handleLogin">Log in with Salesforce   <i class="fa fa-sign-in"></i></button>
-        <div v-if="loginError != '' "id="warning-template-text">
-          {{loginError}}
+        <div v-if="showError" id="warning-template-text">
+          {{error}}
         </div>
       </section>
     </div>

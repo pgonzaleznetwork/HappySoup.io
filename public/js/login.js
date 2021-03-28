@@ -4,7 +4,7 @@ const Form = {
     data() {
 
       return {
-        loginError:'',
+        error:'',
         clientId:'',
         domain:'',
         envSelected:'test',
@@ -15,7 +15,11 @@ const Form = {
     computed: {
         showDomain() {
            return this.envSelected == 'domain';
-        }
+        },
+
+        showError(){
+            return !!this.error;
+        }  
     },
 
     methods:{
@@ -25,11 +29,11 @@ const Form = {
             let params = new URLSearchParams(location.search);
 
             if(params.has('logout')){           
-                this.loginError = 'Your Salesforce session has expired. Please log in again.';
+                this.error = 'Your Salesforce session has expired. Please log in again.';
             }
 
             if(params.has('oauthfailed')){
-                this.loginError = 'We were unable to log into your salesforce org. Try clearing the cache and cookies, using another browser or another org.';
+                this.error = 'We were unable to log into your salesforce org. Try clearing the cache and cookies, using another browser or another org.';
             }
 
             /**
@@ -133,7 +137,7 @@ const Form = {
             
         }
     },
-    
+
     mounted(){
         this.processUrlParams();
         this.getClientId();
