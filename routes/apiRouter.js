@@ -404,11 +404,6 @@ function getSupportedMetadataTypes(){
             "label":"Lightning Component (Aura)",
             "value":"AuraDefinitionBundle",
             supportedQueries : defaultSupportedQueries
-         },
-         {
-            "label":"Lightning Web Component",
-            "value":"LightningComponentBundle",
-            supportedQueries : defaultSupportedQueries
          }
     ];
 }
