@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/framework.css">
     <link rel="stylesheet" href="css/index.css">
-    <script src="js/login.js" type="module"></script>  
-    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.global.prod.js"></script>
+    <script defer src="js/login.js"></script>  
     <title>Happy Soup - Salesforce Impact & Dependency Analysis 100% free</title>
 </head>
 
@@ -29,7 +29,7 @@
         <section id="vue-form">
         <div class="env-selection">
             <label for="environment">Login Type  </label>
-            <select id="environment" v-model="envSelected" v-on:change="handleEnvChange">
+            <select id="environment" v-model="envSelected" @change="handleEnvChange">
             <option value="test">Sandbox</option>
             <option value="login">Production</option>
             <option value="domain">My Domain</option>
@@ -41,10 +41,10 @@
         <div id=privacy-statement>
           <input id="privacy-checkbox" type="checkbox" v-model="privacyAccepted"/> <label for="privacy-checkbox">I agree to the Happy Soup </label> <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a> 
         </div>
-        <button id="login-button" v-on:click="handleLogin">Log in with Salesforce   <i class="fa fa-sign-in"></i></button>
         <div v-if="showError" id="warning-template-text">
           {{error}}
         </div>
+        <button id="login-button" @click="handleLogin">Log in with Salesforce   <i class="fa fa-sign-in"></i></button>
       </section>
     </div>
     

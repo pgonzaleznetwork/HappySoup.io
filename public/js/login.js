@@ -78,15 +78,15 @@ const Form = {
         validateDomain(){
 
             if(!this.domain){
-                alert('Please enter your domain URL');
+                this.error = 'Please enter your domain URL';
                 return;
             }
             if(this.domain.indexOf('my.salesforce.com') === -1){
-                alert(`${this.domain} is not a valid salesforce domain`);
+                this.error = `This is not a valid salesforce domain. It should look something like https://company.my.salesforce.com`;
                 return;
             }
             if(this.domain.indexOf('https://') != 0){
-                alert(`Please use https://`);
+                this.error = `Did you mean https://${this.domain} ?`;
                 return;
             }
             
@@ -104,7 +104,7 @@ const Form = {
         handleLogin(){
 
             if(!this.privacyAccepted){
-                window.alert('You must agree to our Privacy Policy before using Happy Soup. Remember you can always deploy it to your own FREE Heroku account!');
+                this.error = 'You must agree to our Privacy Policy before using HappySoup.io. Remember you can always deploy it to your own free Heroku account!';
                 return;
             }
 
@@ -122,17 +122,14 @@ const Form = {
             }
         
             let authEndPoint = `${baseURL}/services/oauth2/authorize`;
-    
             let redirectURI = encodeURIComponent(`${window.location.origin}/oauth2/callback`);
     
             let state = JSON.stringify({
                 'baseURL':baseURL,
                 'redirectURI':redirectURI
             });
-            
-            let responseType = "code";
-            
-            let requestURL = `${authEndPoint}?client_id=${this.clientId}&response_type=${responseType}&redirect_uri=${redirectURI}&state=${state}`;
+             
+            let requestURL = `${authEndPoint}?client_id=${this.clientId}&response_type=code&redirect_uri=${redirectURI}&state=${state}`;
             window.location = requestURL;
             
         }
@@ -145,5 +142,5 @@ const Form = {
     }
   }
   
-Vue.createApp(Form).mount('#vue-form')
+Vue.createApp(Form).mount('#vue-form');
 
