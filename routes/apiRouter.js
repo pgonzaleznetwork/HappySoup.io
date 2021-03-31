@@ -48,7 +48,7 @@ apiRouter.route('/dependencies')
                 jobType:'DEPENDENCIES'
             }
 
-            let jobId = `${getIdentityKey(req)}:deps-${entryPoint.id}-${entryPoint.type}${Date.now()}`
+            let jobId = `${serverSessions.getIdentityKey(req)}:deps-${entryPoint.id}-${entryPoint.type}${Date.now()}`
     
             let job = await workQueue.add(jobDetails,{jobId});
             res.status(200).json({jobId:job.id});   
@@ -88,7 +88,7 @@ apiRouter.route('/usage')
                 jobType:'USAGE'
             }
 
-            let jobId = `${getIdentityKey(req)}:usage-${entryPoint.id}-${entryPoint.type}${Date.now()}`
+            let jobId = `${serverSessions.getIdentityKey(req)}:usage-${entryPoint.id}-${entryPoint.type}${Date.now()}`
 
             let job = await workQueue.add(jobDetails,{jobId});
             res.status(200).json({jobId:job.id});   
@@ -136,7 +136,7 @@ apiRouter.route('/metadata')
                     sessionId:getSessionKey(req)
                 };
 
-                let jobId = `${getIdentityKey(req)}:${cacheKey}${Date.now()}`
+                let jobId = `${serverSessions.getIdentityKey(req)}:${cacheKey}${Date.now()}`
                 
                 let job = await workQueue.add(jobDetails,{jobId});
                 res.status(200).json({jobId:job.id});
@@ -197,6 +197,7 @@ apiRouter.route('/job/:id')
 
 .get(
     cors(corsOptions),
+    serverSessions.validateJobId,
     serverSessions.validateSessions,
     async (req,res,next) => {
     
@@ -450,17 +451,13 @@ function validateParams(req,res,next){
 }
 
 function deleteJobInfo(jobId){
-    //bull:happy-soup:pgonzalez@test.com.uat:list-ApexClass1602182549998
+    //redis key format -- bull:happy-soup:pgonzalez@test.com.uat:list-ApexClass1602182549998
     let redisKey = `bull:${QUEUE_NAME}:${jobId}`;
     redisOps.redisDel(redisKey);
 }
 
 function getSessionKey(req){
     return `sfhs-sess:${req.sessionID}`;
-}
-
-function getIdentityKey(req){
-    return `${req.session.identity.orgId}.${req.session.identity.userId}`;
 }
 
 module.exports = apiRouter;
