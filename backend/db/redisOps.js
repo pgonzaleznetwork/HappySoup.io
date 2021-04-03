@@ -1,6 +1,6 @@
 let redis = require('redis');
 let { promisify } = require("util");
-let redisConfig = require('../services/redisConfig');
+let redisConfig = require('./redisConfig');
 
 let redisClient = redis.createClient(redisConfig.port,redisConfig.host);
 if(redisConfig.password){

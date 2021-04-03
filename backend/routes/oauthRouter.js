@@ -1,8 +1,8 @@
 const express = require('express');
 require('dotenv').config();
-let serverSessions = require('../services/serverSessions');
+let sessionValidation = require('../services/sessionValidation');
 let fetch = require('node-fetch');
-let {initCache} = require('../services/caching');
+let {initCache} = require('../db/caching');
 let {ErrorHandler} = require('../services/errorHandling');
 
 
@@ -66,9 +66,9 @@ oauthRouter.route('/callback')
 oauthRouter.route('/logout')
 
 .get(
-    serverSessions.validateSessions,
+    sessionValidation.validateSessions,
     async (req,res,next) => {
-        await serverSessions.logout(req.session);
+        await sessionValidation.logout(req.session);
         res.sendStatus(200);
     }
 )

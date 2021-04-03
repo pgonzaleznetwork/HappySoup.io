@@ -1,7 +1,7 @@
 var session = require('express-session');
 const redis = require('redis');
 let RedisStore = require('connect-redis')(session);
-let redisConfig = require('../services/redisConfig');
+let redisConfig = require('../db/redisConfig');
 
 let redisClient = redis.createClient(redisConfig.port,redisConfig.host);
 if(redisConfig.password){

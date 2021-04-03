@@ -1,15 +1,15 @@
 let express = require('express');
-let {cacheApi,initCache} = require('../services/caching');
-let serverSessions = require('../services/serverSessions');
+let {cacheApi,initCache} = require('../db/caching');
+let sessionValidation = require('../services/sessionValidation');
 let parser = require('body-parser');
 let cors = require('cors');
 let {ErrorHandler} = require('../services/errorHandling');
 let logError = require('../services/logging');
 let Queue = require('bull');
-let {url} = require('../services/redisConfig');
+let {url} = require('../db/redisConfig');
 const QUEUE_NAME = 'happy-soup';
 let workQueue = new Queue(QUEUE_NAME, url);
-let redisOps = require('../services/redisOps');
+let redisOps = require('../db/redisOps');
 
 let whitelist = process.env.CORS_DOMAINS.split(',');
 
@@ -34,7 +34,7 @@ apiRouter.route('/dependencies')
 
 .get(
     cors(corsOptions),
-    serverSessions.validateSessions,
+    sessionValidation.validateSessions,
     validateParams,
     async (req,res,next) => {
 
@@ -48,7 +48,7 @@ apiRouter.route('/dependencies')
                 jobType:'DEPENDENCIES'
             }
 
-            let jobId = `${serverSessions.getIdentityKey(req)}:deps-${entryPoint.id}-${entryPoint.type}${Date.now()}`
+            let jobId = `${sessionValidation.getIdentityKey(req)}:deps-${entryPoint.id}-${entryPoint.type}${Date.now()}`
     
             let job = await workQueue.add(jobDetails,{jobId});
             res.status(200).json({jobId:job.id});   
@@ -73,7 +73,7 @@ apiRouter.route('/usage')
 
 .get(
     cors(corsOptions),
-    serverSessions.validateSessions,
+    sessionValidation.validateSessions,
     validateParams,
     async (req,res,next) => {
 
@@ -88,7 +88,7 @@ apiRouter.route('/usage')
                 jobType:'USAGE'
             }
 
-            let jobId = `${serverSessions.getIdentityKey(req)}:usage-${entryPoint.id}-${entryPoint.type}${Date.now()}`
+            let jobId = `${sessionValidation.getIdentityKey(req)}:usage-${entryPoint.id}-${entryPoint.type}${Date.now()}`
 
             let job = await workQueue.add(jobDetails,{jobId});
             res.status(200).json({jobId:job.id});   
@@ -112,7 +112,7 @@ apiRouter.route('/metadata')
 
 .get(
     cors(corsOptions),
-    serverSessions.validateSessions,
+    sessionValidation.validateSessions,
     validateParams,
     async (req,res,next) => {
 
@@ -136,7 +136,7 @@ apiRouter.route('/metadata')
                     sessionId:getSessionKey(req)
                 };
 
-                let jobId = `${serverSessions.getIdentityKey(req)}:${cacheKey}${Date.now()}`
+                let jobId = `${sessionValidation.getIdentityKey(req)}:${cacheKey}${Date.now()}`
                 
                 let job = await workQueue.add(jobDetails,{jobId});
                 res.status(200).json({jobId:job.id});
@@ -166,7 +166,7 @@ apiRouter.route('/deletecache')
 
 .get(
     cors(corsOptions),
-    serverSessions.validateSessions,
+    sessionValidation.validateSessions,
     async (req,res,next) => {
         //NEED TO READ ABOUT GC
         req.session.cache = initCache();
@@ -187,7 +187,7 @@ apiRouter.route('/oauthinfo/instanceurl')
 
 .get(
     cors(corsOptions),
-    serverSessions.validateSessions,
+    sessionValidation.validateSessions,
     async (req,res,next) => {
         res.status(200).json(req.session.oauthInfo.instance_url);
     }
@@ -197,8 +197,8 @@ apiRouter.route('/job/:id')
 
 .get(
     cors(corsOptions),
-    serverSessions.validateJobId,
-    serverSessions.validateSessions,
+    sessionValidation.validateJobId,
+    sessionValidation.validateSessions,
     async (req,res,next) => {
     
     let jobId = req.params.id;

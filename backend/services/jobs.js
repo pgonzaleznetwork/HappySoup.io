@@ -1,7 +1,7 @@
-let redisOps = require('../services/redisOps');
+let redisOps = require('../db/redisOps');
 let {metadataAPI,restAPI} = require('sfdc-happy-api')();
-let serverSessions = require('./serverSessions');
-let {cacheApi} = require('./caching')
+let sessionValidation = require('../services/sessionValidation');
+let {cacheApi} = require('../db/caching')
 let {ErrorHandler} = require('../services/errorHandling');
 let logError = require('../services/logging');
 const sfdcSoup = require('sfdc-soup');
@@ -21,7 +21,7 @@ async function listMetadataJob(job){
 
     else if(shouldUseToolingApi(mdtype)){
 
-      let restApi = restAPI(serverSessions.getConnection(session),logError);
+      let restApi = restAPI(sessionValidation.getConnection(session),logError);
 
       let query = `SELECT Id,Name,NamespacePrefix FROM ${mdtype}`;
       let soqlQuery = {query,filterById:false,useToolingApi:true};
@@ -50,7 +50,7 @@ async function listMetadataJob(job){
     }
     //for any other metadata type, we use the Metadata API
     else {
-      let mdapi = metadataAPI(serverSessions.getConnection(session),logError);
+      let mdapi = metadataAPI(sessionValidation.getConnection(session),logError);
       let jsonResponse = await mdapi.listMetadata(mdtype);
 
       if(jsonResponse){
@@ -88,7 +88,7 @@ async function usageJob(job){
     let session = await getSession(sessionId);
 
     let cache = cacheApi(session.cache);
-    let connection = serverSessions.getConnection(session);
+    let connection = sessionValidation.getConnection(session);
 
     let soupApi = sfdcSoup(connection,entryPoint,cache);
     let response = await soupApi.getUsage();
@@ -105,7 +105,7 @@ async function dependencyJob(job){
     let session = await getSession(sessionId);
 
     let cache = cacheApi(session.cache);
-    let connection = serverSessions.getConnection(session);
+    let connection = sessionValidation.getConnection(session);
 
     let soupApi = sfdcSoup(connection,entryPoint,cache);
     let response = await soupApi.getDependencies();

@@ -10,4 +10,4 @@ RUN npm install
 
 COPY ./ /app 
 
-CMD ["node","bin/www"]
+CMD ["node","backend/server/www"]
