@@ -1,8 +1,8 @@
-# Salesforce Happy Soup
+# HappySoup.io
 
  <img src="./github-images/cover.jpg">
 
-## Salesforce Impact Analysis | The best way to visualize your Salesforce dependencies
+## 100% free and open-source impact and dependency analysis for Salesforce
 
 <div style="margin-bottom:10px">
   <a href="#one-click-deployment-to-your-own-heroku-account">
@@ -14,17 +14,17 @@
 </div>
 
 
-[Salesforce Happy Soup](https://happysoup.io) is a **100% free** and open source app that you can use to get a full view of your Salesforce org dependencies and perform impact analysis.
+HappySoup.io helps you keep your salesforce org clean and healthy by helping you see metadata dependencies in ways that have never been possible before (not for free!). 
 
-[Start using it!](https://happysoup.io)
+## :thumbsup: Features
 
-No complex sfdx commands :x:                  
-
-No installation :x:                          
-
-No **development knowledge** required :x:  
-
-Just [log in](https://happysoup.io) and start sipping the soup! :stew: :clap: :white_check_mark:
+*  Impact Analysis (aka "Where is this used") for custom fields, email templates, apex classes, custom labels and many more. 
+* The first and **only** app that creates [Deployment Boundaries](https://www.salesforceben.com/introduction-to-deployment-boundaries/) 
+*  Easily export the dependencies to excel, csv files or package.xml 
+*  [Bypass all the limitations of the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api) 
+*  Intuitive UI, easy to follow tree structure 
+*  Log in from anywhere, no installation required 
+*  Available as a web app, local app or Docker app - forget about all security concerns!
 
 [Watch full demo](https://www.youtube.com/watch?v=2asljhebqlY&t=6s) 
 
@@ -32,22 +32,14 @@ Just [log in](https://happysoup.io) and start sipping the soup! :stew: :clap: :w
   <img src="./github-images/happysoupmini.gif" >
 </p>
 
-
-
-
-
 ## Contents
 
 * [What is a Happy Soup?](#what-is-a-happy-soup)
 * [Who is this for](#question-who-is-this-for)
-* [Deployment Boundaries](#deployment-boundaries)
-* [Impact Analysis](#impact-analysis)
-* [Features](#thumbsup-features)
-* [Security](#no_entry_sign-security)
 * [How we enhaced the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api)
-* [Best Practices for Deployment Boundaries](#best-practices-for-deployment-boundaries)
+* [Security](#no_entry_sign-security)
 * [One-click deployment to your own Heroku account](#one-click-deployment-to-your-own-heroku-account)
-* [Local deployment](#local-deployment)
+* [Docker deployment](#docker-deployment)
 * [Build your own apps using the core npm library](#Build-your-own-apps-using-the-core-npm-library)
 * [Privacy Policy](#privacy-policy)
 
@@ -59,7 +51,7 @@ Just [log in](https://happysoup.io) and start sipping the soup! :stew: :clap: :w
 
 **Developers & Architects**
 
-* Discover [Deployment Boundaries](#deployment-boundaries) that can be the baseline for a scratch org or unlocked packages
+* Discover [Deployment Boundaries](https://www.salesforceben.com/introduction-to-deployment-boundaries/) that can be the baseline for a scratch org or unlocked packages
 * Quickly get a package.xml of your deployment boundary
 * Get immediately insights with built-in charts
 * Drill down to the last dependent metadata in an easy to follow tree structure
@@ -69,91 +61,26 @@ Just [log in](https://happysoup.io) and start sipping the soup! :stew: :clap: :w
 * Find all the metadata used in page layout (fields, buttons, inline pages, etc) and export it to excel to review opportunities for optimization
 * Don't break your org! Know the impact of making changes to a field, validation rule, etc 
 
+## How we enhaced the MetadataComponentDependency API
 
-## Deployment Boundaries
+Salesforce Happy Soup is built on top of the `MetadataComponentDependency` tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!)
 
-#### Why Scratch Orgs and Unlocked Packages have seen adoption :disappointed:
+* Custom field names are returned without the object name and without the _ _ c suffix. For example `Opportunity.Revenue__c` becomes `Revenue`. This makes it very hard to know which fields are actually being referenced. The only way around this is to manually and painfully retrieve additional information through the Tooling and Metadata API.
 
-Salesforce DX introduced the idea of breaking down your org into packages with discrete and modular functionality. Anyone trying to buy into this idea is faced with the following challenges:
+* Validation rules names are also returned without the object prefix, so `Account.ValidationRule` becomes `ValidationRule`. If you want to export this via package.xml, again you'd have to use other APIs to retrieve this information.
 
-> * How do you know what metadata can be grouped into a package?
-> * How do you tell what that metadata depends on?
-> * How do you know what metadata is required for a feature to exist?
+* Objects referenced via a lookup field are not returned. For example, if you have a custom field `Account.RelatedToAnotherObject__c` pointing to `RelatedToAnotherObject__c`, that object is not brought back as a dependency, which is obviously wrong because you can't deploy that custom field to an org where that object doesn't exist. 
 
-Unfortunately, Salesforce DX doesn't provide an answer to these challenges, and it would take most organizations years to be able to split their org in this way.
+* Global Value Sets are not returned when picklist fields depend on them. 
 
-This has led to poor adoption of scratch orgs and unlocked packages. 
+* Lookup filters are returned with cryptic names depending on whether they belong to a custom object or a standard one. 
 
+* The app will tell you if a field is used in an apex class in read or write mode. For example, if a field is used in an assignment expression, then you know the class is assigning values to that field. The app will show you this with a visual indicator; something that the raw API cannot do.  
 
-
-With this realization, Salesforce released the Metadata Dependencies API (`MetadataComponentDependency`), which allows you to see where your metadata is used or what it uses.
-
-#### The real problem :thumbsdown:
-
-So with the new API now organizations can "easily" see where their metadata is used and start their journey to unlocked packages. **This is an oversimplification** . 
-
-It's **not enough** to see where an apex class is used, or what it uses. To be able to take a group of metadata and convert it into an unlocked package/scratch org, you need to be able to answer the question:
-
-> *What is all the metadata that I need to deploy this to a brand new, empty org?*
-
-Say for example you have a complex visualforce page that you are considering for an unlocked page. How do you know what is needed to deploy this to a new org? You can use the new Dependency API to see what that visualforce page references, mainly the controller.
-
-But what about what the controller itself references? Surely it references fields and perhaps other classes. What if some of those fields are cross-object formula fields? This would mean that those objects in the lookup field are also required to be able to deploy this visualforce page to a new org.
-
-What if the controller uses a helper class that itself depends on custom metadata?
-
-You could spend all day running queries through the API! :weary:
-
-#### How Salesforce happy soup can help you :white_check_mark:
-
-To answer to this problem is that you have to recursively query metadata dependencies until you get to the very last metadata member needed to the deploy the top level component. This is what we call a ***Deployment Boundary*** :bulb:
-
-> *A Deployment Boundary represents all the metadata that needs to exist in another org before you can deploy a specific component*
-
-This is **not a trivial thing to do** but Salesforce Happy Soup does it for you with one click. :heart_eyes:
-
-When you use the Deployment Boundary feature, the app will give you all the metadata that is needed to be able to deploy that component. You can then export this data in either an excel/csv or package.xml format (in which case you can immediately retrieve it from your org and package it!).
-
-[Back to top](#salesforce-happy-soup)
-
-## Impact Analysis
-
-The Impact Analysis feature allows to see most of the places where a given metadata is used. 
-
-A common requirement Salesforce customers have is to know where a custom field is used to understand the implications of making changes to that field.
-
-For example, changing a picklist value or changing a field type could have side-effects on:
-
-* Reports
-* Report Types
-* Email Templates
-* Aura/LWC Components
-* Apex classes
-* etc
-
-Don't break your org! Use the Impact Analysis feature before making any changes so that you are fully aware of what areas could be impacted.
-
-### Enhanced Report Data
-
-When a field is used in a report, by default Happy Soup will only show you which reports the field is used in, but not how
-
- <img src="./github-images/reports-simpleinfo.png" width="200px" height="100px">
-
-When selecting the Impact Analysis feature for a custom field, you'll be given the option to display whether the field is used for the purposes of filtering, grouping or visualization.
-
- <img src="./github-images/reports-enhancedinfo.png" width="400px" height="120px">
+As said above, Salesforce Happy Soup has **fixed all** this issues so that you can focus on learning about your dependencies rather than fighting the API! :facepunch:
 
 
-[Back to top](#salesforce-happy-soup)
-
-## :thumbsup: Features
-
-*  "Where is this used" and "Deployment Boundary" visualization :white_check_mark: 
-*  Easily export the dependencies to excel, csv files or package.xml :white_check_mark: 
-*  [Bypass all the limitations of the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api) :white_check_mark: 
-*  Intuitive UI, easy to follow tree structure :white_check_mark: 
-*  Log in from anywhere, no installation required :white_check_mark: 
-*  Available for self-hosting locally or on your own Heroku account :white_check_mark: 
+ 
 
 [Back to top](#salesforce-happy-soup)
 
@@ -179,42 +106,6 @@ Every time a request is made to the app, the request goes through the following 
 * Once the server-side session is verified, we check that the user has a valid session with their Salesforce org. If the user doesn't have a valid session with Salesforce, we send the user back to the login page.
 
 [Back to top](#salesforce-happy-soup)
-
-
-
-## How we enhaced the MetadataComponentDependency API
-
-Salesforce Happy Soup is built on top of the `MetadataComponentDependency` tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!)
-
-* Custom field names are returned without the object name and without the _ _ c suffix. For example `Opportunity.Revenue__c` becomes `Revenue`. This makes it very hard to know which fields are actually being referenced. The only way around this is to manually and painfully retrieve additional information through the Tooling and Metadata API.
-
-* Validation rules names are also returned without the object prefix, so `Account.ValidationRule` becomes `ValidationRule`. If you want to export this via package.xml, again you'd have to use other APIs to retrieve this information.
-
-* Objects referenced via a lookup field are not returned. For example, if you have a custom field `Account.RelatedToAnotherObject__c` pointing to `RelatedToAnotherObject__c`, that object is not brought back as a dependency, which is obviously wrong because you can't deploy that custom field to an org where that object doesn't exist. 
-
-* Global Value Sets are not returned when picklist fields depend on them. 
-
-* Lookup filters are returned with cryptic names depending on whether they belong to a custom object or a standard one. 
-
-* The app will tell you if a field is used in an apex class in read or write mode. For example, if a field is used in an assignment expression, then you know the class is assigning values to that field. The app will show you this with a visual indicator; something that the raw API cannot do.  
-
-As said above, Salesforce Happy Soup has **fixed all** this issues so that you can focus on learning about your dependencies rather than fighting the API! :facepunch:
-
-[Back to top](#salesforce-happy-soup)
-
-## Best Practices for Deployment Boundaries
-
-When using the Deployment Boundary feature, you should try to identify the top-most, entry point of your application or business process. Some examples:
-
-**LWC Components**
-
-A LWC that allows Sales reps to better manage their pipeline. This controller is likely the entry point, it is where all the other metadata are eventually called or referenced. 
-
-For example, the apex controller will be directly called here, and said controller with then reference other metadata. If you had started looking at the dependecy tree from the apex class, you would've missed certain metadata items that are only referenced by the LWC itself (i.e custom labels, etc).
-
-**Apex Triggers**
-
-Apex triggers are also a good example of an application entry point. For example if you want to create an unlocked package with all your opportunity functionality, creating a Deployment Boundary from the opportunity triggers would give you a good overview (though not everything) of what functionality is used by the opportunity object.
 
 [Back to top](#salesforce-happy-soup)
 
@@ -286,60 +177,11 @@ You **must** specify the full URL of your heroku app, which is the `App Name` th
 
 That's it! Now you can use the app in your own servers.
 
-[Back to top](#salesforce-happy-soup)
+## Docker Deployment
 
-## Local Deployment
+If you want to use the app locally on your computer, you can easily create the app using Docker. Just follow the tutorial and you'll be up and running in minutes!
 
-We don't recommend using the app locally because there are too many variables in your system that may cause the app not to work correctly. Deploying to your own (and also free) heroku account is a lot easier - see the section before this one.
-
-That said, if you really want to use it locally to play around or to submit pull requests, here's a quick overview of what the steps would look like
-
-**NOTE:** Before following any of these steps, you must have a Connected App created in any dev org, see the previous section for the steps.
-
-**1.** Make sure you have NPM and NodeJs installed. 
-
-**2.** Download redis and don't change any of the default configuration. You can use this guide to see how to download it https://redis.io/topics/quickstart
- 
-**3.** For the github repostory to your own repository. 
-
-**4.** Go to the local repository in your terminal and use the following command
-
-`npm install`
-
-This will install all the required NPM modules for the app to work
-
-**5.** In another terminal, start the redis server using the following command
-
-```
-$ redis-server
-[28550] 01 Aug 19:29:28 # Warning: no config file specified, using the default config. In order to specify a config file use 'redis-server /path/to/redis.conf'
-[28550] 01 Aug 19:29:28 * Server started, Redis version 2.2.12
-[28550] 01 Aug 19:29:28 * The server is now ready to accept connections on port 6379
-```
-
-If the command doesn't work, make sure you followed **ALL** the steps here https://redis.io/topics/quickstart
-
-**6.** Go back to your main terminal, and download the heroku CLI from here https://devcenter.heroku.com/articles/heroku-cli
-
-**7.** Create a `.env` file in the root directory of the app, here's where we are going to place all the environment variables. The file should look like this
-
-```
-OAUTH_CLIENT_ID=YOUR OWN CLIENT ID
-OAUTH_CLIENT_SECRET=YOUR OWN CLIENT SECRET
-SFDC_API_VERSION=49.0 (ANYTHING BEFORE 48.0 WON'T WORK)
-REDIS_HOST=localhost
-REDIS_PORT=6379
-SESSION_SECRET=YOUR OWN SECRET, ANY STRING
-PORT=3000
-```
-
-**7.** Once the Heroku CLI is installed, use the following command
-
-`heroku local`
-
-Then you should be able to open the app on localhost:3000. To be able to log in, you must have localhost:3000 as a callback URL in the Connected App (see the previous section for details)
-
-That's it, congratulations!
+[Tutorial: Installing HappySoup.io with Docker](https://www.youtube.com/watch?v=WQhz91JSl3o)
 
 [Back to top](#salesforce-happy-soup)
 
@@ -356,7 +198,7 @@ Head over that its repository to learn how you can create your apps.
 
 It's important that you understand what information Happy Soup collects, uses how and how you can control it.
 
->  Remember that you can always [deploy the app to your own Heroku account](#one-click-deployment-to-your-own-heroku-account) or use it [locally](#local-deployment), in which case you need need to worry about security.
+>  Remember that you can always [deploy the app to your own Heroku account](#one-click-deployment-to-your-own-heroku-account) or use it [locally](#docker-deployment), in which case you need need to worry about security.
 
 Our full Privacy Policy can be found [here](https://pgonzaleznetwork.github.io/privacy.html). The sections below contain the specifics about how your Salesforce data is used and what your options are to stop access to your data.
 

@@ -2,8 +2,8 @@ let createError = require('http-errors');
 let express = require('express');
 let path = require('path');
 let logger = require('morgan');
-let sessionConfig = require('./bin/serverSessions');
-let {handleError} = require('./services/errorHandling');
+let sessionConfig = require('./sessions');
+let {handleError} = require('../services/errorHandling');
 var enforce = require('express-sslify');
 require('dotenv').config();
 
@@ -28,7 +28,7 @@ app.use((req,res,next) => {
 });
 
 //unauthenticated route for oauth login
-app.use('/oauth2',require('./routes/oauthRouter'));
+app.use('/oauth2',require('../routes/oauthRouter'));
 
 //authentication for some public routes
 app.use((req,res,next) => {
@@ -43,9 +43,9 @@ app.use((req,res,next) => {
   }  
 });
 
-app.use('/api',require('./routes/apiRouter'));
-app.use('/identity',require('./routes/identityRouter'));
-app.use(express.static(path.join(__dirname, 'public'),{extensions: ['html', 'htm']}));
+app.use('/api',require('../routes/apiRouter'));
+app.use('/identity',require('../routes/identityRouter'));
+app.use(express.static(path.join(__dirname, '../../frontend/public'),{extensions: ['html', 'htm']}));
 
 
 // catch 404 and forward to error handler

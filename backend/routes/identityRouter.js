@@ -1,7 +1,7 @@
 const express = require('express');
 let fetch = require('node-fetch');
 let {ErrorHandler} = require('../services/errorHandling');
-let serverSessions = require('../services/serverSessions');
+let serverSessions = require('../services/sessionValidation');
 
 const identityRouter = express.Router();
 

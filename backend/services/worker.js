@@ -1,7 +1,7 @@
 let throng = require('throng');
 let Queue = require("bull");
 let jobs = require('./jobs');
-let {url} = require('../services/redisConfig');
+let {url} = require('../db/redisConfig');
 
 // Spin up multiple processes to handle jobs to take advantage of more CPU cores
 // See: https://devcenter.heroku.com/articles/node-concurrency for more info

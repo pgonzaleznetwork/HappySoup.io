@@ -1,5 +1,5 @@
 const {soapAPI} = require('sfdc-happy-api')();
-let {ErrorHandler} = require('../services/errorHandling');
+let {ErrorHandler} = require('./errorHandling');
 require('dotenv').config();
 
 async function validateSessions(req,res,next){
