@@ -107,6 +107,11 @@ select {
     margin-top: 40px;
 }
 
+#donation{
+    margin-top:20%;
+    font-size: 12px;
+}
+
 .info{
     text-align: center;
     grid-area:info;
@@ -237,7 +242,7 @@ button:hover::before{
 }
 
 @media only screen and (max-height:670px){
-    footer p{
+    footer p, #donation p{
         display:none;
     }
 }
