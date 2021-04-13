@@ -254,15 +254,6 @@ const SFDM = function(){
             UI.enableInputField(inputField,selectedMetadataType);
             UI.toggleDropdown(mdDropDown,false);
             UI.hideProgressBar();
-
-            if(debugMode){
-                try {
-                    debugPanelContent.innerText = JSON.stringify(response);
-                    UI.showDebugPanel();
-                } catch (error) {
-                    console.log('debug log error',error);
-                }
-            }
         }
 
         
@@ -476,6 +467,15 @@ const SFDM = function(){
             if(state == 'completed' && !latestInvertalDone){
                 stopPolling();
                 await callback(response);
+                
+                if(debugMode){
+                    try {
+                        debugPanelContent.innerText = JSON.stringify(response);
+                        UI.showDebugPanel();
+                    } catch (error) {
+                        console.log('debug log error',error);
+                    }
+                }
             }
             else if(state == 'failed' && !latestInvertalDone){
                 stopPolling();
