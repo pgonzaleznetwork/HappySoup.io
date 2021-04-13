@@ -35,6 +35,8 @@ const SFDM = function(){
         let latestIntervalId;
         let latestInvertalDone = false;
         let filterFunctionsByMetadataType = new Map();
+        let debugMode = new URLSearchParams(location.search).has('debug');
+
 
         /**
          * These functions are used to filter certain metadata members from the UI.
@@ -251,6 +253,10 @@ const SFDM = function(){
             UI.enableInputField(inputField,selectedMetadataType);
             UI.toggleDropdown(mdDropDown,false);
             UI.hideProgressBar();
+
+            if(debugMode){
+                console.log(response);
+            }
         }
 
         
