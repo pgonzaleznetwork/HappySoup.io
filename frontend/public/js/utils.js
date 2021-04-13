@@ -23,6 +23,16 @@ function hideLoader(){
     loader.style.display = 'none';
 }
 
+function showDebugPanel(){
+    let panel = document.querySelector('#debugPanel');
+    panel.style.display = 'block';
+}
+
+function hideDebugPanel(){
+    let panel = document.querySelector('#debugPanel');
+    panel.style.display = 'none';
+}
+
 function enableInputField(inputField,mdType){
 
     inputField.value = '';
@@ -184,5 +194,7 @@ export const utils = {
     showHelpText,
     hideHelpText,
     byId,
-    filterOptions
+    filterOptions,
+    showDebugPanel,
+    hideDebugPanel
 }
