@@ -25,7 +25,7 @@ Our LinkedIn page has a lot of information on new features, blog posts, etc., so
 If you want to support HappySoup.io by helping us cover the Heroku costs, you can make a donation using the link below</p>
 
 
-<a href=" https://www.paypal.com/donate?business=XEWHTYGFC5QEE&item_name=Support+HappySoup.io&currency_code=EUR ">
+<a href="https://www.paypal.com/donate?business=XEWHTYGFC5QEE&item_name=Support+HappySoup.io&currency_code=EUR ">
     <img src="./github-images/btn_donate_SM.gif">
 </a> 
 
