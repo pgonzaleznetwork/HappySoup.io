@@ -28,6 +28,7 @@ const SFDM = function(){
         let canvas = byId('stats');
         let optionsSubcontainer = byId('options-subcontainer');
         let optionsToggler = byId('options-toggler');
+        let debugPanelContent = byId('debugPanelContent');
         let barChart;
         let memberIdsByName = new Map();
         let lastApiResponse;
@@ -253,10 +254,6 @@ const SFDM = function(){
             UI.enableInputField(inputField,selectedMetadataType);
             UI.toggleDropdown(mdDropDown,false);
             UI.hideProgressBar();
-
-            if(debugMode){
-                console.log(response);
-            }
         }
 
         
@@ -470,6 +467,15 @@ const SFDM = function(){
             if(state == 'completed' && !latestInvertalDone){
                 stopPolling();
                 await callback(response);
+                
+                if(debugMode){
+                    try {
+                        debugPanelContent.innerText = JSON.stringify(response);
+                        UI.showDebugPanel();
+                    } catch (error) {
+                        console.log('debug log error',error);
+                    }
+                }
             }
             else if(state == 'failed' && !latestInvertalDone){
                 stopPolling();

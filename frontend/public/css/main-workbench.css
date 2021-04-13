@@ -6,7 +6,7 @@ header{
     background-color:#bdc3c7
 }
 
-.form,.controls{
+.form,.controls,#debugPanel{
     background-color: #ecf0f1;
 }
 

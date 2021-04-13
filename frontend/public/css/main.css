@@ -23,6 +23,16 @@ body{
     display:none;
 }
 
+#debugPanel{
+    max-width: 800px;
+    font-size: 13px;
+    text-align: center;
+    background-color: #5c5d5d;
+    padding: 30px;
+    border-radius: 10px;
+    display:none;
+    word-wrap: break-word;
+}
 
 a{
     color: inherit; /* blue colors for links too */
