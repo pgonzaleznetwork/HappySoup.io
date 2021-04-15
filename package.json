@@ -8,7 +8,8 @@
     "semantic-release": "semantic-release",
     "dc-build": "docker-compose up --build",
     "local": " parallelshell 'node ./bin/www' 'node ./services/worker.js' ",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "update-api": "npm install sfdc-happy-api@latest sfdc-soup@latest"
   },
   "engines": {
     "node": "14.x"
@@ -31,9 +32,9 @@
     "morgan": "~1.9.1",
     "node-fetch": "2.6.1",
     "redis": "^3.0.2",
-    "throng": "^4.0.0",
-    "sfdc-happy-api": "2.1.0",
-    "sfdc-soup": "3.3.0"
+    "sfdc-happy-api": "2.2.0",
+    "sfdc-soup": "3.4.0",
+    "throng": "^4.0.0"
   },
   "devDependencies": {
     "commitizen": "^4.2.0",
