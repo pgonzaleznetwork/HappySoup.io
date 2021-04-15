@@ -32,8 +32,8 @@
     "morgan": "~1.9.1",
     "node-fetch": "2.6.1",
     "redis": "^3.0.2",
-    "sfdc-happy-api": "2.2.0",
-    "sfdc-soup": "3.4.0",
+    "sfdc-happy-api": "2.3.0",
+    "sfdc-soup": "3.5.0",
     "throng": "^4.0.0"
   },
   "devDependencies": {
