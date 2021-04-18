@@ -33,7 +33,7 @@
     "node-fetch": "2.6.1",
     "redis": "^3.0.2",
     "sfdc-happy-api": "2.4.0",
-    "sfdc-soup": "3.6.0",
+    "sfdc-soup": "3.7.0",
     "throng": "^4.0.0"
   },
   "devDependencies": {
