@@ -3,11 +3,11 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "start": "heroku local",
+    "start": "(cd frontend && npm start) & heroku local",
     "debug": "node --inspect ./bin/www",
     "semantic-release": "semantic-release",
     "dc-build": "docker-compose up --build",
-    "local": " parallelshell 'node ./bin/www' 'node ./services/worker.js' ",
+    "local": " parallelshell 'node ./bin/www' 'node ./services/worker.js' 'cd frontend && npm start' ",
     "commit": "git-cz",
     "update-api": "npm install sfdc-happy-api@latest sfdc-soup@latest"
   },

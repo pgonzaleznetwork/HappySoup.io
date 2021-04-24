@@ -1,0 +1,339 @@
+
+*,*::before,*::after{
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+
+body{
+    padding:0;
+    margin:0;
+    font-family: "montserrat",sans-serif;
+}
+
+/* GRID TEMPLATE 
+.grid{
+    height: 100%;
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    grid-template-rows: 1fr 8fr 1fr;
+    grid-template-areas: "header header"
+    "main nav"
+    "footer footer"; 
+}
+
+header{
+    grid-area: header;
+}
+
+main{
+    grid-area: main;
+}
+
+nav{
+    grid-area: nav;
+}
+
+footer{
+    grid-area:footer;
+}*/
+
+
+/*
+Adds border and marging so that it's very easy to tell where a div/container
+starts and end without having to use the browser tools. The client code
+must set the border to none to remove this.
+
+header,div,section,nav,footer{
+    border:1px solid #778899;
+    margin:2px;    
+}*/
+
+
+
+/*
+Makes any header relative so that I can position images, nav bars, etc
+using an absolute position
+*/
+header{
+    position: relative;
+    padding:10px;
+}
+
+/*
+Any nav inside a header will be position on the right side of the header
+*/
+header nav{
+    position: absolute;
+    top:15px;
+    right:30px;
+}
+
+/*
+Any link inside a header > nav will be displayed as boxes
+*/
+header nav a{
+    display: inline-block;
+    border:1px solid black;
+    padding:10px;
+    margin:0 30px;
+    cursor: pointer;
+}
+
+/*
+Default styles for buttons so that they look bigger and just
+nicer. */
+
+button{
+    background-color: #3498db; 
+    border: none;
+    color: white;
+    width:100px;
+    outline: none;
+    text-align: center;
+    text-decoration: none; 
+    border-radius: .25rem;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+/*
+Default styles for a table so that the header has its own color,
+and the cells are smaller. Finally, the rows display a different color
+on hover*/
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    border: 1px solid #ddd;
+    margin: 10px 1px;
+    
+  }
+  
+th, td {
+    text-align: left;
+    padding: 16px;
+    border-top: 1px solid #dee2e6;
+}
+
+td{
+    padding:.3rem;
+}
+
+th {
+    background-color: #1abc9c;
+    color:white;
+}
+
+tr:hover{
+    background-color:#ecf0f1;
+}
+
+
+/*
+This can be applied to any element that should grow when hovered. Nice
+for buttons, links, navigation links, etc.
+*/
+.base-hover-grow{
+    transition: .2s linear;
+    cursor: pointer;
+}
+
+.base-hover-grow:hover{
+    transform: scale(1.06);
+}
+
+/*
+Styles input fields similar to bootstrap.
+*/
+.base-input {
+   
+    width: 50%;
+    outline:none;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+/*
+Centers an image as a background image inside a div container. The
+background-size:cover is used to scale the image. The client code
+needs to modify the height and specify a background img url. 
+*/
+.base-center-background-cover{
+    height: 50%;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+}
+
+/*
+Centers a div inside its parent container, as long as the div
+has a width set.
+*/
+.base-center-margin{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*
+Centers a div inside a non-static container. It does not
+use the margin to achieve this, instead it absolutely 
+positions the element in the center. 
+*/
+.base-center-absolute{
+    /*https://www.reddit.com/r/learncss/comments/eepg22/help_understanding_why_this_css_works/*/
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+/*
+Flex box that sets any item inside it in the center. It can be multiple items.
+It's meant to be applied to the parent container. 
+*/
+.base-flex-center{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+/*
+Flex box that sets any item inside it evenly. It can be multiple items.
+It's meant to be applied to the parent container. 
+*/
+.base-flex-even{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+/*
+Flex box that sets any item inside it on the far right. It can be multiple items.
+It's meant to be applied to the parent container. 
+*/
+.base-flex-end{
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+/*
+Flex box that sets any item inside on the far left. It can be multiple items.
+It's meant to be applied to the parent container. 
+*/
+.base-flex-start{
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+/*
+Flex box that sets any item inside on the sides, or with equally
+space between. It can be multiple items.
+It's meant to be applied to the parent container. 
+*/
+.base-flex-between{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/*
+Flex box COLUMN that sets any item inside it at the center. It can be multiple items.
+It's meant to be applied to the parent container. 
+*/
+.base-flex-center-y{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/*
+display:none. Easy to just add or remove this class from an element to hide it
+without worrying out setting the display propery back to its original value
+*/
+.base-remove{
+    display:none;
+}
+
+/*
+Creates a one line border that can be used to separate items inside a flex box
+*/
+.base-y-line{
+    width: 1px;
+    height: 20px;
+    background:#bbb;
+}
+
+/*
+Creates a one line border that can be used to separate items inside a flex box
+*/
+.base-x-line{
+    height: 1px;
+    width: 40px;
+    background:#bbb;
+}
+
+/*
+Small circle that could be used as buttons. 
+*/
+.base-sm-circle{
+    border-color: #8e44ad;
+    background-color:#8e44ad;
+    border-radius: 50%;
+    width:15px;
+    height: 15px;
+}
+
+/*
+A bit of transparency
+*/
+.base-transparent{
+    opacity: 0.70;
+}
+
+
+.base-text-center{
+    text-align: center;
+}
+
+.base-round{
+    border-radius: 50px;
+}
+
+.base-responsive-img{
+    max-width: 100%;
+    height: auto;
+}
+
+
+.box{
+    width:500px;
+    height: 500px;
+    background-color: #3498db;
+    position: relative;
+}
+
+.box-small{
+    width:250px;
+    height: 250px;
+    background-color: tomato;
+}
+
+
+
+
+
+
+  

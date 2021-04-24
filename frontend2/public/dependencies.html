@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/framework.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/autocomplete.css">
+    <link id="workbench-stylesheet" rel="stylesheet" href="css/main-workbench.css" disabled>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="js/main.js" type="module"></script>
+    <title>Happy Soup - Salesforce Impact & Dependency Analysis 100% free</title>
+    <!-- endbuild -->
+</head>
+
+<body style="width: 1300px;margin:auto">
+
+    <main class="gr2id">
+
+    <header>
+        <div id="logo">
+            <img src="images/logo.png" width="200px" height="100px"/>
+        </div>
+        <div id="header-lower" class="base-flex-between">
+            <p>The best way to visualize your Salesforce dependencies</p>
+            <p><a id="theme-switcher">Switch to Workbench Theme</a></p>
+        </div>
+        
+        <nav>
+            <p id="identity"></p>
+            <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup/issues/new" target="_blank">Log a <i class="fa fa-bug"></i></a>
+            <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#salesforce-happy-soup" target="_blank">Docs</a>
+            <a href="" id="logout-button">Logout</a>
+        </nav>
+    </header>
+    <div class="form">
+        <div class="inner-form">
+            <div>
+                <select id="md-type-select">
+                    <option value="" disabled selected hidden>Select a metadata type</option>
+                </select>
+            </div>
+            <div id="progress-bar" class="invisible-progress-bar">
+                <div id="progress-bar-inner" class="incomplete-progress-bar"></div>
+            </div>
+            <div class="autocomplete">
+                <input class="base-input disabled-input" type="text" id="input-field" readonly>
+            </div>
+            <div>
+            <select id="query-type" class="disabled-input">
+            </select>
+            <div id="options-container">
+                <a id="options-toggler">Choose your toppings</a>
+                <div id="options-subcontainer" class="base-remove">
+                    <div data-metadatatype="CustomField" class="options-group">
+                        <div> 
+                            <input id="enhancedReportData" type="checkbox"/> <label for="enhancedReportData">Show whether the field is used in report filters, groupings or columns (<span style="font-weight: bold;">only available for the first 100 reports, this limit protects performance</span>) </label><a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#enhanced-report-data" target="_blank">Learn more</a> <i class="fa fa-external-link"></i>
+                        </div>
+                        <div>
+                            <input id="fieldInMetadataTypes" type="checkbox"/> <label for="fieldInMetadataTypes">Show whether the field is referenced in the FieldDefinition fields of Custom Metadata Types (<span style="font-weight: bold;">Affects performance, only use if you know what this means</span>) </label>
+                        </div>
+                    </div>
+                    <div data-metadatatype="ApexClass" class="options-group">
+                        <div>
+                            <input id="classInMetadataTypes" type="checkbox"/> <label for="classInMetadataTypes">Show whether the apex class is referenced in any field of any of Custom Metadata Type for dependency injection/table-driven triggers (<span style="font-weight: bold;">Affects performance, only use if you know what this means</span>) </label>
+                        </div>
+                    </div>
+                    <div data-metadatatype="CustomObject" class="options-group">
+                        <div>
+                            <input id="objectInMetadataTypes" type="checkbox"/> <label for="objectInMetadataTypes">Show whether the object is referenced in the EntityDefinition fields of Custom Metadata Types (<span style="font-weight: bold;">Affects performance, only use if you know what this means</span>) </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div>
+            <button id="search-button" class="disabled-button" disabled>Search</button>
+        </div>
+    </div>
+    </div>
+    <div class="controls base-flex-between">
+        <div>
+            <button id="expand-button" title="Expand All">Expand all <i class="fa fa-expand"></i></button>
+            <button id="collapse-button" title="Collapse All">Collapse all <i class="fa fa-compress"></i></button>
+        </div>
+        <div>
+            <button id="package-button" class="download-button">package.xml     <i class="fa fa-download"> </i></button>
+            <button id="csv-button" class="download-button" data-format="csv">Copy (csv)     <i class="fa fa-copy"> </i></button>
+            <button id="excel-button" class="download-button" data-format="excel">Copy (Excel)     <i class="fa fa-copy"> </i></button>
+        </div>
+    </div>
+</main>
+
+<section class="dependencies">
+    <template id="warning-template">
+        <div id="warning-template-text">
+        </div>
+    </template>
+    <div>
+        <div id="canvas-container">
+            <canvas id="stats" ></canvas>
+        </div>
+        <div class="loader"></div>
+        <ul>
+            <p id="deps-help" class="help-text">This is the metadata <span style="font-weight: bold">referenced by / called from </span><span id="deps-help-name"></span> and 
+                <span style="font-weight: bold">all its descendants</span>. This represents the deployment boundary. <a style="font-weight: bold" href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#deployment-boundaries" target="_blank"> Learn more <i class="fa fa-external-link"></i></a></p>
+
+            <p id="usage-help" class="help-text">This is the metadata <span style="font-weight: bold">that uses/references </span><span id="usage-help-name"></span>. Changes made to it
+                could have side effects on all this metadata. <a style="font-weight: bold" href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#impact-analysis" target="_blank"> Learn more <i class="fa fa-external-link"></i></a></p>
+
+            <div id="usage-tree-placeholder">
+            </div>
+
+            <li id="dependency-tree-placeholder">
+            
+            </li>
+        </ul>
+    </div>
+</section>
+<section id="debugPanel">
+  <h3>
+      You can remove this panel by completely removing the ?debug=1 parameter from URL and reloading the page.
+  </h3>
+  <div id="debugPanelContent">
+
+  </div>
+</section>  
+</body>
+
+</html>
