@@ -1,6 +1,12 @@
 <template>
-    This is the login page
-    <login-form/>
+    <div class="columns">
+      <div class="column">
+        <login-form/>
+      </div>
+    <div class="column">
+      a lot of text
+    </div>
+    </div>
 </template>
 
 <script>
@@ -12,3 +18,9 @@ export default {
   components:{LoginForm}
 }
 </script>
+
+<style>
+
+
+
+</style>
