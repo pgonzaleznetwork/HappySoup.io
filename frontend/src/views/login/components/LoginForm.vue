@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form class="has-text-light pure-center">
     <div class="is-flex is-flex-direction-row is-justify-content-center field">
       <div>
         <img src="../../../assets/logo.png" />
@@ -49,7 +49,7 @@
       <div class="control">
         <label>
           <input v-model="privacyAccepted" type="checkbox" />
-          I agree to the HappySoup.io <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a>
+          I agree to the HappySoup.io <a class="has-text-light" href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a>
         </label>
       </div>
     </div>
@@ -64,6 +64,7 @@
         </button>
       </div>
     </div>
+    <p><a class="has-text-light" href="http://" target="_blank">Documentation</a></p>
   </form>
 </template>
 
@@ -120,7 +121,7 @@ export default {
 <style lang="scss">
 
 .label {
-  color: white;
+  color: $text-color;
 }
 
 .field:not(:last-child) {
@@ -129,9 +130,9 @@ export default {
 
 form {
   padding: 40px;
-  background-color: $shit;
-  position: absolute;
-
+  background-color: black;
+  max-width: 400px;
+  background-color:#2e3243;
   border-radius: 5px;
 }
 
@@ -145,6 +146,10 @@ img {
   margin: 0 auto;
   background: #3498db;
   width: 300px;
+}
+
+a{
+  text-decoration: underline;
 }
 </style>
 

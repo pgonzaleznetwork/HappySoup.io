@@ -1,2 +1,8 @@
-$blue: #72d0eb;
-$shit:green;
+$text-color:#ecf0f1;
+
+.pure-center{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%,-30%);
+}
