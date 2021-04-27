@@ -67,7 +67,7 @@
     <p><a class="has-text-light" href="http://" target="_blank">Documentation</a></p>
   </form>
   <Alert v-if="showError" @close="showError = false" maxWidth="600px">
-    <span>The nexdt words <b>are bold</b> because of the b tag</span>
+   <span v-html="error"></span>
   </Alert>
 
   
