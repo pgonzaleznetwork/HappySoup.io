@@ -1,8 +1,15 @@
-$text-color:#ecf0f1;
+$text-color-dark:#ecf0f1;
+$bg-color-dark:#2c3e50;
 
-.pure-center{
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%,-30%);
+.entire-screen{
+    height: 100vh;
 }
+
+html,body{
+    background-color: $bg-color-dark;
+}
+
+body{
+    @extend .entire-screen;
+}
+

@@ -1,5 +1,5 @@
 <template>
-  <form class="has-text-light pure-center">
+  <form @submit.prevent="login" class="has-text-light ">
     <div class="is-flex is-flex-direction-row is-justify-content-center field">
       <div>
         <img src="../../../assets/logo.png" />
@@ -14,8 +14,8 @@
       <div class="control has-icons-left">
         <div class="select">
           <select v-model="loginType">
-            <option selected value="sandbox">Sandbox</option>
-            <option value="production">Production</option>
+            <option selected value="test">Sandbox</option>
+            <option value="login">Production</option>
             <option value="domain">My Domain</option>
           </select>
         </div>
@@ -66,18 +66,30 @@
     </div>
     <p><a class="has-text-light" href="http://" target="_blank">Documentation</a></p>
   </form>
+  <Alert v-if="showError" @close="showError = false" maxWidth="600px">
+    <span>The nexdt words <b>are bold</b> because of the b tag</span>
+  </Alert>
+
+  
 </template>
 
 <script>
 
+import Alert from '@/components/Alert.vue'
+
 export default {
+
+  components:{Alert},
 
   data() {
     return {
       privacyAccepted: false,
       isFormInvalid: true,
-      loginType: "sandbox",
-      domain:''
+      loginType: "test",
+      domain:'',
+      error:'',
+      clientId:'',
+      showError:true
     };
   },
 
@@ -105,23 +117,81 @@ export default {
         'is-danger' : !this.validDomain,
         'is-success': this.validDomain
       }
-    },
-
-    domainIcon(){
-      return{
-        'fa-exclamation-triangle' : !this.validDomain,
-        'fa-check': this.validDomain
-      }
     }
+  },
+  methods:{
 
-  }
+        processUrlParams(){
+
+            let params = new URLSearchParams(location.search);
+
+            if(params.has('logout')){           
+                this.error = 'Your Salesforce session has expired. <b>Please</b> log in again.';
+                this.showError = true;
+            }
+
+            if(params.has('oauthfailed')){
+                this.error = '<span>We were unable to log into your salesforce org. Try <b>clearing</b> the cache and cookies, using another browser or another org.</span>';
+                this.showError = true;
+            }
+
+            /**
+             * The very first time the login page is loaded, the no-session parameter
+             * will not be on the URL. If the parameter is not there, we immediately
+             * redirect the to dependencies page.
+             * 
+             * The dependencies page however, needs a server side session to be rendered,
+             * if there's no session, it'll redirect back to THIS page with the attribute
+             * no-session.
+             * 
+             * So the 2nd time the page is loaded (by the redirect) and the attribute is in the URL
+             * we don't redirect the user, and allow them to log in. 
+             * 
+             * What this whole ping-pong does is to ensure that users cannot use the login page
+             * if they are already authenticated. This prevents a single session cookie from
+             * being used for 2 different logins/orgs.
+             * 
+             * If users want to use the login page again, they must use the logout button, which
+             * will kill the server side session.
+             */
+            if(!params.has('no-session') && !params.has('logout') && !params.has('oauthfailed')){
+                //window.location = '/dependencies?session-active=true';
+            }
+        },
+
+        async getClientId(){
+            let res = await fetch('/api/oauthinfo/clientid');
+            this.clientId = await res.json();
+        },
+
+        login(){
+
+          let baseURL = this.loginType == 'domain' ? this.domain :  `https://${this.loginType}.salesforce.com`;
+
+          let authEndPoint = `${baseURL}/services/oauth2/authorize`;
+          let redirectURI = encodeURIComponent(`${window.location.origin}/oauth2/callback`);
+  
+          let state = JSON.stringify({
+              'baseURL':baseURL,
+              'redirectURI':redirectURI
+          });
+            
+          let requestURL = `${authEndPoint}?client_id=${this.clientId}&response_type=code&redirect_uri=${redirectURI}&state=${state}`;
+          window.location = requestURL;
+        }
+  },
+  
+  mounted(){
+        this.processUrlParams();
+        this.getClientId();
+    }
 }
 </script>
 
 <style lang="scss">
 
 .label {
-  color: $text-color;
+  color: $text-color-dark;
 }
 
 .field:not(:last-child) {

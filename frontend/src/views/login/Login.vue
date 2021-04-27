@@ -1,12 +1,21 @@
 <template>
-   <!--<section class="is-flex is-flex-direction-row  
-      is-align-items-center is-justify-content-space-evenly">-->
-  <section class="columns">
-    <div class="column">
+  <section class="entire-screen columns">
+    <div class="column is-flex 
+    is-flex-direction-column 
+    is-justify-content-center
+    is-align-items-center">
+
       <login-form/>
+
     </div>
-    <div class="column infoSection">
+
+    <div class="column infoSection is-flex 
+    is-flex-direction-row 
+    is-justify-content-center
+    is-align-items-center">
+
       <info/>
+      
     </div>
    </section>
 </template>
@@ -24,12 +33,8 @@ export default {
 
 <style lang="scss" scoped>
 
-  section{
-    height: 100vh;
-  }
-
   .column{
-    position: relative;
+    padding:50px
   }
 
   .infoSection{
