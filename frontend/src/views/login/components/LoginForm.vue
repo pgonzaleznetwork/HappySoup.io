@@ -1,7 +1,7 @@
 <template>
-  <form @submit.prevent="login" class="has-text-light ">
+  <form @submit.prevent="login" >
     <div class="is-flex is-flex-direction-row is-justify-content-center field">
-      <div>
+      <div class="happy-logo">
         <img src="../../../assets/logo.png" />
       </div>
     </div>
@@ -49,14 +49,14 @@
       <div class="control">
         <label>
           <input v-model="privacyAccepted" type="checkbox" />
-          I agree to the HappySoup.io <a class="has-text-light" href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a>
+          I agree to the HappySoup.io <a  href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a>
         </label>
       </div>
     </div>
 
     <div class="field">
       <div class="control">
-        <button class="button is-primary" :disabled="!isFormValid">
+        <button class="button is-info" :disabled="!isFormValid">
           <span class="icon">
             <i class="fas fa-cloud"></i>
           </span>
@@ -64,7 +64,7 @@
         </button>
       </div>
     </div>
-    <p><a class="has-text-light" href="http://" target="_blank">Documentation</a></p>
+    <p><a  href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#happysoupio" target="_blank">Documentation</a></p>
   </form>
   <Alert v-if="showError" @close="showError = false" maxWidth="600px">
    <span v-html="error"></span>
@@ -81,6 +81,8 @@ export default {
 
   components:{Alert},
 
+  
+
   data() {
     return {
       privacyAccepted: false,
@@ -89,7 +91,7 @@ export default {
       domain:'',
       error:'',
       clientId:'',
-      showError:true
+      showError:false
     };
   },
 
@@ -166,8 +168,24 @@ export default {
 
         login(){
 
-          let baseURL = this.loginType == 'domain' ? this.domain :  `https://${this.loginType}.salesforce.com`;
+          let baseURL;
+          
+          if(this.loginType == 'domain'){
 
+            this.domain = this.domain.trim();
+            let lastCharacter = this.domain.substr(this.domain.length-1);
+            
+            //remove last slash
+            if(lastCharacter === '/'){
+                this.domain = this.domain.substr(0,this.domain.length-1);
+            }
+
+            baseURL = this.domain;
+          }
+          else{
+            baseURL =  `https://${this.loginType}.salesforce.com`;
+          }
+          
           let authEndPoint = `${baseURL}/services/oauth2/authorize`;
           let redirectURI = encodeURIComponent(`${window.location.origin}/oauth2/callback`);
   
@@ -182,16 +200,18 @@ export default {
   },
   
   mounted(){
+
         this.processUrlParams();
         this.getClientId();
     }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
-.label {
-  color: $text-color-dark;
+.happy-logo {
+    background-color: #4d5e7b;
+    padding: 30px;
 }
 
 .field:not(:last-child) {
@@ -200,10 +220,9 @@ export default {
 
 form {
   padding: 40px;
-  background-color: black;
   max-width: 400px;
-  background-color:#2e3243;
   border-radius: 5px;
+  border:thin solid black;
 }
 
 img {

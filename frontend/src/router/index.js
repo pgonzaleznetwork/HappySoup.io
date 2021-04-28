@@ -1,11 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/login/Login.vue';
+import Dependencies from '../views/dependencies/Dependencies.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/dependencies',
+    name: 'Dependencies',
+    component: Dependencies
   }
 ]
 

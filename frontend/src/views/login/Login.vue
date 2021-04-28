@@ -1,6 +1,6 @@
 <template>
   <section class="entire-screen columns">
-    <div class="column is-flex 
+    <div class="login column is-flex 
     is-flex-direction-column 
     is-justify-content-center
     is-align-items-center">
@@ -27,18 +27,26 @@ import Info from './components/Info'
 
 
 export default {
-  components:{LoginForm,Info}
+  components:{LoginForm,Info},
+
+  mounted(){
+    console.log('login view is mounted');
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+
+  .login{
+    border-right: thin solid black;
+  }
 
   .column{
     padding:50px
   }
 
   .infoSection{
-    background:#34495e;
+    background-color: #f1f1f1;;
   }
 
 </style>
