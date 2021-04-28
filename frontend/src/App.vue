@@ -1,7 +1,24 @@
 <template>
-  <!--Everything here will be replaced by the router-->
+  <NavBar v-if="showNavBar"/>
   <router-view/>
 </template>
+
+<script>
+
+import NavBar from '@/components/NavBar.vue';
+
+export default {
+  
+  components:{NavBar},
+
+  computed:{
+    showNavBar(){
+      return (this.$router.currentRoute.value.name != 'Login');
+    }
+  }
+}
+</script>
+
 
 <style lang="scss">
 #app {

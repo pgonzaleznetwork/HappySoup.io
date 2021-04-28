@@ -3,7 +3,7 @@
         <label class="label">Metadata Type</label>
         <div class="control has-icons-left">
         <div class="select">
-            <select v-model="selectedType">
+            <select v-model="selectedType" @change="getMembers">
             <option  v-for="type in types" :key="type.label" :value="type.value">{{type.label}}</option>
             </select>
         </div>
@@ -27,6 +27,12 @@ export default {
     async beforeMount(){
         let res = await fetch('/api/supportedtypes');
         this.types = await res.json();
+    },
+
+    methods:{
+        getMembers(){
+            console.log('getting members for ',this.selectedType);
+        }
     }
 
 }

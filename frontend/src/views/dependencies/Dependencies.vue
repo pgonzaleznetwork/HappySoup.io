@@ -1,5 +1,4 @@
 <template>
-  <NavBar/>
   <section class="container">
     <div class="box">
       <form @submit.prevent="login" >

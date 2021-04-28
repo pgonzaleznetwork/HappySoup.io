@@ -44,7 +44,6 @@ app.use((req,res,next) => {
 });
 
 app.use('/api',require('../routes/apiRouter'));
-app.use('/identity',require('../routes/identityRouter'));
 app.use(express.static(path.join(__dirname, '../../frontend2/public'),{extensions: ['html', 'htm']}));
 
 
