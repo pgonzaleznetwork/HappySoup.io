@@ -45,6 +45,7 @@
         </a>
 
         <div class="navbar-dropdown">
+          <router-link to="/configure">
           <a class="navbar-item">
             <span class="icon-text">
               <span class="icon">
@@ -53,12 +54,13 @@
               <span>Settings</span>
             </span>
           </a>
-          <a class="navbar-item">
+          </router-link>
+          <a  @click.prevent="logout" class="navbar-item">
             <span class="icon-text">
               <span class="icon">
                 <i class="fas fa-sign-out-alt"></i>
               </span>
-              <span>Logout</span>
+              <span >Logout</span>
             </span>
           </a>
         </div>
@@ -79,12 +81,24 @@ export default {
       username:''
     }
   },
+
+  methods:{
+    
+    async logout(){
+      await fetch('/oauth2/logout');
+      this.$router.push('/');
+    },
+
+    async getUserDetails(){
+      let response = await fetch('/api/identity');
+      let json = await response.json();
+      this.username = json.username;     
+    }
+
+  },
   
   async mounted(){
-    let response = await fetch('/api/identity');
-    let json = await response.json();
-    this.username = json.username;        
-    //byId('identity').innerText = `${json.name} (${json.username}) - ${json.env}`;
+      this.getUserDetails();
   }
 
 }
@@ -96,7 +110,15 @@ export default {
 }
 
 .navbar-dropdown{
-  background-color: $primary-color;
+  background-color: white;
+
+    .navbar-item{
+      color:$text-color !important;
+    }
+
+    .navbar-item:hover{
+      background-color: gainsboro !important;
+    }
 }
 
 </style>

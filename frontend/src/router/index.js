@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/login/Login.vue';
 import Dependencies from '../views/dependencies/Dependencies.vue';
+import Configure from '../views/configure/Configure.vue';
+
 
 const routes = [
   {
@@ -12,6 +14,11 @@ const routes = [
     path: '/dependencies',
     name: 'Dependencies',
     component: Dependencies
+  },
+  {
+    path: '/configure',
+    name: 'Configure',
+    component: Configure
   }
 ]
 
