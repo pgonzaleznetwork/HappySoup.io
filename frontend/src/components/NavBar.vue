@@ -5,29 +5,31 @@
   <div class="navbar-brand">
     <span class="navbar-item is-size-4 has-text-weight-semibold">HappySoup.io</span>
 
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" @click="toggleMobileMenu" :class="{'is-active':showMobileMenu}">
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
     </a>
   </div>
 
-  <div id="navbarBasicExample" class="navbar-menu">
+  <div class="navbar-menu" :class="{'is-active':showMobileMenu}">
     <div class="navbar-start">
-      <a class="navbar-item">
-        Impact Analysis
+      
+      <a  class="navbar-item" @click="moveTo('/dependencies')">
+        Impact Analysis 
       </a>
+      
 
-      <a class="navbar-item">
+      <a  class="navbar-item"  @click="moveTo('/boundaries')">
         Deployment Boundaries
       </a>
 
-      <a class="navbar-item">
-        Page Layout Dictionary
+      <a  class="navbar-item"  @click="moveTo('/layout-dictionary')">
+        Page Layout Dictionary 
       </a>
 
-      <a class="navbar-item">
-        Apex Bio
+      <a  class="navbar-item"  @click="moveTo('/apex-bio')">
+        Apex Bio 
       </a>
 
       <a class="navbar-item">
@@ -38,14 +40,17 @@
     <div class="navbar-end">
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-item">
-          <span>{{username}}</span>
+          <span class="icon">
+          <i class="fas fa-user"></i>
+          </span>
+          <span> {{username}}</span>
           <span class="icon">
             <i class="fas fa-caret-down"></i>
           </span>
         </a>
 
         <div class="navbar-dropdown">
-          <router-link to="/configure">
+          <router-link to="/configure" @click="setActive">
           <a class="navbar-item">
             <span class="icon-text">
               <span class="icon">
@@ -78,7 +83,9 @@ export default {
 
   data(){
     return{
-      username:''
+      username:'',
+      showMobileMenu:false,
+      currentTab:'/dependencies'
     }
   },
 
@@ -93,6 +100,18 @@ export default {
       let response = await fetch('/api/identity');
       let json = await response.json();
       this.username = json.username;     
+    },
+
+    toggleMobileMenu(){
+      this.showMobileMenu = !this.showMobileMenu;
+    },
+
+    moveTo(path){
+      this.$router.push(path);
+      //hide mobile menu
+      if(this.showMobileMenu){
+        this.showMobileMenu = false;
+      }
     }
 
   },
@@ -105,20 +124,30 @@ export default {
 </script>
 
 <style lang="scss">
+
+
+
+
 .navbar-item{
   font-weight: bold;
+  
 }
 
 .navbar-dropdown{
-  background-color: white;
+  background-color: white !important;
 
     .navbar-item{
       color:$text-color !important;
+      background-color: white !important;
     }
 
     .navbar-item:hover{
       background-color: gainsboro !important;
     }
+}
+
+.router-link-active .router-link-exact-active{
+  background-color: $primary-color !important;
 }
 
 </style>

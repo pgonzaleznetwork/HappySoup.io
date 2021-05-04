@@ -2,23 +2,8 @@
   <section class="container">
     <div class="box">
       <form @submit.prevent="login" >
-        <MetadataList/>
-        <div class="field">
-          <label class="label">Metadata Name</label>
-          <div class="control has-icons-right">
-            <input
-              class="input"
-              type="text"    
-            />
-            <span v-if="!validDomain" class="icon is-small is-right">
-              <i class="fas fa-exclamation-triangle" ></i>
-            </span>
-            <span v-else class="icon is-small is-right">
-              <i class="fas fa-check"></i>
-            </span>
-          </div>
-          <p v-if="!validDomain" class="help is-danger">Invalid domain URL</p>
-        </div>
+        <MetadataList />
+        
 
         <div class="field">
           <div class="control">
