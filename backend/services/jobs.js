@@ -57,6 +57,7 @@ async function listMetadataJob(job){
         //if multiple items are returned the response comes in array form
         if(Array.isArray(jsonResponse)){
           results = jsonResponse.map(record => {
+           
             return {
               name:record.fullName,
               id:record.id || record.fullName//standard objects use their name as the id

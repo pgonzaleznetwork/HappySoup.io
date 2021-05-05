@@ -4,24 +4,26 @@
         ref="autocompleteRef"
         type="text"
         v-model="searchText"
-        :class="getInputClass"
-        @focus="displayResults"
+        class="input"
+        :disabled="disabled"
         @blur="hideResults"
         @keydown.enter = 'enter'
-        @keydown.down = 'down'
-        @keydown.up = 'up'
+        @keydown.down.prevent = 'down'
+        @keydown.up.prevent = 'up'
         @input="handleInput"
+        autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+        placeholder="Type at least 3 characters..."
     />
     <div :style="{ width: inputWidth + 'px' }" :class="getResultsContainerClass" v-if="shouldShowResults">
       <div
           v-for="(item,index) in filteredResults"
-            :key="item"
+            :key="item.name"
             class="vue3-results-item"
             :class="{'active': isActive(index)}"
-            @click="clickItem(item)"
+            @click="clickItem(item.name)"
            
             @mousedown.prevent
-      >{{ displayItem(item) }}</div>
+      > <span v-html="item.label"></span> </div>
     </div>
   </div>
 </template>
@@ -35,6 +37,10 @@ export default {
     debounce: {
       type: Number,
       default: 0
+    },
+    disabled:{
+        type:Boolean,
+        default:true
     },
     inputClass: {
       type: Array,
@@ -87,14 +93,45 @@ export default {
      * @param { InputEvent } e
      */
     function handleInput(e) {
-      clearTimeout(timeout)
-      displayResults();
-      timeout = setTimeout(() => {
-        results.value = props.suggestions.filter(member => {
-                return member.toLowerCase()
-                .includes(searchText.value.toLowerCase())
-        })
-      }, props.debounce)
+
+        if(searchText.value.length < 3){
+            hideResults();
+            return;
+        }
+
+        clearTimeout(timeout)
+        
+        timeout = setTimeout(() => {
+
+            results.value = [];
+            current.value = 0;
+
+            props.suggestions.forEach(member => {
+
+                let memberLc = member.toLowerCase();
+                let textLc = searchText.value.toLowerCase();
+
+                if(memberLc.includes(textLc)){
+                    
+                    let startIndex = memberLc.indexOf(textLc);
+
+                    let textBeforeMatch = member.substr(0,startIndex);
+                    let matchingText = member.substr(startIndex,searchText.value.length);
+                    let textAfterMatch = member.substr(startIndex+searchText.value.length,member.length);
+
+                    let result = {}
+
+                    /*make the matching letters bold:*/
+                    result.label = `${textBeforeMatch}<strong style=color:black;>${matchingText}</strong>${textAfterMatch}`;
+                    result.name = member;
+
+                    results.value.push(result);
+                }
+            })
+
+             if(results.value.length) displayResults();
+
+        }, props.debounce)
     }
     /**
      * Triggered on click on a result item
@@ -122,17 +159,15 @@ export default {
     }
 
     function up(){
-        console.log('up event')
         if(current.value > 0) current.value--;
     }
 
     function down() {
-        console.log('down event')
         if(current.value < results.value.length - 1) current.value++;
     }
 
     function enter() {
-        searchText.value = results.value[current.value];
+        searchText.value = results.value[current.value].name;
         hideResults();
     }
 
@@ -211,16 +246,23 @@ export default {
     }
   }
   .vue3-results-container {
+    
     position: absolute;
-    top: 27px;
-    border: 1px solid black;
+    top: 45px;
+    
     z-index: 99;
     background: white;
   }
   .vue3-results-item {
     list-style-type: none;
     padding: 5px;
-    border-bottom: 1px solid black;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border: 1px solid #dbdbdb;
+    border-radius: 4px;
+    margin-bottom: 2px;
+
     &:hover {
       cursor: pointer;
     }

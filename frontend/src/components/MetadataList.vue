@@ -3,9 +3,12 @@
         <div class="field">
             <label class="label">Metadata Type</label>
             <div class="control has-icons-left">
-            <div class="select">
-                <select v-model="selectedType" @change="getMembers">
-                <option  v-for="type in types" :key="type.label" :value="type.value">{{type.label}}</option>
+            <div class="select"  :class="{'is-loading':isLoading}">
+                <select v-model="selectedType" @change="getMembers" :disabled="isLoading">
+                <option value="" disabled selected hidden>Select...</option>
+                <option  v-for="type in types" :key="type.label" :value="type.value" :ref="type.value">
+                    {{type.label}}
+                </option>
                 </select>
             </div>
             <div class="icon is-small is-left">
@@ -17,6 +20,7 @@
           <label class="label">Metadata Name</label>
           <div class="control">
            <Autocomplete
+            :disabled="isLoading || selectedType == ''"
             @input="updateSearchText"
             :suggestions="memberNames"
             @onSelect="showItem"
@@ -43,7 +47,8 @@ export default {
             intervalId:'',
             members:[],
             selectedMember:'',
-            searchText:''
+            searchText:'',
+            loading:false
         }
     },
 
@@ -76,33 +81,20 @@ export default {
             }
             else{
                 return [];
-            }
-            
-            
+            }   
         },
 
-        matchingMembers(){
-            if (this.searchText.length < 1) { return [] }
-                return this.memberNames.filter(member => {
-                    return member.toLowerCase()
-                    .includes(this.searchText.toLowerCase())
-                })
+        isLoading(){
+            return this.loading;
         }
     },
     
     methods:{
 
-        showItem(item){
-            console.log(item);
-        },
-
-        updateSearchText(value){
-            this.searchText = value;
-            console.log(this.searchText);
-        },
 
         async getMembers(){
-            console.log('getting members for ',this.selectedType);
+            
+            this.loading = true;
 
             let res = await fetch(`/api/metadata?mdtype=${this.selectedType}`);
             let json = await res.json();
@@ -115,14 +107,15 @@ export default {
 
             else if(json.error){
                 console.log('error',error);
+                this.loading = false;
                 //handleError(json);
                // UI.toggleDropdown(mdDropDown,false);
                 //UI.hideProgressBar();
             }
             else{
-                //we got cached data
-                console.log('cached data');
+                this.loading = false;
                 this.members = json;
+                this.renameSelectedLabel();
             }
         },
 
@@ -137,12 +130,18 @@ export default {
                 window.clearInterval(this.intervalId);
                 console.log('completed',response);
                 this.members = response;
-                
+                this.loading = false;
+                this.renameSelectedLabel();
             }
             else if(state == 'failed'){
                 window.clearInterval(this.intervalId);
+                this.loading = false;
                 console.log('failed');
             }
+        },
+
+        renameSelectedLabel(){
+            this.$refs[this.selectedType].label = `${this.$refs[this.selectedType].label} (${this.members.length})`;
         }
     }
 

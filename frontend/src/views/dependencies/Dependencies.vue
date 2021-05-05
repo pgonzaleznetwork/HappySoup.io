@@ -1,30 +1,31 @@
 <template>
   <section class="container">
     <div class="box">
+      <div class="content">
+        <p>Impact Analysis is about understanding where your metadata is used so that you can make informed decisions before making changes to it. Here are 
+          some examples of when this is useful
+        </p>
+        <ul>
+          <li>If you are changing the name of a picklist value, you should know where that value is used (apex, report filters, etc.)</li>
+          <li>You could be</li>
+        </ul>
+      </div>
       <form @submit.prevent="login" >
-        <MetadataList />
-        
 
         <div class="field">
-          <div class="control">
-            <label>
-              <input v-model="privacyAccepted" type="checkbox" />
-              I agree to the HappySoup.io <a  href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a>
-            </label>
-          </div>
+          <MetadataList />
         </div>
-
+        
         <div class="field">
           <div class="control">
             <button class="button is-info">
               <span class="icon">
                 <i class="fas fa-search"></i>
               </span>
-              <span>Show me where it's used</span>
+              <span>Where is this used</span>
             </button>
           </div>
         </div>
-        <p><a  href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#happysoupio" target="_blank">Documentation</a></p>
   </form>
     </div>
 </section>
