@@ -1,15 +1,18 @@
 <template>
-  <section class="container">
-    <div class="box">
-      <div class="content">
-        <p>Impact Analysis is about understanding where your metadata is used so that you can make informed decisions before making changes to it. Here are 
-          some examples of when this is useful
-        </p>
-        <ul>
-          <li>If you are changing the name of a picklist value, you should know where that value is used (apex, report filters, etc.)</li>
-          <li>You could be</li>
-        </ul>
-      </div>
+  
+  <Panel>
+    <template v-slot:title>
+      Impact Analysis
+    </template>
+
+    <template v-slot:tip>
+      <h4>Tip</h4>
+      <p>If you know where a piece of metadata is used (i.e what depends on it), you will know what could break if you make changes to it.</p>
+      <p>You can also use this to answer questions like: <i>What automation (workflow/apex/etc.) is assigning this value to this field?</i> or 
+      <i>What workflow is sending this email template?</i>.</p>
+    </template>
+
+    <template v-slot:form>
       <form @submit.prevent="login" >
 
         <div class="field">
@@ -26,28 +29,28 @@
             </button>
           </div>
         </div>
-  </form>
-    </div>
-</section>
+      </form>
+    </template>
+
+  </Panel>
+
 </template>
 
 <script>
 
-import NavBar from '@/components/NavBar.vue';
-import MetadataList from '../../components/MetadataList.vue';
+
+import MetadataList from '@/components/MetadataList.vue';
+import Panel from '@/components/Panel.vue'
 
 
 export default {
 
-    components:{NavBar,MetadataList}
+    components:{MetadataList,Panel}
 
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 
-  .topX{
-    background-color: green;;
-  }
 
 </style>

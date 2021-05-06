@@ -24,7 +24,7 @@
             @input="updateSearchText"
             :suggestions="memberNames"
             @onSelect="showItem"
-            debounce=800
+            debounce=700
         ></Autocomplete>
           </div>
         </div>
