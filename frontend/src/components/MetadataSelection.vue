@@ -21,10 +21,9 @@
           <div class="control">
            <Autocomplete
             :disabled="isLoading || selectedType == ''"
-            @input="updateSearchText"
-            :suggestions="memberNames"
-            @onSelect="showItem"
+            :suggestions="members"
             debounce=700
+            @memberSelected="getSelectedMember"
         ></Autocomplete>
           </div>
         </div>
@@ -74,6 +73,8 @@ export default {
         }
     },
 
+    
+
     computed:{
         memberNames(){
             if(this.members.length){
@@ -91,10 +92,14 @@ export default {
     
     methods:{
 
+        getSelectedMember(data){
+            this.$emit('memberSelected',data);
+        },
 
         async getMembers(){
             
             this.loading = true;
+            this.$emit('typeSelected',this.selectedType);
 
             let res = await fetch(`/api/metadata?mdtype=${this.selectedType}`);
             let json = await res.json();

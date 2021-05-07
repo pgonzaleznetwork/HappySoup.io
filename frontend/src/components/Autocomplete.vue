@@ -14,13 +14,13 @@
         autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
         placeholder="Type at least 3 characters..."
     />
-    <div :style="{ width: inputWidth + 'px' }" :class="getResultsContainerClass" v-if="shouldShowResults">
+    <div :style="{ width: inputWidth  }" :class="getResultsContainerClass" v-if="shouldShowResults">
       <div
           v-for="(item,index) in filteredResults"
             :key="item.name"
             class="vue3-results-item"
             :class="{'active': isActive(index)}"
-            @click="clickItem(item.name)"
+            @click="clickItem(item)"
            
             @mousedown.prevent
       > <span v-html="item.label"></span> </div>
@@ -35,7 +35,7 @@ export default {
   name: 'Autocomplete',
   props: {
     debounce: {
-      type: Number,
+      type: String,
       default: 0
     },
     disabled:{
@@ -71,8 +71,7 @@ export default {
     }
   },
   emits: [
-    'input',
-    'onSelect'
+    'memberSelected'
   ],
   setup(props, context) {
     const autocompleteRef = ref()
@@ -86,7 +85,7 @@ export default {
      * Same as Vue2 'mounted' function, used to get refs correctly
      */
     onMounted(() => {
-      inputWidth.value = autocompleteRef.value.offsetWidth - 2
+      inputWidth.value = '100%'
     })
     /**
      * Triggered on input changes with a dynamic debounce
@@ -108,22 +107,25 @@ export default {
 
             props.suggestions.forEach(member => {
 
-                let memberLc = member.toLowerCase();
+                let {name,id} = member;
+
+                let memberLc = name.toLowerCase();
                 let textLc = searchText.value.toLowerCase();
 
                 if(memberLc.includes(textLc)){
                     
                     let startIndex = memberLc.indexOf(textLc);
 
-                    let textBeforeMatch = member.substr(0,startIndex);
-                    let matchingText = member.substr(startIndex,searchText.value.length);
-                    let textAfterMatch = member.substr(startIndex+searchText.value.length,member.length);
+                    let textBeforeMatch = name.substr(0,startIndex);
+                    let matchingText = name.substr(startIndex,searchText.value.length);
+                    let textAfterMatch = name.substr(startIndex+searchText.value.length,member.length);
 
                     let result = {}
 
                     /*make the matching letters bold:*/
                     result.label = `${textBeforeMatch}<strong style=color:black;>${matchingText}</strong>${textAfterMatch}`;
-                    result.name = member;
+                    result.name = name;
+                    result.id = id;
 
                     results.value.push(result);
                 }
@@ -136,10 +138,10 @@ export default {
     /**
      * Triggered on click on a result item
      */
-    function clickItem(data) {
-      context.emit('onSelect', data)
+    function clickItem(member) {
+      context.emit('memberSelected', member)
       showResults.value = false
-      searchText.value = data;
+      searchText.value = member.name;
     }
     /**
      * Called on focus
@@ -167,7 +169,9 @@ export default {
     }
 
     function enter() {
-        searchText.value = results.value[current.value].name;
+        let selectedMember = results.value[current.value];
+        searchText.value = selectedMember.name;
+        context.emit('memberSelected', selectedMember)
         hideResults();
     }
 
