@@ -1,6 +1,5 @@
 <template>
-  <div v-if="production" class="hero is-danger has-text-centered is-size-7 prod-warning"><b>You are using HappySoup from a PRODUCTION org. HappySoup does not need access to your data (only your metadata), so it's recommended to use it with a sandbox environment</b></div>
-  <div class="hero is-info">
+  <div class="hero">
   <section class="container">
      <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
@@ -87,7 +86,6 @@ export default {
       username:'',
       showMobileMenu:false,
       currentTab:'/dependencies',
-      production:false
     }
   },
 
@@ -101,8 +99,7 @@ export default {
     async getUserDetails(){
       let response = await fetch('/api/identity');
       let json = await response.json();
-      this.username = json.username;    
-      this.production = json.env == 'Production'; 
+      this.username = json.username;     
     },
 
     toggleMobileMenu(){
@@ -127,6 +124,15 @@ export default {
 </script>
 
 <style lang="scss">
+
+.hero{
+
+  background-color: #2c4b60;
+
+  .navbar-item{
+      color:white;
+    }
+}
 
 
 .prod-warning{

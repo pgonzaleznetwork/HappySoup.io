@@ -28,7 +28,7 @@ export default {
 <style lang="scss" scoped>
 
     .message-body{
-        border-color: $primary-color;
+        border-color: $success-color;
     }
 
     header{

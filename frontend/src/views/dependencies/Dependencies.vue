@@ -21,9 +21,13 @@
 
           <div>
             <div class="field">
-              <MetadataSelection @typeSelected="getSelectedType" @memberSelected="getSelectedMember" filter="exclude" :values="typesToExclude"/>
+              <MetadataSelection @typeSelected="getSelectedType" 
+              @memberSelected="getSelectedMember" 
+              filter="exclude" 
+              :values="typesToExclude"
+              :parentIsLoading="isLoading"/>
             </div>
-             <TheButton title="Where is this used?" @clicked="submitUsageJob"/>
+             <TheButton title="Where is this used?" @clicked="submitUsageJob" :disabled="isLoading || !formIsValid"/>
           </div>
 
           <div v-if="flags?.length" style="margin-left: 50px;">
@@ -39,8 +43,14 @@
       </div>
     </template>
 
+    <template v-slot:results>
+      <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
+      <div ref="tree"></div>
+    </template>
+
+
   </Panel>
-  {{usageResponse}}
+  
 </template>
 
 <script>
@@ -51,6 +61,7 @@ import Panel from '@/components/Panel.vue'
 import Flag from '@/components/Flag.vue'
 import TheButton from '@/components/TheButton.vue'
 import jobSubmission from '@/functions/jobSubmission'
+import treeApi from '@/functions/tree.js'
 
 
 export default {
@@ -58,8 +69,9 @@ export default {
     components:{MetadataSelection,Panel,Flag,TheButton},
 
     setup(){
-      let {submitJob,apiError,apiResponse} = jobSubmission();
-      return {submitJob,apiError,apiResponse};
+      let {submitJob,apiError,apiResponse,done} = jobSubmission();
+      let {createUsageTree} = treeApi();
+      return {submitJob,apiError,apiResponse,done,createUsageTree};
     },
 
    
@@ -83,25 +95,43 @@ export default {
 
       setFlag(data){
         this.usageFlags[data.value] = data.ticked;
-        console.log(this.usageFlags)
       },
 
       async submitUsageJob(){
 
+        this.done = false;
         let options = JSON.stringify(this.usageFlags);
-        let url = `api/usage?name=${this.selectedMember.name}&id=${this.selectedMember.id}&type=${this.selectedType}&options=${options}`;
-        let fetchOptions = {};
-        
-        this.submitJob({url,fetchOptions});
+        let url = `api/usage?name=${this.selectedMember.name}&id=${this.selectedMember.id}&type=${this.selectedType}&options=${options}`;       
+        this.submitJob(url);
       }
 
     },
 
+    watch: {
+  
+        apiResponse: function (newDone, oldDone) {
+
+            this.createUsageTree(this.apiResponse.usageTree,this.$refs.tree );
+            
+        }
+    },
+
     computed:{
 
+      isLoading(){
+        return !this.done;
+      },
+
       usageResponse(){
-        console.log(this.apiResponse);
         return this.apiResponse;
+      },
+
+      usageError(){
+        return this.apiError;
+      },
+
+      formIsValid(){
+        return this.selectedType != '' && this.selectedMember != null && Object.keys(this.selectedMember).length != 0;
       },
 
       flags(){
@@ -145,6 +175,10 @@ export default {
 
 <style lang="scss" scoped>
 
-  @import '/assets/bulma-tooltip.css'
+  @import '/assets/bulma-tooltip.css';
+
+  .progress{
+    width: 50%;
+  }
 
 </style>

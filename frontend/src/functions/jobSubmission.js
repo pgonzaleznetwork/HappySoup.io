@@ -5,10 +5,9 @@ function jobSubmission(){
     let intervalId;
     let apiError = ref(null);
     let apiResponse = ref(null);
+    let done = ref(true);
 
-    async function submitJob(jobDetails){
-
-        let {url,fetchOptions} = jobDetails;
+    async function submitJob(url,fetchOptions = {}){
 
         let res = await fetch(url,fetchOptions);
         let json = await res.json();
@@ -20,10 +19,12 @@ function jobSubmission(){
         }     
         else if(error){
             apiError.value = error;
+            done.value = true;
         }
         //got cached data
         else{
             apiResponse.value = json;
+            done.value = true;
         }
     }
 
@@ -36,17 +37,18 @@ function jobSubmission(){
 
         if(state == 'completed'){
             window.clearInterval(intervalId);
-            console.log('completed',response);
             apiResponse.value = response;
+            done.value = true;
         }
         else if(state == 'failed'){
             window.clearInterval(intervalId);
             apiError.value = error;
+            done.value = true;
             console.log('failed');
         }
     }
 
-    return {submitJob,apiError,apiResponse};
+    return {submitJob,apiError,apiResponse,done};
 
 }
 

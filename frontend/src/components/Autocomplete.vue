@@ -240,6 +240,10 @@ export default {
 
 <style lang="scss" scoped>
 
+.input{
+  margin-bottom: 10px;
+}
+
 .vue3-autocomplete-container {
   display: flex;
   flex-direction: column;

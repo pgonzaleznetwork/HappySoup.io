@@ -1,7 +1,7 @@
 <template>
     <div class="field">
         <div class="control">
-            <button @click="emitClick" class="button is-info">
+            <button @click="emitClick" class="button is-success" :disabled="disabled">
             <span class="icon">
                 <i class="fas fa-search"></i>
             </span>
@@ -13,7 +13,7 @@
 
 <script>
 export default {
-    props:['title'],
+    props:['title','disabled'],
 
     methods:{
         emitClick(){

@@ -24,6 +24,7 @@
             :suggestions="members"
             debounce=700
             @memberSelected="getSelectedMember"
+            @onEmpty="notifyEmpty"
         ></Autocomplete>
           </div>
         </div>
@@ -31,23 +32,26 @@
 </template>
 
 <script>
-import Autocomplete from '../components/Autocomplete';
+
+import Autocomplete from '@/components/Autocomplete';
+import jobSubmission from '@/functions/jobSubmission'
+
 
 
 export default {
   components: { Autocomplete },
 
-    props:['filter','values','mode'],
+    props:['filter','values','mode','parentIsLoading'],
+
+    setup(){
+      let {submitJob,apiError,apiResponse,done} = jobSubmission();
+      return {submitJob,apiError,apiResponse,done};
+    },
 
     data(){
         return{
             types:[],
             selectedType:'',
-            intervalId:'',
-            members:[],
-            selectedMember:'',
-            searchText:'',
-            loading:false
         }
     },
 
@@ -73,16 +77,35 @@ export default {
         }
     },
 
-    
-
     computed:{
         
         isLoading(){
-            return this.loading;
+            return !this.done || this.parentIsLoading;
+        },
+
+        members(){
+            return this.apiResponse;
+        },
+
+        error(){
+            return this.apiError;
+        }
+    },
+
+    watch: {
+        
+        done: function (newDone, oldDone) {
+            if(!oldDone && newDone){
+                this.renameSelectedLabel();
+            }
         }
     },
     
     methods:{
+
+        notifyEmpty(){
+            this.$emit('emptyField')
+        },
 
         getSelectedMember(data){
             this.$emit('memberSelected',data);
@@ -90,51 +113,10 @@ export default {
 
         async getMembers(){
             
-            this.loading = true;
-            this.$emit('typeSelected',this.selectedType);
+            this.done = false;
+            this.$emit('typeSelected',this.selectedType);            
+            this.submitJob(`/api/metadata?mdtype=${this.selectedType}`);
 
-            let res = await fetch(`/api/metadata?mdtype=${this.selectedType}`);
-            let json = await res.json();
-
-            let {jobId} = json;
-
-            if(jobId){
-                this.intervalId = window.setInterval(this.checkJobStatus,4000,jobId);
-            }     
-
-            else if(json.error){
-                console.log('error',error);
-                this.loading = false;
-                //handleError(json);
-               // UI.toggleDropdown(mdDropDown,false);
-                //UI.hideProgressBar();
-            }
-            else{
-                this.loading = false;
-                this.members = json;
-                this.renameSelectedLabel();
-            }
-        },
-
-        async checkJobStatus(jobId){
-
-            let res = await fetch(`/api/job/${jobId}`);
-            let result = await res.json();
-
-            let {state,error,response} = result;
-
-            if(state == 'completed'){
-                window.clearInterval(this.intervalId);
-                console.log('completed',response);
-                this.members = response;
-                this.loading = false;
-                this.renameSelectedLabel();
-            }
-            else if(state == 'failed'){
-                window.clearInterval(this.intervalId);
-                this.loading = false;
-                console.log('failed');
-            }
         },
 
         renameSelectedLabel(){
