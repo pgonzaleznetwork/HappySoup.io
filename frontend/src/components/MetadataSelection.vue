@@ -59,7 +59,7 @@ export default {
             if(this.filter == 'exclude'){
 
                 this.types = types.filter(type => {
-                    return !this.values.includes(type);
+                    return !this.values.includes(type.value);
                 })   
             }
             else if(this.filter == 'only'){
@@ -76,15 +76,7 @@ export default {
     
 
     computed:{
-        memberNames(){
-            if(this.members.length){
-                return this.members.map(member => member.name);
-            }
-            else{
-                return [];
-            }   
-        },
-
+        
         isLoading(){
             return this.loading;
         }
@@ -146,7 +138,9 @@ export default {
         },
 
         renameSelectedLabel(){
-            this.$refs[this.selectedType].label = `${this.$refs[this.selectedType].label} (${this.members.length})`;
+            let label = this.$refs[this.selectedType].label;
+            if(label.includes('(') && label.includes(')')) return;
+            this.$refs[this.selectedType].label = `${label} (${this.members.length})`;
         }
     }
 
@@ -154,8 +148,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-    
 
     section{
         max-width: 362px;

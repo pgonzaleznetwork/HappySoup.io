@@ -2,8 +2,8 @@
     <div class="field">
         <div class="control">
             <label class="checkbox">
-            <input type="checkbox">
-            {{name}} <span class="has-tooltip-arrow has-tooltip-info has-tooltip-right" :data-tooltip="content"><i class="far fa-question-circle"></i></span>
+            <input type="checkbox" v-model="ticked" @change="notify">
+            {{label}} <span class="has-tooltip-arrow has-tooltip-info has-tooltip-right" :data-tooltip="description"><i class="far fa-question-circle"></i></span>
             </label>
         </div>
     </div>
@@ -12,7 +12,21 @@
 <script>
 export default {
 
-    props:['name','content']
+    props:['label','value','description'],
+
+    data(){
+        return{
+            ticked:false
+        }
+    },
+
+    methods:{
+        notify(){
+            let ticked = this.ticked;
+            let value = this.value;
+            this.$emit('ticked',{ticked,value});
+        }
+    }
 
 }
 </script>

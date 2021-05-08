@@ -1,7 +1,7 @@
 <template>
     <div class="field">
         <div class="control">
-            <button class="button is-info">
+            <button @click="emitClick" class="button is-info">
             <span class="icon">
                 <i class="fas fa-search"></i>
             </span>
@@ -13,7 +13,13 @@
 
 <script>
 export default {
-    props:['title']
+    props:['title'],
+
+    methods:{
+        emitClick(){
+            this.$emit('clicked');
+        }
+    }
 }
 </script>
 

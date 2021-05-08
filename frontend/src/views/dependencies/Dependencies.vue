@@ -14,33 +14,33 @@
 
     <template v-slot:form>
 
-      <form @submit.prevent="login">
+      <div>
 
         <div class="is-flex 
           is-flex-direction-row">
 
           <div>
             <div class="field">
-              <MetadataSelection @typeSelected="getSelectedType" @memberSelected="getSelectedMember"/>
+              <MetadataSelection @typeSelected="getSelectedType" @memberSelected="getSelectedMember" filter="exclude" :values="typesToExclude"/>
             </div>
-             <SearchButton title="Where is this used?"/>
+             <TheButton title="Where is this used?" @clicked="submitUsageJob"/>
           </div>
 
           <div v-if="flags?.length" style="margin-left: 50px;">
             <div >
-              <div class="has-text-weight-bold" >
+              <div class="has-text-weight-bold" style="margin-bottom:10px;">
                 Choose your toppings
               </div>
-              <Flag v-for="flag in flags" :name="flag.label" :content="flag.description"/>
+              <Flag v-for="flag in flags" :label="flag.label" :value="flag.value" :description="flag.description" @ticked="setFlag"/>
             </div>
           </div>
 
         </div>
-      </form>
+      </div>
     </template>
 
   </Panel>
-
+  {{usageResponse}}
 </template>
 
 <script>
@@ -49,18 +49,26 @@
 import MetadataSelection from '@/components/MetadataSelection.vue';
 import Panel from '@/components/Panel.vue'
 import Flag from '@/components/Flag.vue'
-import SearchButton from '@/components/SearchButton.vue'
+import TheButton from '@/components/TheButton.vue'
+import jobSubmission from '@/functions/jobSubmission'
 
 
 export default {
 
-    components:{MetadataSelection,Panel,Flag,SearchButton},
+    components:{MetadataSelection,Panel,Flag,TheButton},
+
+    setup(){
+      let {submitJob,apiError,apiResponse} = jobSubmission();
+      return {submitJob,apiError,apiResponse};
+    },
 
    
      data(){
       return{
         selectedType:'',
-        selectedMember:{}
+        selectedMember:{},
+        usageFlags:{},
+        typesToExclude:['ValidationRule','Layout']
       }
     },
 
@@ -71,15 +79,36 @@ export default {
 
       getSelectedMember(selectedMember){
         this.selectedMember = selectedMember;
+      },
+
+      setFlag(data){
+        this.usageFlags[data.value] = data.ticked;
+        console.log(this.usageFlags)
+      },
+
+      async submitUsageJob(){
+
+        let options = JSON.stringify(this.usageFlags);
+        let url = `api/usage?name=${this.selectedMember.name}&id=${this.selectedMember.id}&type=${this.selectedType}&options=${options}`;
+        let fetchOptions = {};
+        
+        this.submitJob({url,fetchOptions});
       }
+
     },
 
     computed:{
+
+      usageResponse(){
+        console.log(this.apiResponse);
+        return this.apiResponse;
+      },
+
       flags(){
         if(this.selectedType == 'CustomField'){
           return [
             {
-              label:'enhanced report data',
+              label:'Enhanced report data',
               value:'EnhancedReportData',
               description:'Show whether the field is used in report filters, groupings or columns. Only available for the first 100 reports'
             },
@@ -87,6 +116,24 @@ export default {
               label:'Field in metadata types',
               value:'fieldInMetadataTypes',
               description:'Show whether the field is referenced in the FieldDefinition fields of Custom Metadata Types'
+            }
+          ]
+        }
+        else if(this.selectedType == 'ApexClass'){
+          return [
+            {
+              label:'Class in Metadata Types',
+              value:'classInMetadataTypes',
+              description:'Show whether the apex class is referenced in any field of any of Custom Metadata Type for dependency injection/table-driven triggers'
+            }
+          ]
+        }
+        else if(this.selectedType == 'CustomObject'){
+          return [
+            {
+              label:'Object in Metadata Types',
+              value:'objectInMetadataTypes',
+              description:'Show whether the object is referenced in the EntityDefinition fields of Custom Metadata Types'
             }
           ]
         }
