@@ -45,7 +45,24 @@
 
     <template v-slot:results>
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
-      <div ref="tree"></div>
+      <!--<div v-if="apiResponse">
+        <div class="is-flex is-flex-direction-row is-justify-content-space-between mb-4">
+          <div>
+            <button class="button is-small is-info">
+              {{treeControlLabel}}
+            </button>
+          </div>
+
+          <div>
+            <button class="button is-small is-warning">Expand all</button>
+            <button class="button is-small is-warning ml-3">Collapse all</button>
+            <button class="button is-small is-warning ml-3">Collapse all</button>
+          </div>
+        </div>
+        
+        <MetadataTree :metadata="apiResponse.usageTree"/>  
+      </div>-->
+      
     </template>
 
 
@@ -61,17 +78,16 @@ import Panel from '@/components/Panel.vue'
 import Flag from '@/components/Flag.vue'
 import TheButton from '@/components/TheButton.vue'
 import jobSubmission from '@/functions/jobSubmission'
-import treeApi from '@/functions/tree.js'
+import MetadataTree from '@/components/MetadataTree.vue'
 
 
 export default {
 
-    components:{MetadataSelection,Panel,Flag,TheButton},
+    components:{MetadataSelection,Panel,Flag,TheButton,MetadataTree},
 
     setup(){
       let {submitJob,apiError,apiResponse,done} = jobSubmission();
-      let {createUsageTree} = treeApi();
-      return {submitJob,apiError,apiResponse,done,createUsageTree};
+      return {submitJob,apiError,apiResponse,done};
     },
 
    
@@ -80,7 +96,8 @@ export default {
         selectedType:'',
         selectedMember:{},
         usageFlags:{},
-        typesToExclude:['ValidationRule','Layout']
+        typesToExclude:['ValidationRule','Layout'],
+        treeAllOpen:false
       }
     },
 
@@ -107,14 +124,6 @@ export default {
 
     },
 
-    watch: {
-  
-        apiResponse: function (newDone, oldDone) {
-
-            this.createUsageTree(this.apiResponse.usageTree,this.$refs.tree );
-            
-        }
-    },
 
     computed:{
 
@@ -122,12 +131,8 @@ export default {
         return !this.done;
       },
 
-      usageResponse(){
-        return this.apiResponse;
-      },
-
-      usageError(){
-        return this.apiError;
+      treeControlLabel(){
+        return this.treeAllOpen ? 'Collapse All' : 'Expand All';
       },
 
       formIsValid(){
@@ -139,7 +144,7 @@ export default {
           return [
             {
               label:'Enhanced report data',
-              value:'EnhancedReportData',
+              value:'enhancedReportData',
               description:'Show whether the field is used in report filters, groupings or columns. Only available for the first 100 reports'
             },
             {

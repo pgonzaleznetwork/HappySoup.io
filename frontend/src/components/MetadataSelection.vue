@@ -3,8 +3,8 @@
         <div class="field">
             <label class="label">Metadata Type</label>
             <div class="control has-icons-left">
-            <div class="select"  :class="{'is-loading':isLoading}">
-                <select v-model="selectedType" @change="getMembers" :disabled="isLoading">
+            <div class="select" >
+                <select v-model="selectedType" @change="getMembers" :disabled="!done || parentIsLoading">
                 <option value="" disabled selected hidden>Select...</option>
                 <option  v-for="type in types" :key="type.label" :value="type.value" :ref="type.value">
                     {{type.label}}
@@ -16,6 +16,12 @@
             </div>
             </div>
         </div>
+        <div class="field" v-if="!done">
+            <p class="is-size-7">Loading metadata. This can take a while in large orgs</p>
+          <progress  class="progress is-small is-primary" max="100">15%</progress>
+        </div>
+        
+
         <div class="field">
           <label class="label">Metadata Name</label>
           <div class="control">
@@ -82,6 +88,8 @@ export default {
         isLoading(){
             return !this.done || this.parentIsLoading;
         },
+
+
 
         members(){
             return this.apiResponse;

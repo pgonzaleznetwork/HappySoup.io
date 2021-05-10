@@ -161,11 +161,21 @@ export default {
     }
 
     function up(){
-        if(current.value > 0) current.value--;
+        if(current.value > 0) {
+          current.value--;
+        }
+        else if(current.value == 0){
+          current.value = results.value.length - 1;
+        }
     }
 
     function down() {
-        if(current.value < results.value.length - 1) current.value++;
+        if(current.value < results.value.length - 1) {
+          current.value++;
+        }
+        else if(current.value == results.value.length - 1){
+          current.value = 0;
+        }
     }
 
     function enter() {

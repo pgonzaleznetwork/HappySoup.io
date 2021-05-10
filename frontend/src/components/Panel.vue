@@ -13,7 +13,7 @@
     </article>
     <slot name="form"></slot>
     </div>
-    <div>
+    <div class="box">
         <slot name="results"></slot>
     </div>
 </section>
