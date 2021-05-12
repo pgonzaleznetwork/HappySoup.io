@@ -10,7 +10,7 @@
         <span class="type" @click="toggle">{{type}}</span>
     </span>
   </div>
-  <li v-if="shouldBeOpen" v-for="member in members">
+  <li v-if="isOpen" v-for="member in members" :key="member.id">
         <span class="icon-text">
             <span class="icon">
                 <i class="fas fa-code"></i>
@@ -37,21 +37,22 @@ export default {
         }
     },
 
-    computed:{
-        shouldBeOpen(){
-            if(this.isOpen){
-                return true;
-            }
-            else if(!this.isOpen || this.parentOpen){
-                return true;
-            }
-            return false;
-        }
-    },
-
     methods:{
         toggle(){
             this.isOpen = !this.isOpen
+        }
+    },
+
+    watch: {
+        
+        parentOpen: function (newValue, oldValue) {
+
+            if(oldValue && !newValue){
+                this.isOpen = false;
+            }
+            else if(!oldValue && newValue){
+                this.isOpen = true;
+            }
         }
     }
 }

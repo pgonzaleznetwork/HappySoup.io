@@ -3,7 +3,7 @@
         <div class="control">
             <label class="checkbox">
             <input type="checkbox" v-model="ticked" @change="notify">
-            {{label}} <span class="icon has-text-warning has-tooltip-arrow has-tooltip-info has-tooltip-right" :data-tooltip="description">
+            {{label}} <span class="has-tooltip-arrow has-tooltip-info has-tooltip-right" :data-tooltip="description">
                 <i class="far fa-question-circle"></i></span>
             </label>
         </div>

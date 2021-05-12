@@ -45,24 +45,7 @@
 
     <template v-slot:results>
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
-      <!--<div v-if="apiResponse">
-        <div class="is-flex is-flex-direction-row is-justify-content-space-between mb-4">
-          <div>
-            <button class="button is-small is-info">
-              {{treeControlLabel}}
-            </button>
-          </div>
-
-          <div>
-            <button class="button is-small is-warning">Expand all</button>
-            <button class="button is-small is-warning ml-3">Collapse all</button>
-            <button class="button is-small is-warning ml-3">Collapse all</button>
-          </div>
-        </div>
-        
-        <MetadataTree :metadata="apiResponse.usageTree"/>  
-      </div>-->
-      
+      <DependencyResultPanel v-if="apiResponse" :metadata-tree="apiResponse.usageTree" :api-response="apiResponse"/>      
     </template>
 
 
@@ -79,11 +62,12 @@ import Flag from '@/components/Flag.vue'
 import TheButton from '@/components/TheButton.vue'
 import jobSubmission from '@/functions/jobSubmission'
 import MetadataTree from '@/components/MetadataTree.vue'
+import DependencyResultPanel from '@/components/DependencyResultPanel.vue';
 
 
 export default {
 
-    components:{MetadataSelection,Panel,Flag,TheButton,MetadataTree},
+    components:{MetadataSelection,Panel,Flag,TheButton,MetadataTree,DependencyResultPanel},
 
     setup(){
       let {submitJob,apiError,apiResponse,done} = jobSubmission();
@@ -96,8 +80,7 @@ export default {
         selectedType:'',
         selectedMember:{},
         usageFlags:{},
-        typesToExclude:['ValidationRule','Layout'],
-        treeAllOpen:false
+        typesToExclude:['ValidationRule','Layout']
       }
     },
 
@@ -129,10 +112,6 @@ export default {
 
       isLoading(){
         return !this.done;
-      },
-
-      treeControlLabel(){
-        return this.treeAllOpen ? 'Collapse All' : 'Expand All';
       },
 
       formIsValid(){

@@ -1,7 +1,7 @@
 <template>
     <ul>
         <li v-for="(value,key) in metadata">
-            <TreeItem :type="key" :members="value" :parent-open="openTree"/>
+            <TreeItem :type="key" :members="value" :parent-open="parentOpen"/>
         </li>
     </ul>
 </template>
@@ -15,7 +15,7 @@ export default {
 
     components:{TreeItem,TheButton},
 
-    props:['metadata','openTree'],
+    props:['metadata','parentOpen'],
 
 }
 </script>

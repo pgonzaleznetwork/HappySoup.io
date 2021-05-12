@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="field" v-if="!done">
-            <p class="is-size-7">Loading metadata. This can take a while in large orgs</p>
+            <p class="is-size-7">Loading metadata. This can take a minute in large orgs (specially sandboxes)</p>
           <progress  class="progress is-small is-primary" max="100">15%</progress>
         </div>
         

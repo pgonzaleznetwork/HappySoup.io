@@ -254,6 +254,10 @@ export default {
   margin-bottom: 10px;
 }
 
+.input,.vue3-results-item{
+  font-size: 13px;
+}
+
 .vue3-autocomplete-container {
   display: flex;
   flex-direction: column;

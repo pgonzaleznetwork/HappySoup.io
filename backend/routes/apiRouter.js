@@ -237,6 +237,8 @@ async function getIdentity(url,token){
           }
     }     
 
+    console.log('identity headers',options);
+
     try {
 
         let res = await fetch(url,options);
