@@ -4,7 +4,7 @@
             <label class="label">Metadata Type</label>
             <div class="control has-icons-left">
             <div class="select" >
-                <select v-model="selectedType" @change="getMembers" :disabled="!done || parentIsLoading">
+                <select v-model="selectedType" @change="getMembers" :disabled="isLoading">
                 <option value="" disabled selected hidden>Select...</option>
                 <option  v-for="type in types" :key="type.label" :value="type.value" :ref="type.value">
                     {{type.label}}
@@ -20,20 +20,32 @@
             <p class="is-size-7">Loading metadata. This can take a minute in large orgs (specially sandboxes)</p>
           <progress  class="progress is-small is-primary" max="100">15%</progress>
         </div>
-        
-
+        <p v-if="!isLoading && apiError"> the error is {{apiError}}</p>
         <div class="field">
-          <label class="label">Metadata Name</label>
-          <div class="control">
-           <Autocomplete
+            <label class="label">Metadata Name</label>
+            <div class="control">
+            <Autocomplete
+            :key="selectedType"
             :disabled="isLoading || selectedType == ''"
             :suggestions="members"
             debounce=700
             @memberSelected="getSelectedMember"
-            @onEmpty="notifyEmpty"
-        ></Autocomplete>
+            @empty="selectedMember = null">
+            </Autocomplete>
           </div>
         </div>
+
+        <div class="field">
+            <div class="control">
+                <button @click="emitSubmit" class="button is-success" :disabled="isLoading || !isFormValid">
+                <span class="icon">
+                    <i class="fas fa-search"></i>
+                </span>
+                <span>{{buttonLabel}}</span>
+                </button>
+            </div>
+        </div>
+
     </section>
 </template>
 
@@ -42,12 +54,10 @@
 import Autocomplete from '@/components/Autocomplete';
 import jobSubmission from '@/functions/jobSubmission'
 
-
-
 export default {
   components: { Autocomplete },
 
-    props:['filter','values','mode','parentIsLoading'],
+    props:['filter','values','mode','parentIsLoading','buttonLabel'],
 
     setup(){
       let {submitJob,apiError,apiResponse,done} = jobSubmission();
@@ -58,6 +68,7 @@ export default {
         return{
             types:[],
             selectedType:'',
+            selectedMember:null
         }
     },
 
@@ -89,21 +100,20 @@ export default {
             return !this.done || this.parentIsLoading;
         },
 
-
+        isFormValid(){
+            return (this.selectedType != '' || this.selectedType != null || Object.keys(this.selectedMember).length != 0) && this.selectedMember != null;
+        },
 
         members(){
             return this.apiResponse;
         },
 
-        error(){
-            return this.apiError;
-        }
     },
 
     watch: {
         
         done: function (newDone, oldDone) {
-            if(!oldDone && newDone){
+            if(!oldDone && newDone && !this.apiError){
                 this.renameSelectedLabel();
             }
         }
@@ -111,11 +121,12 @@ export default {
     
     methods:{
 
-        notifyEmpty(){
-            this.$emit('emptyField')
+        emitSubmit(){
+            this.$emit('submitted')
         },
 
         getSelectedMember(data){
+            this.selectedMember = data;
             this.$emit('memberSelected',data);
         },
 

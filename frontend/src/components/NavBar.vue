@@ -81,6 +81,8 @@
 <script>
 export default {
 
+  props:['current'],
+
   data(){
     return{
       username:'',
@@ -117,7 +119,13 @@ export default {
   },
   
   async mounted(){
-      this.getUserDetails();
+    
+    window.setTimeout(()=>{
+      if(this.current != 'Login'){
+        this.getUserDetails()
+      }
+    },500)
+      ;
   }
 
 }
@@ -132,6 +140,11 @@ export default {
   .navbar-item{
       color:white;
     }
+  
+  .navbar-item:hover{
+    background-color: #243a4a;
+    color:white;
+  }
 }
 
 

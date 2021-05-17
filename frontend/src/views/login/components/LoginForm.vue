@@ -194,7 +194,7 @@ export default {
               'redirectURI':redirectURI
           });
             
-          let requestURL = `${authEndPoint}?client_id=${this.clientId}&response_type=code&redirect_uri=${redirectURI}&state=${state}`;
+          let requestURL = `${authEndPoint}?client_id=${this.clientId}&response_type=code&redirect_uri=${redirectURI}&state=${state}&prompt=select_account`;
           window.location = requestURL;
         }
   },

@@ -71,7 +71,7 @@ export default {
     }
   },
   emits: [
-    'memberSelected'
+    'memberSelected','empty'
   ],
   setup(props, context) {
     const autocompleteRef = ref()
@@ -95,6 +95,12 @@ export default {
 
         if(searchText.value.length < 3){
             hideResults();
+
+          if(searchText.value.length == 0){
+            console.log('emiting event from Autocomplete.vue')
+            context.emit('empty');
+          }
+
             return;
         }
 

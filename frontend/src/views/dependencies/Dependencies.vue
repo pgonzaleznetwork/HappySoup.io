@@ -6,9 +6,7 @@
     </template>
 
     <template v-slot:tip>
-      <p>If you know where a piece of metadata is used (i.e what depends on it), you will know what could break if you make changes to it.</p>
-      <p>You can also use this to answer questions like: <i>What automation (workflow/apex/etc.) is assigning this value to this field?</i> or 
-      <i>What workflow is sending this email template?</i>.</p>
+      <p>If you know where a piece of metadata is used (i.e what depends on it), you will know what could break if you make changes to it. <a>Learn more</a></p>
       
     </template>
 
@@ -23,13 +21,13 @@
             <div class="field">
               <MetadataSelection @typeSelected="getSelectedType" 
               @memberSelected="getSelectedMember" 
+              @submitted="submitUsageJob"
               filter="exclude" 
               :values="typesToExclude"
-              :parentIsLoading="isLoading"/>
+              :parentIsLoading="isLoading"
+              button-label="Where is this used?"/>
             </div>
-             <TheButton title="Where is this used?" @clicked="submitUsageJob" :disabled="isLoading || !formIsValid"/>
           </div>
-
           <div v-if="flags?.length" style="margin-left: 50px;">
             <div >
               <div class="has-text-weight-bold" style="margin-bottom:10px;">
@@ -41,11 +39,13 @@
 
         </div>
       </div>
+      
     </template>
 
+    
     <template v-slot:results>
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
-      <DependencyResultPanel v-if="apiResponse" :metadata-tree="apiResponse.usageTree" :api-response="apiResponse"/>      
+      <DependencyResultPanel v-if="!isLoading && apiResponse" :metadata-tree="apiResponse.usageTree" :api-response="apiResponse"/> 
     </template>
 
 
@@ -86,6 +86,7 @@ export default {
 
     methods:{
       getSelectedType(selectedType){
+        console.log('selectedType',selectedType)
         this.selectedType = selectedType;
       },
 
@@ -104,18 +105,18 @@ export default {
         let url = `api/usage?name=${this.selectedMember.name}&id=${this.selectedMember.id}&type=${this.selectedType}&options=${options}`;       
         this.submitJob(url);
       }
-
     },
 
 
     computed:{
 
-      isLoading(){
-        return !this.done;
+      hasError(){
+        
+        return true;
       },
 
-      formIsValid(){
-        return this.selectedType != '' && this.selectedMember != null && Object.keys(this.selectedMember).length != 0;
+      isLoading(){
+        return !this.done;
       },
 
       flags(){

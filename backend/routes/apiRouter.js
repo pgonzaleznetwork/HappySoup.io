@@ -237,8 +237,6 @@ async function getIdentity(url,token){
           }
     }     
 
-    console.log('identity headers',options);
-
     try {
 
         let res = await fetch(url,options);
@@ -306,163 +304,83 @@ apiRouter.route('/job/:id')
 
 function getSupportedMetadataTypes(){
 
-    let defaultDeploymentBoundaryLabel = 'What it depends on / Deployment Boundary';
-    let defaultImpactAnalysisLabel = 'Where is this used / Impact Analysis';
-
-    let defaultSupportedQueries = [
-        {
-            type:'usage',
-            label:defaultImpactAnalysisLabel
-        },
-        {
-            type:'deps',
-            label:defaultDeploymentBoundaryLabel
-        }
-        
-    ];
-
     return [
 
         {
             "label":"Custom Field",
-            "value":"CustomField",
-            supportedQueries : [
-                {
-                    type:'deps',
-                    label:'Fields referenced by this field / Deployment Boundary'
-                },
-                {
-                    type:'usage',
-                    label:defaultImpactAnalysisLabel
-                },
-            ]
+            "value":"CustomField"
          },
          {
             "label":"Standard Field",
-            "value":"StandardField",
-            supportedQueries : [
-                {
-                    type:'usage',
-                    label:defaultImpactAnalysisLabel
-                },
-            ]
+            "value":"StandardField"
          },
 
          {
-            "label":"Custom Object/Setting/Metadata Type",
-            "value":"CustomObject",
-            supportedQueries : [
-                {
-                    type:'usage',
-                    label:'Where is this used / Impact Analysis'
-                },
-            ]
+            "label":"Objects & Custom Settings/Metadata Types",
+            "value":"CustomObject"
+            
          },
          {
             "label":"Standard Objects",
-            "value":"CustomObject",
-            supportedQueries : [
-                {
-                    type:'usage',
-                    label:'Where is this used / Impact Analysis'
-                },
-            ]
+            "value":"CustomObject"
          },
 
         {
             "label":"Page Layout",
-            "value":"Layout",
-            supportedQueries : [
-                {
-                    type:'deps',
-                    label:'Fields used in layout / Deployment Boundary'
-                }
-            ]
+            "value":"Layout"
          },
          
         {
             "label":"Custom Button",
-            "value":"WebLink",
-            supportedQueries : [
-                {
-                    type:'usage',
-                    label:'Layouts using this button / Impact Analysis'
-                },
-            ]
+            "value":"WebLink"
          },
          
          {
             "label":"Field Set",
-            "value":"FieldSet",
-            supportedQueries : defaultSupportedQueries
+            "value":"FieldSet"
          },
 
         {
             "label":"Apex Trigger",
-            "value":"ApexTrigger",
-            supportedQueries : [
-                {
-                    type:'deps',
-                    label:defaultDeploymentBoundaryLabel
-                }
-            ]
+            "value":"ApexTrigger"
         },
 
         {
             label:'Apex Class',
-            value:'ApexClass',
-            supportedQueries : defaultSupportedQueries
+            value:'ApexClass'
         },
         {
             "label":"Visualforce Page",
-            "value":"ApexPage",
-            supportedQueries : defaultSupportedQueries
+            "value":"ApexPage"
          },
          {
             "label":"Visualforce Component",
-            "value":"ApexComponent",
-            supportedQueries : defaultSupportedQueries
+            "value":"ApexComponent"
          },
          
          {
             "label":"Custom Label",
-            "value":"CustomLabel",
-            supportedQueries : [
-                {
-                    type:'usage',
-                    label:defaultImpactAnalysisLabel
-                }
-            ]
+            "value":"CustomLabel"
          },
          {
             "label":"Validation Rule",
-            "value":"ValidationRule",
-            supportedQueries : [
-                {
-                    type:'deps',
-                    label:'Fields used in validation rule / Deployment Boundary'
-                }
-            ]
+            "value":"ValidationRule"
          },
          {
             "label":"Flow / Process",
-            "value":"Flow",
-            supportedQueries : defaultSupportedQueries
+            "value":"Flow"
          },
          {
             "label":"Email Template",
-            "value":"EmailTemplate",
-            supportedQueries : defaultSupportedQueries
+            "value":"EmailTemplate"
          },
          {
             "label":"Email Alert",
-            "value":"WorkflowAlert",
-            supportedQueries : defaultSupportedQueries
+            "value":"WorkflowAlert"
          },
          {
             "label":"Lightning Component (Aura)",
-            "value":"AuraDefinitionBundle",
-            supportedQueries : defaultSupportedQueries
+            "value":"AuraDefinitionBundle"
          }
     ];
 }

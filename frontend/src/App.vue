@@ -1,5 +1,5 @@
 <template>
-  <NavBar v-if="showNavBar"/>
+  <NavBar v-show="showNavBar" :current="currentPath"/>
   <router-view/>
 </template>
 
@@ -14,8 +14,14 @@ export default {
   computed:{
     showNavBar(){
       return (this.$router.currentRoute.value.name != 'Login');
+    },
+
+    currentPath(){
+      return this.$router.currentRoute.value.name
     }
-  }
+  },
+
+  
 }
 </script>
 

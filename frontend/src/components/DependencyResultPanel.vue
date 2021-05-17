@@ -1,47 +1,53 @@
 <template>
-    <div class="is-flex is-flex-direction-row is-justify-content-space-between mb-4">
-        <div>
-            <button class="button is-small is-info" @click="toggleTree">
-                {{treeControlLabel}}
-            </button>
+    <div v-if="apiResponseHasData">
+        <div class="is-flex is-flex-direction-row is-justify-content-space-between mb-4">
+            <div>
+                <button class="button is-small is-info" @click="toggleTree">
+                    {{treeControlLabel}}
+                </button>
+            </div>
+            <div>
+                <button @click="downloadXml" class="button is-small is-warning">
+                    <span class="icon">
+                        <i class="fa fa-download"></i>
+                    </span>
+                    <span>Download package.xml</span>
+                </button>
+                <button @click="copyFile('excel')" class="button is-small is-warning ml-3">
+                    <span class="icon">
+                        <i class="fa fa-copy"></i>
+                    </span>
+                    <span>Copy (Excel)</span>
+                </button>
+                <button @click="copyFile('csv')" class="button is-small is-warning ml-3">
+                    <span class="icon">
+                        <i class="fa fa-copy"></i>
+                    </span>
+                    <span>Copy (csv)</span>
+                </button>
+            </div>
         </div>
-        <div>
-            <button @click="downloadXml" class="button is-small is-warning">
-                <span class="icon">
-                    <i class="fa fa-download"></i>
-                </span>
-                <span>Download package.xml</span>
-            </button>
-            <button @click="copyFile('excel')" class="button is-small is-warning ml-3">
-                <span class="icon">
-                    <i class="fa fa-copy"></i>
-                </span>
-                <span>Copy (Excel)</span>
-            </button>
-            <button @click="copyFile('csv')" class="button is-small is-warning ml-3">
-                <span class="icon">
-                    <i class="fa fa-copy"></i>
-                </span>
-                <span>Copy (csv)</span>
-            </button>
-        </div>
-    </div>
 
-    <div class="notification is-warning is-light">
-        Primar lorem ipsum dolor sit amet, consectetur
-        adipiscing elit lorem ipsum dolor. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
+        <div class="notification is-warning is-light">
+            <span v-html="resultsDescription"></span>
+        </div>
+        <div class="canvas-container mt-5 mb-4 ml-3">
+            <canvas ref="stats"></canvas>
+        </div>
+        <MetadataTree :metadata="metadataTree" :parent-open="openTree"/> 
     </div>
-    <div class="canvas-container mt-5 mb-4 ml-3">
-        <canvas ref="stats"></canvas>
+    <div v-else>
+        <div class="notification is-warning is-light">
+            <span v-html="noResultsDescription"></span>
+        </div>
     </div>
-    
-    
-    <MetadataTree :metadata="metadataTree" :parent-open="openTree"/>  
+     
 </template>
 
 <script>
 
 import MetadataTree from '@/components/MetadataTree.vue';
+import Alert from '@/components/Alert.vue';
 
 export default {
 
@@ -56,12 +62,14 @@ export default {
         }
     },
 
+    mounted(){
+        this.displayStats(this.apiResponse.stats,'usage');
+    },
+
     watch: {
         
         apiResponse: function (newValue, oldValue) {
-            console.log(newValue)
             this.displayStats(newValue.stats,'usage');
-
         }
     },
 
@@ -105,8 +113,6 @@ export default {
 
         displayStats(stats,type){
 
-            console.log('is this called at all')
-
             //remove the contents of the previously initialized chart
             if(this.barChart){
                 this.barChart.destroy();
@@ -137,7 +143,7 @@ export default {
 
             let canvas = this.$refs.stats;
 
-            console.log(canvas);
+            if(!canvas) return;
 
             let ctx = canvas.getContext('2d');
 
@@ -171,6 +177,62 @@ export default {
     computed:{
         treeControlLabel(){
             return this.openTree ? 'Collapse All' : 'Expand All';
+        },
+
+        apiResponseHasData(){
+            return this.apiResponse && Object.keys(this.apiResponse.stats).length != 0;
+        },
+
+        resultsDescription(){
+
+            let isUsage = this.apiResponse.hasOwnProperty('usageTree');
+            let {type,name} = this.apiResponse.entryPoint;
+            let stats = this.apiResponse.stats;
+
+            console.log(stats,type,name,this.apiResponse);
+
+            let total = 0;
+
+            for(const prop in stats){
+                //we exclude reports from usage data because they are less important when
+                //determining the overal impact
+                if(prop != 'Report'){
+                    total += stats[prop];
+                }
+            }
+
+            let text = `The ${type} ${name} `;
+
+            if(isUsage){
+                text += `is being used by <b>${total} metadata items</b> (reports excluded). Changes to the ${type} <b>can impact these items</b>`
+            }
+            else{
+                text += `depends <b>${total} metadata items</b> (reports excluded). All the metadata items below represent <b>what is needed to deploy this
+                component to an empty org (like a scratch org)</b>`
+            }
+
+            return text;
+        },
+
+        noResultsDescription(){
+
+            let isUsage = this.apiResponse.hasOwnProperty('usageTree');
+            let {type,name} = this.apiResponse.entryPoint;
+            let text;
+
+            if(isUsage){
+                text = `Unable to find any metadata items that use or reference the <b>${type} ${name}</b>. This either means that the ${type} is not being used at all or that it is used by
+                metadata types that are <b>not yet supported by HappySoup</b>.`
+            }else{
+                text = `Unable to find any metadata items that the <b>${type} ${name}</b> depends on. This either means that the ${type} is a stand alone component (and can be deployed as is)
+                or that it depends on metadata types that is <b>not yet supported by HappySoup</b>.`;
+            }
+
+            text += `If you think this is the case 
+                please log a <i class="fab fa-github"></i> Github issue <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup/issues" target="_blank">here</a>`;
+            
+
+            return text;
         }
     }
 

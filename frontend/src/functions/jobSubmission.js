@@ -44,7 +44,7 @@ function jobSubmission(){
             window.clearInterval(intervalId);
             apiError.value = error;
             done.value = true;
-            console.log('failed');
+            console.log('failed',apiError.value);
         }
     }
 
