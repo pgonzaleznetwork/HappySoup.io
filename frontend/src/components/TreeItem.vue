@@ -18,16 +18,18 @@
             <span><a :href="member.url" target="_blank">{{member.name}}</a></span>
             <Pill v-for="pill in member.pills" :pill="pill"/>
         </span>
+        <MetadataTree v-if="member.references" :metadata="member.references"/>
   </li>
 </template>
 
 <script>
 
+import MetadataTree from './MetadataTree.vue';
 import Pill from '@/components/Pill.vue'
 
 export default {
 
-    components:{Pill},
+    components:{Pill,MetadataTree},
 
     props:['type','members','parentOpen'],
 
@@ -40,6 +42,18 @@ export default {
     methods:{
         toggle(){
             this.isOpen = !this.isOpen
+        },
+
+        getDisplayName(name){
+    
+            let displayName = name;
+            let indexOfSpecialChar = name.indexOf(':::');
+            
+            if(indexOfSpecialChar != -1){
+                displayName = name.substr(0,indexOfSpecialChar);
+            }
+            
+            return displayName;
         }
     },
 

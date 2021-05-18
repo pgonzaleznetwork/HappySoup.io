@@ -26,7 +26,6 @@ function start() {
     switch(jobType) {
         case 'LIST_METADATA':
           result = await jobs.listMetadataJob(job);
-          throw new Error('mierda!');
             break;
         case 'DEPENDENCIES':
           result = await jobs.dependencyJob(job);

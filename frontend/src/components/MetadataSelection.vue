@@ -3,7 +3,7 @@
         <div class="field">
             <label class="label">Metadata Type</label>
             <div class="control has-icons-left">
-            <div class="select" >
+            <div class="select is-small" >
                 <select v-model="selectedType" @change="getMembers" :disabled="isLoading">
                 <option value="" disabled selected hidden>Select...</option>
                 <option  v-for="type in types" :key="type.label" :value="type.value" :ref="type.value">
@@ -20,7 +20,7 @@
             <p class="is-size-7">Loading metadata. This can take a minute in large orgs (specially sandboxes)</p>
           <progress  class="progress is-small is-primary" max="100">15%</progress>
         </div>
-        <p v-if="!isLoading && apiError"> the error is {{apiError}}</p>
+        <Error v-if="!isLoading && apiError" :error="apiError"/>
         <div class="field">
             <label class="label">Metadata Name</label>
             <div class="control">
@@ -52,10 +52,11 @@
 <script>
 
 import Autocomplete from '@/components/Autocomplete';
-import jobSubmission from '@/functions/jobSubmission'
+import jobSubmission from '@/functions/jobSubmission';
+import Error from '@/components/Error';
 
 export default {
-  components: { Autocomplete },
+  components: { Autocomplete , Error},
 
     props:['filter','values','mode','parentIsLoading','buttonLabel'],
 

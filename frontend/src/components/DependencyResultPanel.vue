@@ -47,7 +47,6 @@
 <script>
 
 import MetadataTree from '@/components/MetadataTree.vue';
-import Alert from '@/components/Alert.vue';
 
 export default {
 

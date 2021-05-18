@@ -45,7 +45,8 @@
     
     <template v-slot:results>
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
-      <DependencyResultPanel v-if="!isLoading && apiResponse" :metadata-tree="apiResponse.usageTree" :api-response="apiResponse"/> 
+      <DependencyResultPanel v-if="!isLoading && apiResponse" :metadata-tree="apiResponse.usageTree" :api-response="apiResponse"/>
+      <Error v-if="!isLoading && apiError" :error="apiError"/> 
     </template>
 
 
@@ -59,15 +60,14 @@
 import MetadataSelection from '@/components/MetadataSelection.vue';
 import Panel from '@/components/Panel.vue'
 import Flag from '@/components/Flag.vue'
-import TheButton from '@/components/TheButton.vue'
 import jobSubmission from '@/functions/jobSubmission'
-import MetadataTree from '@/components/MetadataTree.vue'
 import DependencyResultPanel from '@/components/DependencyResultPanel.vue';
+import Error from '@/components/Error';
 
 
 export default {
 
-    components:{MetadataSelection,Panel,Flag,TheButton,MetadataTree,DependencyResultPanel},
+    components:{MetadataSelection,Panel,Flag,DependencyResultPanel,Error},
 
     setup(){
       let {submitJob,apiError,apiResponse,done} = jobSubmission();

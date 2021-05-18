@@ -18,7 +18,7 @@ function jobSubmission(){
             intervalId = window.setInterval(checkJobStatus,4000,jobId);
         }     
         else if(error){
-            apiError.value = error;
+            apiError.value = json;
             done.value = true;
         }
         //got cached data
@@ -39,12 +39,13 @@ function jobSubmission(){
             window.clearInterval(intervalId);
             apiResponse.value = response;
             done.value = true;
+            console.log(response);
         }
         else if(state == 'failed'){
             window.clearInterval(intervalId);
             apiError.value = error;
             done.value = true;
-            console.log('failed',apiError.value);
+            console.error('failed',apiError.value);
         }
     }
 

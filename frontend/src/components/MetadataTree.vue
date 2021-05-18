@@ -23,7 +23,7 @@ export default {
 <style lang="scss" scoped>
 
     ul{
-        margin-left: 12px;
+        margin-left: 25px;
     }
 
 </style>

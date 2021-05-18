@@ -1,5 +1,17 @@
 <template>
-    {{text}}
+    <div class="notification is-danger is-light">
+        <div v-if="genericError">
+            <p>We are sorry, something went wrong. Please click <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup/issues/new" target="_blank">here</a> to log a Github 
+            issue so that we can review the error. Please include the following details: {{error.message}}</p>
+            <p>{{error.stack}}</p>
+        </div>
+         <div v-if="salesforceError">
+            <p>Unable to connect to Salesforce. Please check your internet connection or the status of your org at trust.salesforce.com. If the error persists, 
+            please click <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup/issues/new" target="_blank">here</a> to log a Github 
+            issue so that we can review the error. Please include the following details: </p>
+            <p>{{error.stack}}</p>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -9,27 +21,24 @@ export default {
 
     data(){
         return{
-            text:''
+            text:'',
+            genericError:false,
+            salesforceError:false
+            
         }
-    }
+    },
 
     mounted(){
 
-        if(error.message === 'session-expired'){
+        if(this.error.message === 'session-expired'){
             window.location = '/?logout=true';
         }
 
-        else if(error.message === 'no-sfdc-connection'){     
-            this.text = `Unable to connect to Salesforce. Please check your internet connection or the status of your org at trust.salesforce.com
-            ${error.stack}`;     
+        else if(this.error.message === 'no-sfdc-connection'){     
+            this.salesforceError = true;     
         }
         else{
-            this.text = `We are sorry, something went wrong. Please click <a style="font-weight: bold" href="https://github.com/pgonzaleznetwork/sfdc-happy-soup/issues/new" target="_blank">here</a> to log a Github 
-            issue so that we can review the error. Please include the following details: ${error.message} 
-            ${error.stack}
-            
-            <p>If you don't have a github account, please email us a <b>pgonzaleznetwork@gmail.com</b></p>
-            `;
+            this.genericError = true;
         }
     }
 

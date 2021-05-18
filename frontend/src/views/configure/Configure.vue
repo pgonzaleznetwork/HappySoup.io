@@ -10,6 +10,7 @@
     </template>
 
     <template v-slot:form>
+      <Parent/>
       <form>
         <div class="field">
           <div class="control">
@@ -32,10 +33,11 @@
 <script>
 
 import Panel from '@/components/Panel.vue'
+import Parent from '@/components/Parent.vue'
 
 export default {
 
-  components:{Panel}
+  components:{Panel,Parent}
 
 }
 </script>
