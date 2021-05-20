@@ -36,7 +36,7 @@
     
     <template v-slot:results>
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
-      <DependencyResultPanel v-if="!isLoading && apiResponse" :metadata-tree="apiResponse.dependencyTree['SRM_SelectMetadataExtensionTests:::01p3h00000E1kj4AAB'].references" :api-response="apiResponse"/>
+      <DependencyResultPanel v-if="!isLoading && apiResponse && apiResponse.dependencyTree[selectedMemberKey]" :metadata-tree="apiResponse.dependencyTree[selectedMemberKey].references" :api-response="apiResponse"/>
       <Error v-if="!isLoading && apiError" :error="apiError"/> 
     </template>
 
@@ -95,9 +95,8 @@ export default {
 
     computed:{
 
-      hasError(){
-        
-        return true;
+      selectedMemberKey(){
+        return `${this.selectedMember.name}:::${this.selectedMember.id}`;
       },
 
       isLoading(){

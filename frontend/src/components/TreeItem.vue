@@ -15,10 +15,10 @@
             <span class="icon">
                 <i class="fas fa-code"></i>
             </span>
-            <span><a :href="member.url" target="_blank">{{member.name}}</a></span>
+            <span><a :href="member.url" target="_blank">{{getDisplayName(member.name)}}</a></span>
             <Pill v-for="pill in member.pills" :pill="pill"/>
         </span>
-        <MetadataTree v-if="member.references" :metadata="member.references"/>
+        <MetadataTree v-if="member.references" :key="member.name" :metadata="member.references" :parent-open="isOpen"/>
   </li>
 </template>
 
@@ -26,16 +26,20 @@
 
 import MetadataTree from './MetadataTree.vue';
 import Pill from '@/components/Pill.vue'
+import TreeItem from '@/components/TreeItem.vue';
 
 export default {
 
-    components:{Pill,MetadataTree},
+    components:{Pill,MetadataTree,TreeItem},
+
+    name:'TreeItem',
 
     props:['type','members','parentOpen'],
 
     data(){
         return{
-            isOpen:false
+            isOpen:false,
+            openChildren:false
         }
     },
 
@@ -61,11 +65,17 @@ export default {
         
         parentOpen: function (newValue, oldValue) {
 
+            console.log('parent open changed on ',this.type,this.members);
+
             if(oldValue && !newValue){
+                console.log('closed')
                 this.isOpen = false;
+                this.openChildren = false;
             }
             else if(!oldValue && newValue){
+                console.log('open')
                 this.isOpen = true;
+                this.openChildren = true;
             }
         }
     }
