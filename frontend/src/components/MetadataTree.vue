@@ -18,7 +18,7 @@ export default {
 
     name:'MetadataTree',
 
-    props:['metadata','parentOpen'],
+    props:['metadata','parentOpen']
 
 }
 </script>

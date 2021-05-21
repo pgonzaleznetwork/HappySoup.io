@@ -7,7 +7,7 @@
         <span v-if="!isOpen" class="icon">
             <i class="fas fa-folder"></i>
         </span>
-        <span class="type" @click="toggle">{{type}}</span>
+        <span class="type" @click="toggle">{{type}} <span style="font-size:14px">({{members.length}})</span> </span>
     </span>
   </div>
   <li v-if="isOpen" v-for="member in members" :key="member.id">
@@ -39,7 +39,6 @@ export default {
     data(){
         return{
             isOpen:false,
-            openChildren:false
         }
     },
 
@@ -70,12 +69,12 @@ export default {
             if(oldValue && !newValue){
                 console.log('closed')
                 this.isOpen = false;
-                this.openChildren = false;
+              
             }
             else if(!oldValue && newValue){
                 console.log('open')
                 this.isOpen = true;
-                this.openChildren = true;
+               
             }
         }
     }
@@ -86,6 +85,7 @@ export default {
 
     .type{
         cursor: pointer;
+        font-weight:500;
     }
 
     .fa-folder, .fa-folder-open{
