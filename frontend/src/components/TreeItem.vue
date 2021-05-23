@@ -64,8 +64,6 @@ export default {
         
         parentOpen: function (newValue, oldValue) {
 
-            console.log('parent open changed on ',this.type,this.members);
-
             if(oldValue && !newValue){
                 console.log('closed')
                 this.isOpen = false;

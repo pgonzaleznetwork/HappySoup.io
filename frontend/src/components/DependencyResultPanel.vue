@@ -188,8 +188,6 @@ export default {
             let {type,name} = this.apiResponse.entryPoint;
             let stats = this.apiResponse.stats;
 
-            console.log(stats,type,name,this.apiResponse);
-
             let total = 0;
 
             for(const prop in stats){
@@ -206,7 +204,7 @@ export default {
                 text += `is being used by <b>${total} metadata items</b> (reports excluded). Changes to the ${type} <b>can impact these items</b>`
             }
             else{
-                text += `depends <b>${total} metadata items</b> (reports excluded). All the metadata items below represent <b>what is needed to deploy this
+                text += `depends <b>${total} metadata items</b>. All the metadata items below represent <b>what is needed to deploy this
                 component to an empty org (like a scratch org)</b>`
             }
 

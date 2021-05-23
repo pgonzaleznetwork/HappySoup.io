@@ -3,7 +3,7 @@
         <div class="field">
             <label class="label">Metadata Type</label>
             <div class="control has-icons-left">
-            <div class="select is-small" >
+            <div class="select" >
                 <select v-model="selectedType" @change="getMembers" :disabled="isLoading">
                 <option value="" disabled selected hidden>Select...</option>
                 <option  v-for="type in types" :key="type.label" :value="type.value" :ref="type.value">

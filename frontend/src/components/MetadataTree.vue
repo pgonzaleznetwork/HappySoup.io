@@ -1,7 +1,7 @@
 <template>
     <ul>
         <li v-for="(value,key) in metadata">
-            <TreeItem :type="key" :members="value" :parent-open="parentOpen" :key="key"/>
+            <TreeItem :type="key" :members="value" :parent-open="parentOpen" :key="key" />
         </li>
     </ul>
 </template>
@@ -24,6 +24,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+   
 
     ul{
         margin-left: 25px;

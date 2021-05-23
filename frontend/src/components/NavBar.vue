@@ -135,7 +135,7 @@ export default {
 
 .hero{
 
-  background-color: #2c4b60;
+  background-color: $background-color;
 
   .navbar-item{
       color:white;

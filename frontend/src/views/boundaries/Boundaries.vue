@@ -6,8 +6,23 @@
     </template>
 
     <template v-slot:tip>
-      <p>If you know where a piece of metadata is used (i.e what depends on it), you will know what could break if you make changes to it. <a>Learn more</a></p>
-      
+      <p>A deployment boundary is all the metadata that an org needs to have in order for a particular feature/configuration to exist. <a @click.prevent="toggleModal">Learn more</a></p>
+      <Modal :is-active="showModal" @closeModal="toggleModal">
+        <template v-slot:title>
+          Deployment Boundaries
+        </template>
+        <template v-slot:content>
+          <h3>What are Deployment Boundaries?</h3>
+          <p>Deployment Boundaries are a new concept in the Salesforce ecosystem and are relevant to administrators, developers and architects. 
+            You can use deployment boundaries to answer key questions including:</p>
+          <ul>
+            <li>Admins – What are all the fields and buttons that make up a specific page layout?</li>
+            <li>Developers & Architects – What metadata should my scratch orgs have before I can start using them for development?</li>
+          </ul>
+          <p>We recommend reading this SalesforceBen blog post to fully understand the power of this feature</p>
+          <p><a href="https://www.salesforceben.com/introduction-to-deployment-boundaries/" target="_blank">Introduction to Deploment Boundaries</a></p>
+        </template>
+      </Modal>
     </template>
 
     <template v-slot:form>
@@ -69,7 +84,8 @@ export default {
       return{
         selectedType:'',
         selectedMember:{},
-        typesToExclude:['CustomLabel','Layout','StandardField']
+        typesToExclude:['CustomLabel','Layout','StandardField'],
+        showModal:false,
       }
     },
 
@@ -81,6 +97,10 @@ export default {
 
       getSelectedMember(selectedMember){
         this.selectedMember = selectedMember;
+      },
+
+       toggleModal(){
+        this.showModal = !this.showModal;
       },
 
       async submitUsageJob(){
