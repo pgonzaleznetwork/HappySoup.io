@@ -97,7 +97,6 @@ export default {
             hideResults();
 
           if(searchText.value.length == 0){
-            console.log('emiting event from Autocomplete.vue')
             context.emit('empty');
           }
 

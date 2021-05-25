@@ -65,12 +65,10 @@ export default {
         parentOpen: function (newValue, oldValue) {
 
             if(oldValue && !newValue){
-                console.log('closed')
                 this.isOpen = false;
               
             }
             else if(!oldValue && newValue){
-                console.log('open')
                 this.isOpen = true;
                
             }

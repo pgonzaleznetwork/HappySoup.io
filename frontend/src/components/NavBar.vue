@@ -50,7 +50,7 @@
         </a>
 
         <div class="navbar-dropdown">
-          <router-link to="/configure" @click="setActive">
+          <router-link to="/configure">
           <a class="navbar-item">
             <span class="icon-text">
               <span class="icon">

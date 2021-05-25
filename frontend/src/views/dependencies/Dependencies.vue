@@ -109,7 +109,6 @@ export default {
 
     methods:{
       getSelectedType(selectedType){
-        console.log('selectedType',selectedType)
         this.selectedType = selectedType;
       },
 

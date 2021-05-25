@@ -81,7 +81,6 @@ apiRouter.route('/usage')
         try {
 
             let entryPoint = {...req.query};
-            console.log(entryPoint);
             entryPoint.options = JSON.parse(entryPoint.options);
 
             let jobDetails = {
