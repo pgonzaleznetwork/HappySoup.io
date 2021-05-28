@@ -66,9 +66,12 @@
 
     
     <template v-slot:results>
+      
+      <MetadataTable :source="source"/>
+
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
       <div v-if="!isLoading && apiResponse">
-        <CSVTable :csv="apiResponse.csv"/>
+       
       </div>
       <Error v-if="!isLoading && apiError" :error="apiError"/> 
     </template>
@@ -85,19 +88,16 @@ import MetadataSelection from '@/components/MetadataSelection.vue';
 import Panel from '@/components/Panel.vue'
 import Flag from '@/components/Flag.vue'
 import jobSubmission from '@/functions/jobSubmission'
-import CSVTable from '@/components/CSVTable.vue';
+import MetadataTable from '@/components/MetadataTable.vue'
 
 
 
 export default {
 
-    components:{MetadataSelection,Panel,Flag,CSVTable},
+    components:{MetadataSelection,Panel,Flag,MetadataTable},
 
     setup(){
       let {submitJob,apiError,apiResponse,done} = jobSubmission();
-
-      console.log(d3)
-
       return {submitJob,apiError,apiResponse,done};
     },
 
@@ -108,6 +108,38 @@ export default {
         selectedMember:{},
         usageFlags:{},
         showModal:false,
+        source:{
+          columns:[{field: 'name', header: 'API Name'},
+            {field: 'type', header: 'Metadata Type'},
+            {field: 'id', header: 'Id'},
+            {field: 'url', header: 'URL'}],
+          data:[
+            {
+              name:'My 2 Layout',
+              type:'Layout',
+              id:'004340546565',
+              url:'000406506050/salesforce.com'
+            },
+            {
+              name:'A My Layout',
+              type:'WebLink',
+              id:'4444',
+              url:'000406344506050/salesforce.com'
+            },
+            {
+              name:'A My 3 Layout',
+              type:'Layout',
+              id:'4444',
+              url:'000406344506050/salesforce.com'
+            },
+            {
+              name:'A My5  Layout',
+              type:'WebLink',
+              id:'44gggg44',
+              url:'000406344506050/salesforce.com'
+            }
+          ]
+        }
       }
     },
 

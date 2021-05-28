@@ -148,7 +148,7 @@ function getStandardFields(){
   let fieldsByObject = new Map();
 
   fieldsByObject.set('Opportunity',['StageName','Amount','CloseDate','IsClosed','ForecastCategory','HasOpportunityLineItem','Type','Probability','IsWon']);
-  fieldsByObject.set('Account',['Industry','AccountNumber','AnnualRevenue','IsPersonAccount']);
+  fieldsByObject.set('Account',['Industry','AccountNumber','AnnualRevenue','IsPersonAccount','Type']);
   fieldsByObject.set('Case',['ClosedDate','Origin','Priority','Status','Type']);
   fieldsByObject.set('Contact',['Birthdate','LeadSource']);
   fieldsByObject.set('Lead', ['LeadSource','Industry','Status']);
