@@ -6,28 +6,15 @@
     </template>
 
     <template v-slot:tip>
-      <p>Page Layout info <a @click.prevent="toggleModal">Learn more</a></p>
+
+      <p>Export all the fields, visualforce pages and buttons used in a page layout.</p>
 
       <Modal :is-active="showModal" @closeModal="toggleModal">
         <template v-slot:title>
           Page Layout
         </template>
         <template v-slot:content>
-          <h3>What is Impact Analysis?</h3>
-          <p>Your custom fields, apex classes and other types of metadata don't live in isolation. They are most likey used by other metadata types, for example:</p>
-          <ul>
-            <li>Custom fields are used by page layouts, apex classes, email templates, etc.</li>
-            <li>Email templates are used by workflow alerts or approval processes; or even apex.</li>
-            <li>Apex classes can be used by visualforce pages or apex triggers</li>
-          </ul>
-          <p>With this said, it's important to understand what is the impact of making changes to a particular piece of metadata.</p>
-          <h3>Use cases</h3>
-          <p>You can use this feature to answer questions like</p>
-          <ul>
-            <li>What reports will be impacted if I rename this picklist value?</li>
-            <li>I keep getting this email when an account is created, which workflow is sending the email template?</li>
-            <li>I'm converting custom labels into custom metadata types, how do I know where the labels are used?</li>
-          </ul>
+          placeholder
         </template>
       </Modal>
     </template>
@@ -67,11 +54,31 @@
     
     <template v-slot:results>
       
-      <MetadataTable :source="source"/>
+     
 
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
       <div v-if="!isLoading && apiResponse">
-       
+        <div class="is-flex is-flex-direction-row is-justify-content-flex-end mb-4">
+            <button @click="downloadXml(apiResponse)" class="button is-small is-warning">
+                    <span class="icon">
+                        <i class="fa fa-download"></i>
+                    </span>
+                    <span>Download package.xml</span>
+            </button>
+            <button @click="copyFile('excel',apiResponse)" class="button is-small is-warning ml-3">
+                <span class="icon">
+                    <i class="fa fa-copy"></i>
+                </span>
+                <span>Copy (Excel)</span>
+            </button>
+            <button @click="copyFile('csv',apiResponse)" class="button is-small is-warning ml-3">
+                <span class="icon">
+                    <i class="fa fa-copy"></i>
+                </span>
+                <span>Copy (csv)</span>
+            </button>
+        </div>
+        <MetadataTable :source="apiResponse.datatable" title="Metadata in Page Layout"/>
       </div>
       <Error v-if="!isLoading && apiError" :error="apiError"/> 
     </template>
@@ -89,8 +96,7 @@ import Panel from '@/components/Panel.vue'
 import Flag from '@/components/Flag.vue'
 import jobSubmission from '@/functions/jobSubmission'
 import MetadataTable from '@/components/MetadataTable.vue'
-
-
+import fileExports from '@/functions/fileExports'
 
 export default {
 
@@ -98,7 +104,8 @@ export default {
 
     setup(){
       let {submitJob,apiError,apiResponse,done} = jobSubmission();
-      return {submitJob,apiError,apiResponse,done};
+      let {copyFile,downloadXml} = fileExports();
+      return {submitJob,apiError,apiResponse,done,copyFile,downloadXml};
     },
 
    
@@ -107,39 +114,7 @@ export default {
         selectedType:'',
         selectedMember:{},
         usageFlags:{},
-        showModal:false,
-        source:{
-          columns:[{field: 'name', header: 'API Name'},
-            {field: 'type', header: 'Metadata Type'},
-            {field: 'id', header: 'Id'},
-            {field: 'url', header: 'URL'}],
-          data:[
-            {
-              name:'My 2 Layout',
-              type:'Layout',
-              id:'004340546565',
-              url:'000406506050/salesforce.com'
-            },
-            {
-              name:'A My Layout',
-              type:'WebLink',
-              id:'4444',
-              url:'000406344506050/salesforce.com'
-            },
-            {
-              name:'A My 3 Layout',
-              type:'Layout',
-              id:'4444',
-              url:'000406344506050/salesforce.com'
-            },
-            {
-              name:'A My5  Layout',
-              type:'WebLink',
-              id:'44gggg44',
-              url:'000406344506050/salesforce.com'
-            }
-          ]
-        }
+        showModal:false
       }
     },
 

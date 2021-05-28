@@ -7,19 +7,19 @@
                 </button>
             </div>
             <div>
-                <button @click="downloadXml" class="button is-small is-warning">
+                <button @click="downloadXml(apiResponse)" class="button is-small is-warning">
                     <span class="icon">
                         <i class="fa fa-download"></i>
                     </span>
                     <span>Download package.xml</span>
                 </button>
-                <button @click="copyFile('excel')" class="button is-small is-warning ml-3">
+                <button @click="copyFile('excel',apiResponse)" class="button is-small is-warning ml-3">
                     <span class="icon">
                         <i class="fa fa-copy"></i>
                     </span>
                     <span>Copy (Excel)</span>
                 </button>
-                <button @click="copyFile('csv')" class="button is-small is-warning ml-3">
+                <button @click="copyFile('csv',apiResponse)" class="button is-small is-warning ml-3">
                     <span class="icon">
                         <i class="fa fa-copy"></i>
                     </span>
@@ -47,8 +47,14 @@
 <script>
 
 import MetadataTree from '@/components/MetadataTree.vue';
+import fileExports from '@/functions/fileExports'
 
 export default {
+
+    setup(){
+      let {copyFile,downloadXml} = fileExports();
+      return {copyFile,downloadXml};
+    },
 
     components:{MetadataTree},
 
@@ -75,39 +81,6 @@ export default {
     methods:{
         toggleTree(){
             this.openTree = !this.openTree;
-        },
-
-        downloadXml(){
-
-            let hiddenLink = document.createElement('a');
-            hiddenLink.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.apiResponse.packageXml));
-            hiddenLink.setAttribute('download', `${this.apiResponse.entryPoint.name}-package.xml`);            
-            hiddenLink.style.display = 'none';
-
-            document.body.appendChild(hiddenLink);
-            hiddenLink.click();
-            document.body.removeChild(hiddenLink); 
-        },
-
-        copyFile(type){
-
-            if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
-                var textarea = document.createElement('textarea');
-                textarea.textContent = this.apiResponse[type];
-                textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in Microsoft Edge.
-                document.body.appendChild(textarea);
-                textarea.select();
-                try {
-                    return document.execCommand("copy");  // Security exception may be thrown by some browsers.
-                }
-                catch (ex) {
-                    console.warn("Copy to clipboard failed.", ex);
-                    return false;
-                }
-                finally {
-                    document.body.removeChild(textarea);
-                }
-            }
         },
 
         displayStats(stats,type){

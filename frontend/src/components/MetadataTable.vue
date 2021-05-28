@@ -8,7 +8,7 @@
             >
             <template #header>
                  <div class="p-d-flex p-jc-between p-ai-center">
-                    <h5 class="p-m-0">Metadata</h5>
+                    <h3 class="p-m-0">{{title}}</h3>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search" />
                         <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
@@ -23,8 +23,12 @@
             </template>
 
             <Column v-for="col in source.columns" :field="col.field" :header="col.header" :key="col.field"  style="min-width: 14rem">
+            
                 <template #body="{data}">
-                    {{data[col.field]}}
+
+                    <a v-if="col.field == 'name'" :href="data['url']" target="_blank" > {{data[col.field]}}</a>
+                    <span v-else>{{data[col.field]}}</span>
+
                 </template>
             </Column>
 
@@ -39,7 +43,7 @@ import {PrimeIcons} from 'primevue/api';
 
 export default {
 
-    props:['source'],
+    props:['source','title'],
 
     data(){
         return{

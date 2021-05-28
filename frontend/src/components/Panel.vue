@@ -29,6 +29,7 @@ export default {
 
     .message-body{
         border-color: $success-color;
+        padding-bottom: 1px;
     }
 
     header{
