@@ -60,6 +60,14 @@
             </span>
           </a>
           </router-link>
+          <a class="navbar-item" :href="orgUrl" target="_blank">
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fas fa-server"></i>
+              </span>
+              <span>Go to Org</span>
+            </span>
+          </a>
           <a  @click.prevent="logout" class="navbar-item">
             <span class="icon-text">
               <span class="icon">
@@ -88,6 +96,7 @@ export default {
       username:'',
       showMobileMenu:false,
       currentTab:'/dependencies',
+      orgUrl:''
     }
   },
 
@@ -101,6 +110,7 @@ export default {
     async getUserDetails(){
       let response = await fetch('/api/identity');
       let json = await response.json();
+      this.orgUrl = json.url;
       this.username = json.username;     
     },
 

@@ -1,40 +1,78 @@
 <template>
     <div v-if="apiResponseHasData">
-        <div class="is-flex is-flex-direction-row is-justify-content-space-between mb-4">
-            <div>
-                <button class="button is-small is-info" @click="toggleTree">
-                    {{treeControlLabel}}
-                </button>
-            </div>
-            <div>
-                <button @click="downloadXml(apiResponse)" class="button is-small is-warning">
-                    <span class="icon">
-                        <i class="fa fa-download"></i>
-                    </span>
-                    <span>Download package.xml</span>
-                </button>
-                <button @click="copyFile('excel',apiResponse)" class="button is-small is-warning ml-3">
-                    <span class="icon">
-                        <i class="fa fa-copy"></i>
-                    </span>
-                    <span>Copy (Excel)</span>
-                </button>
-                <button @click="copyFile('csv',apiResponse)" class="button is-small is-warning ml-3">
-                    <span class="icon">
-                        <i class="fa fa-copy"></i>
-                    </span>
-                    <span>Copy (csv)</span>
-                </button>
-            </div>
-        </div>
 
         <div class="notification is-warning is-light">
             <span v-html="resultsDescription"></span>
         </div>
-        <div class="canvas-container mt-5 mb-4 ml-3">
-            <canvas ref="stats"></canvas>
+
+        <div class="tabs is-boxed">
+            <ul>
+                <li :class="{'is-active':activeTab == 'tree'}">
+                    <a @click.prevent="activateTab('tree')">
+                        <span class="icon is-small"><i class="fas fa-sitemap" aria-hidden="true"></i></span>
+                        <span>Tree View</span>
+                    </a>
+                </li>
+                <li :class="{'is-active':activeTab == 'table'}">
+                    <a @click.prevent="activateTab('table')">
+                        <span class="icon is-small"><i class="fas fa-table" aria-hidden="true"></i></span>
+                        <span>Table View</span>
+                    </a>
+                </li>
+                <li :class="{'is-active':activeTab == 'chart'}">
+                    <a @click.prevent="activateTab('chart')">
+                        <span class="icon is-small"><i class="fas fa-chart-bar" aria-hidden="true"></i></span>
+                        <span>Chart View</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <MetadataTree :metadata="metadataTree" :parent-open="openTree"/> 
+
+        <div class="is-flex is-flex-direction-row is-justify-content-flex-end mb-4">
+            <button @click="downloadXml(apiResponse)" class="button is-small ">
+                <span class="icon" style="color:#f39c12;">
+                    <i class="fa fa-download"></i>
+                </span>
+                <span style="font-weight:500;">Download package.xml</span>
+            </button>
+            <button @click="copyFile('excel',apiResponse)" class="button is-small  ml-3">
+                <span class="icon" style="color:green">
+                    <i class="fas fa-file-excel"></i>
+                </span>
+                <span  style="font-weight:500;">Copy (Excel)</span>
+            </button>
+            <button @click="copyFile('csv',apiResponse)" class="button is-small  ml-3">
+                <span class="icon">
+                    <i class="fas fa-file-csv"></i>
+                </span>
+                <span  style="font-weight:500;">Copy (csv)</span>
+            </button>
+        </div>
+
+        <section v-show="activeTab == 'tree'">
+            <div class="is-flex is-flex-direction-row is-justify-content-space-between mb-4">
+                <div>
+                    <button class="button is-small is-info" @click="toggleTree">
+                        {{treeControlLabel}}
+                    </button>
+                </div>
+                
+            </div>
+
+            <MetadataTree :metadata="metadataTree" :parent-open="openTree"/> 
+            
+        </section>
+
+        <section v-show="activeTab == 'table'">
+            <MetadataTable :source="apiResponse.datatable" />
+        </section>
+
+        <section  v-show="activeTab == 'chart'">
+            <div class="canvas-container mt-5 mb-4 ml-3">
+                <canvas ref="stats"></canvas>
+            </div>
+        </section>
+
     </div>
     <div v-else>
         <div class="notification is-warning is-light">
@@ -48,6 +86,7 @@
 
 import MetadataTree from '@/components/MetadataTree.vue';
 import fileExports from '@/functions/fileExports'
+import MetadataTable from '@/components/MetadataTable.vue'
 
 export default {
 
@@ -56,14 +95,15 @@ export default {
       return {copyFile,downloadXml};
     },
 
-    components:{MetadataTree},
+    components:{MetadataTree,MetadataTable},
 
     props:['metadataTree','apiResponse'],
 
     data(){
         return{
             openTree:false,
-            barChart:undefined
+            barChart:undefined,
+            activeTab:'tree'
         }
     },
 
@@ -83,7 +123,13 @@ export default {
             this.openTree = !this.openTree;
         },
 
+        activateTab(tab){
+            this.activeTab = tab;
+        },
+
         displayStats(stats,type){
+
+            console.log('called chart')
 
             //remove the contents of the previously initialized chart
             if(this.barChart){

@@ -205,7 +205,7 @@ apiRouter.route('/identity')
             if(!req.session.identity){
 
                 let oauthInfo = req.session.oauthInfo;
-
+                
                 let json = await getIdentity(oauthInfo.id,oauthInfo.access_token);
 
                 let env = oauthInfo.id.includes('test.salesforce.com') ? 'Sandbox' : 'Production';
@@ -215,6 +215,7 @@ apiRouter.route('/identity')
                     name:json.display_name,
                     orgId:json.organization_id,
                     userId:json.user_id,
+                    url:oauthInfo.instance_url,
                     env
                 }
             }

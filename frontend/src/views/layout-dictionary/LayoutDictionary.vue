@@ -59,26 +59,26 @@
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
       <div v-if="!isLoading && apiResponse">
         <div class="is-flex is-flex-direction-row is-justify-content-flex-end mb-4">
-            <button @click="downloadXml(apiResponse)" class="button is-small is-warning">
-                    <span class="icon">
-                        <i class="fa fa-download"></i>
-                    </span>
-                    <span>Download package.xml</span>
-            </button>
-            <button @click="copyFile('excel',apiResponse)" class="button is-small is-warning ml-3">
-                <span class="icon">
-                    <i class="fa fa-copy"></i>
+            <button @click="downloadXml(apiResponse)" class="button is-small ">
+                <span class="icon" style="color:#f39c12;">
+                    <i class="fa fa-download"></i>
                 </span>
-                <span>Copy (Excel)</span>
+                <span style="font-weight:500;">Download package.xml</span>
             </button>
-            <button @click="copyFile('csv',apiResponse)" class="button is-small is-warning ml-3">
-                <span class="icon">
-                    <i class="fa fa-copy"></i>
+            <button @click="copyFile('excel',apiResponse)" class="button is-small  ml-3">
+                <span class="icon" style="color:green">
+                    <i class="fas fa-file-excel"></i>
                 </span>
-                <span>Copy (csv)</span>
+                <span  style="font-weight:500;">Copy (Excel)</span>
+            </button>
+            <button @click="copyFile('csv',apiResponse)" class="button is-small  ml-3">
+                <span class="icon">
+                    <i class="fas fa-file-csv"></i>
+                </span>
+                <span  style="font-weight:500;">Copy (csv)</span>
             </button>
         </div>
-        <MetadataTable :source="apiResponse.datatable" title="Metadata in Page Layout"/>
+        <MetadataTable :source="apiResponse.datatable" />
       </div>
       <Error v-if="!isLoading && apiError" :error="apiError"/> 
     </template>
