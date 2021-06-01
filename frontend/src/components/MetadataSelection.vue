@@ -1,9 +1,9 @@
 <template>
     <section>
         <div class="field">
-            <label class="label">Metadata Type</label>
+            <label class="label label-size">Metadata Type</label>
             <div class="control has-icons-left">
-            <div class="select" >
+            <div class="select is-small" >
                 <select v-model="selectedType" @change="getMembers" :disabled="isLoading">
                 <option value="" disabled selected hidden>Select...</option>
                 <option  v-for="type in types" :key="type.label" :value="type.value" :ref="type.value">
@@ -22,7 +22,7 @@
         </div>
         <Error v-if="!isLoading && apiError" :error="apiError"/>
         <div class="field">
-            <label class="label">Metadata Name</label>
+            <label class="label label-size">Metadata Name</label>
             <div class="control">
             <Autocomplete
             :key="selectedType"
@@ -37,11 +37,11 @@
 
         <div class="field">
             <div class="control">
-                <button @click="emitSubmit" class="button is-success" :disabled="isLoading || !isFormValid">
+                <button @click="emitSubmit" class="button is-info is-small" :disabled="isLoading || !isFormValid">
                 <span class="icon">
                     <i class="fas fa-search"></i>
                 </span>
-                <span>{{buttonLabel}}</span>
+                <span style="font-weight:500;">{{buttonLabel}}</span>
                 </button>
             </div>
         </div>
@@ -150,6 +150,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 
     section{
         max-width: 362px;

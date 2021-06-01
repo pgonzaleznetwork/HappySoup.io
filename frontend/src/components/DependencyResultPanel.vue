@@ -28,31 +28,15 @@
             </ul>
         </div>
 
-        <div class="is-flex is-flex-direction-row is-justify-content-flex-end mb-4">
-            <button @click="downloadXml(apiResponse)" class="button is-small ">
-                <span class="icon" style="color:#f39c12;">
-                    <i class="fa fa-download"></i>
-                </span>
-                <span style="font-weight:500;">Download package.xml</span>
-            </button>
-            <button @click="copyFile('excel',apiResponse)" class="button is-small  ml-3">
-                <span class="icon" style="color:green">
-                    <i class="fas fa-file-excel"></i>
-                </span>
-                <span  style="font-weight:500;">Copy (Excel)</span>
-            </button>
-            <button @click="copyFile('csv',apiResponse)" class="button is-small  ml-3">
-                <span class="icon">
-                    <i class="fas fa-file-csv"></i>
-                </span>
-                <span  style="font-weight:500;">Copy (csv)</span>
-            </button>
-        </div>
+        <FileDownloadButtons @xml="downloadXml(apiResponse)"
+            @excel="copyFile('excel',apiResponse)"
+            @csv="copyFile('csv',apiResponse)"
+         />
 
         <section v-show="activeTab == 'tree'">
             <div class="is-flex is-flex-direction-row is-justify-content-space-between mb-4">
                 <div>
-                    <button class="button is-small is-info" @click="toggleTree">
+                    <button class="button is-small is-info is-light" @click="toggleTree">
                         {{treeControlLabel}}
                     </button>
                 </div>
@@ -87,6 +71,7 @@
 import MetadataTree from '@/components/MetadataTree.vue';
 import fileExports from '@/functions/fileExports'
 import MetadataTable from '@/components/MetadataTable.vue'
+import FileDownloadButtons from '@/components/FileDownloadButtons.vue'
 
 export default {
 
@@ -95,7 +80,7 @@ export default {
       return {copyFile,downloadXml};
     },
 
-    components:{MetadataTree,MetadataTable},
+    components:{MetadataTree,MetadataTable,FileDownloadButtons},
 
     props:['metadataTree','apiResponse'],
 

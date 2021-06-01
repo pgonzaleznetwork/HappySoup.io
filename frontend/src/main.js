@@ -13,7 +13,7 @@ import router from './router'
 import { createStore } from 'vuex'
 import TableLite from "vue3-table-lite";
 import PrimeVue from 'primevue/config';
-
+import VueCookies from 'vue3-cookies'
 
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -53,6 +53,6 @@ app.component('MultiSelect',MultiSelect)
 
 app.use(router);
 app.use(PrimeVue);
-
+app.use(VueCookies);
 
 app.mount('#app')

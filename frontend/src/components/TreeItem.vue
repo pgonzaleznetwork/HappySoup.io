@@ -7,7 +7,7 @@
         <span v-if="!isOpen" class="icon">
             <i class="fas fa-folder"></i>
         </span>
-        <span class="type" @click="toggle">{{type}} <span style="font-size:14px">({{members.length}})</span> </span>
+        <span class="type" @click="toggle">{{type}} <span class="text-size">({{members.length}})</span> </span>
     </span>
   </div>
   <li v-if="isOpen" v-for="member in members" :key="member.id">
@@ -85,7 +85,7 @@ export default {
     }
 
     .fa-folder, .fa-folder-open{
-        color:#f39c12;
+        color:$folder-color;
     }   
 
     li{

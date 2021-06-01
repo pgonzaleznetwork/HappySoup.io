@@ -23,6 +23,7 @@
     "vue-pagination-3": "2.0.0-beta01",
     "vue-router": "^4.0.0-0",
     "vue-tables-3": "2.0.1-beta05",
+    "vue3-cookies": "1.0.1",
     "vue3-table-lite": "1.0.5",
     "vuex": "4.0.0"
   },

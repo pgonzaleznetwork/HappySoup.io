@@ -27,6 +27,7 @@
                 <template #body="{data}">
 
                     <a v-if="col.field == 'name'" :href="data['url']" target="_blank" > {{data[col.field]}}</a>
+                    <Pill v-else-if="col.field == 'attributes'" v-for="pill in data.pills" :pill="pill"/>
                     <span v-else>{{data[col.field]}}</span>
 
                 </template>
@@ -40,8 +41,11 @@
 import { ref, onMounted } from "vue";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
 import {PrimeIcons} from 'primevue/api';
+import Pill from '@/components/Pill.vue'
 
 export default {
+
+    components:{Pill},
 
     props:['source','title'],
 
@@ -56,6 +60,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.p-datatable-metadata{
+     @extend .text-size;
+}
 
 
 img {
@@ -88,7 +96,7 @@ img {
     .p-datatable-header {
         padding: 1rem;
         text-align: left;
-        font-size: 1.5rem;
+       
     }
 
     .p-paginator {

@@ -53,7 +53,7 @@
           <div v-if="flags?.length" style="margin-left: 50px;">
             <div >
               <div class="has-text-weight-bold" style="margin-bottom:10px;">
-                Choose your toppings
+                <span class="label-size">Choose your toppings</span> 
               </div>
               <Flag v-for="flag in flags" :label="flag.label" :value="flag.value" :description="flag.description" @ticked="setFlag"/>
             </div>

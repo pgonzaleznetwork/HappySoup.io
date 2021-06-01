@@ -3,7 +3,7 @@
         <div class="control">
             <label class="checkbox">
             <input type="checkbox" v-model="ticked" @change="notify">
-            <span style="margin-left:5px; font-size:14px;" >{{label}}</span> <span class="has-tooltip-arrow has-tooltip-info has-tooltip-right" :data-tooltip="description">
+            <span class="tag-label">{{label}}</span> <span class="has-tooltip-arrow has-tooltip-info has-tooltip-right" :data-tooltip="description">
                 <i class="far fa-question-circle"></i></span>
             </label>
         </div>
@@ -32,6 +32,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+
+    .tag-label{
+        margin-left:5px;
+        @extend .text-size
+    }
 
 </style>

@@ -18,7 +18,8 @@ export default {
 
   computed:{
     showNavBar(){
-      return (this.$router.currentRoute.value.name != 'Login');
+      let route = this.$router.currentRoute.value.name;
+      return (route != 'Login' && route != 'NotFound');
     },
 
     currentPath(){

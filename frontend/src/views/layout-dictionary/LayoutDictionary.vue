@@ -37,47 +37,21 @@
               button-label="Create Dictionary"/>
             </div>
           </div>
-          <div v-if="flags?.length" style="margin-left: 50px;">
-            <div >
-              <div class="has-text-weight-bold" style="margin-bottom:10px;">
-                Choose your toppings
-              </div>
-              <Flag v-for="flag in flags" :label="flag.label" :value="flag.value" :description="flag.description" @ticked="setFlag"/>
-            </div>
-          </div>
-
         </div>
       </div>
       
     </template>
-
     
     <template v-slot:results>
       
-     
-
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
       <div v-if="!isLoading && apiResponse">
-        <div class="is-flex is-flex-direction-row is-justify-content-flex-end mb-4">
-            <button @click="downloadXml(apiResponse)" class="button is-small ">
-                <span class="icon" style="color:#f39c12;">
-                    <i class="fa fa-download"></i>
-                </span>
-                <span style="font-weight:500;">Download package.xml</span>
-            </button>
-            <button @click="copyFile('excel',apiResponse)" class="button is-small  ml-3">
-                <span class="icon" style="color:green">
-                    <i class="fas fa-file-excel"></i>
-                </span>
-                <span  style="font-weight:500;">Copy (Excel)</span>
-            </button>
-            <button @click="copyFile('csv',apiResponse)" class="button is-small  ml-3">
-                <span class="icon">
-                    <i class="fas fa-file-csv"></i>
-                </span>
-                <span  style="font-weight:500;">Copy (csv)</span>
-            </button>
-        </div>
+
+        <FileDownloadButtons @xml="downloadXml(apiResponse)"
+            @excel="copyFile('excel',apiResponse)"
+            @csv="copyFile('csv',apiResponse)"
+         />
+
         <MetadataTable :source="apiResponse.datatable" />
       </div>
       <Error v-if="!isLoading && apiError" :error="apiError"/> 
@@ -97,10 +71,11 @@ import Flag from '@/components/Flag.vue'
 import jobSubmission from '@/functions/jobSubmission'
 import MetadataTable from '@/components/MetadataTable.vue'
 import fileExports from '@/functions/fileExports'
+import FileDownloadButtons from '@/components/FileDownloadButtons.vue'
 
 export default {
 
-    components:{MetadataSelection,Panel,Flag,MetadataTable},
+    components:{MetadataSelection,Panel,Flag,MetadataTable,FileDownloadButtons},
 
     setup(){
       let {submitJob,apiError,apiResponse,done} = jobSubmission();

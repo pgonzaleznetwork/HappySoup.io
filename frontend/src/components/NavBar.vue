@@ -1,5 +1,5 @@
 <template>
-  <div class="hero">
+  <div class="nav-container">
   <section class="container">
      <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
@@ -15,26 +15,30 @@
   <div class="navbar-menu" :class="{'is-active':showMobileMenu}">
     <div class="navbar-start">
       
-      <a  class="navbar-item" @click="moveTo('/dependencies')">
-        Impact Analysis 
+
+      <a class="navbar-item" @click="moveTo('/dependencies')" :class="{'active-tab':currentTab == '/dependencies'}">
+          <span class="icon">
+          <i class="fas fa-sitemap"></i>
+          </span>
+          <span style="margin-left:10px">Impact Analysis </span>
       </a>
+
+      <a  class="navbar-item"  @click="moveTo('/boundaries')" :class="{'active-tab':currentTab == '/boundaries'}">
+        <span class="icon">
+        <i class="fas fa-code-branch"></i>
+        </span>
+        <span style="margin-left:10px">Deployment Boundaries </span>
+      </a>
+
+      <a  class="navbar-item"  @click="moveTo('/layout-dictionary')" :class="{'active-tab':currentTab == '/layout-dictionary'}">
+        <span class="icon">
+        <i class="fas fa-book"></i>
+        </span>
+        <span style="margin-left:10px">Page Layout Dictionary </span> 
+      </a>
+
       
 
-      <a  class="navbar-item"  @click="moveTo('/boundaries')">
-        Deployment Boundaries
-      </a>
-
-      <a  class="navbar-item"  @click="moveTo('/layout-dictionary')">
-        Page Layout Dictionary 
-      </a>
-
-      <a  class="navbar-item"  @click="moveTo('/apex-bio')">
-        Apex Bio 
-      </a>
-
-      <a class="navbar-item">
-        Documentation
-      </a>
     </div>
 
     <div class="navbar-end">
@@ -120,6 +124,7 @@ export default {
 
     moveTo(path){
       this.$router.push(path);
+      this.currentTab = path;
       //hide mobile menu
       if(this.showMobileMenu){
         this.showMobileMenu = false;
@@ -143,23 +148,39 @@ export default {
 
 <style lang="scss">
 
-.hero{
+.nav-container{
 
   background-color: $background-color;
 
-  .navbar-item{
+  .navbar{
+    background-color: $background-color;
+  }
+
+  .navbar-item,.navbar-burger{
       color:white;
     }
   
   .navbar-item:hover{
-    background-color: #243a4a;
+    background-color: #111b22;
     color:white;
   }
+
+  
+}
+
+@media screen and (max-width: 1023px){
+
+  .navbar-menu {
+      background-color: $background-color;
+      box-shadow: 0 8px 16px rgb(10 10 10 / 10%);
+      padding: 0.5rem 0;
+  }
+
 }
 
 
-.prod-warning{
-  background-color: red  !important;
+.active-tab{
+  background-color: #111b22;
 }
 
 .navbar-item{
