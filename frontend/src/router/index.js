@@ -7,48 +7,43 @@ import LayoutDictionary from '../views/layout-dictionary/LayoutDictionary.vue';
 import ApexBio from '../views/apex-bio/ApexBio.vue';
 import NotFound from '../views/not-found/NotFound.vue';
 
-function requireAuth(to,from,next){
-  console.log(this);
-  console.log(this.$cookies.get('_ga'))
-  next();
-}
-
-
-
 const routes = [
   {
     path: '/',
     name: 'Login',
     component: Login,
-    beforeEnter:requireAuth
   },
   {
     path: '/dependencies',
     name: 'Dependencies',
     component: Dependencies,
-    
+    beforeEnter:requireAuth
   },
   {
     path: '/boundaries',
     name: 'Boundaries',
     component: Boundaries,
+    beforeEnter:requireAuth
     
   },
   {
     path: '/layout-dictionary',
     name: 'LayoutDictionary',
     component: LayoutDictionary,
+    beforeEnter:requireAuth
     
   },
   {
     path: '/apex-bio',
     name: 'ApexBio',
-    component: ApexBio
+    component: ApexBio,
+    beforeEnter:requireAuth
   },
   {
     path: '/configure',
     name: 'Configure',
-    component: Configure
+    component: Configure,
+    beforeEnter:requireAuth
   },
   {
     path: '/:catchAll(.*)',
@@ -62,25 +57,19 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to,from,next) => {
-  console.log(router.app);
-});
+function requireAuth(to, from, next) {
+  const { $cookies } = router.app.config.globalProperties
 
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  console.log('decoded',document.cookie)
-  var ca = decodedCookie.split(';');
-  for(var i = 0; i <ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
+  if(!$cookies.get('connect.sid')){
+    next('/?logout=true')
   }
-  return "";
+  else{
+    next()
+  }
+
+
 }
+
+
 
 export default router

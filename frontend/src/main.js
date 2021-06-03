@@ -50,7 +50,7 @@ app.component('ProgressBar',ProgressBar)
 app.component('Button',Button)
 app.component('MultiSelect',MultiSelect)
 
-
+router.app = app;
 app.use(router);
 app.use(PrimeVue);
 app.use(VueCookies);
