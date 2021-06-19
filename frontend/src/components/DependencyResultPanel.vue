@@ -25,6 +25,12 @@
                         <span>Chart View</span>
                     </a>
                 </li>
+                <li v-if="apiResponse.utilization" :class="{'is-active':activeTab == 'utilization'}">
+                    <a @click.prevent="activateTab('utilization')">
+                        <span class="icon is-small"><i class="fas fa-chart-pie" aria-hidden="true"></i></span>
+                        <span>Field Utilization</span>
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -54,6 +60,15 @@
         <section  v-show="activeTab == 'chart'">
             <div class="canvas-container mt-5 mb-4 ml-3">
                 <canvas ref="stats"></canvas>
+            </div>
+        </section>
+
+        <section  v-show="activeTab == 'utilization'">
+            <p><span class="font-weight-500">Total number of records: </span>{{apiResponse.utilization.totalRecords.toLocaleString()}}</p>
+            <p><span class="font-weight-500">Total number of records populated: </span>{{apiResponse.utilization.totalRecordsPopulated.toLocaleString()}}</p>
+            <p><span class="font-weight-500">Percentage Populated: </span>{{apiResponse.utilization.percentagePopulated}}%</p>
+            <div class="canvas-container mt-5 mb-4 ml-3">
+                <canvas ref="utilizationCanvas"></canvas>
             </div>
         </section>
 
@@ -87,19 +102,16 @@ export default {
     data(){
         return{
             openTree:false,
-            barChart:undefined,
+            statsChart:undefined,
+            utilizationChart:undefined,
             activeTab:'tree'
         }
     },
 
     mounted(){
         this.displayStats(this.apiResponse.stats,'usage');
-    },
-
-    watch: {
-        
-        apiResponse: function (newValue, oldValue) {
-            this.displayStats(newValue.stats,'usage');
+        if(this.apiResponse.utilization){
+            this.displayUtilization(this.apiResponse.utilization);
         }
     },
 
@@ -114,11 +126,11 @@ export default {
 
         displayStats(stats,type){
 
-            console.log('called chart')
+            console.log('calling display status');
 
             //remove the contents of the previously initialized chart
-            if(this.barChart){
-                this.barChart.destroy();
+            if(this.statsChart){
+                this.statsChart.destroy();
             }
 
             let availableBackgroundColors = [
@@ -152,7 +164,7 @@ export default {
 
             let label = (type === 'usage' ? '# of Metadata Types using it' : '# of Metadata Types required for deployment');
 
-            this.barChart = new Chart(ctx, {
+            this.statsChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: chartLabels,
@@ -174,6 +186,66 @@ export default {
                                 display:false
                             }  
                         }]
+                    }
+                }
+            }); 
+        },
+
+         displayUtilization(utilization){
+
+             console.log(utilization)
+
+            //remove the contents of the previously initialized chart
+            if(this.utilizationChart){
+                this.utilizationChart.destroy();
+            }
+
+            let availableBackgroundColors = [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ];
+            let chartLabels = [];
+            let chartValues = [];
+
+            for (const key in utilization.recordTypeCount) {
+                chartLabels.push(key);
+                chartValues.push(utilization.recordTypeCount[key]);
+            }
+
+            let backgroundColors = [];
+
+            chartLabels.forEach(val => {
+                let randomValue = availableBackgroundColors[Math.floor(Math.random() * availableBackgroundColors.length)]; 
+                backgroundColors.push(randomValue);
+            })
+
+            let utilizationCanvas = this.$refs.utilizationCanvas;
+
+            if(!utilizationCanvas) return;
+
+            let ctx = utilizationCanvas.getContext('2d');
+
+            let label = 'Field Utilization by Record Type'
+
+            this.utilizationChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: label,
+                        data: chartValues,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 2
+                    }]
+                },
+                options:{
+                    title: {
+                        display: true,
+                        text: `${utilization.field} utilization`
                     }
                 }
             }); 

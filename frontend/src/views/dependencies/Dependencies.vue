@@ -157,6 +157,11 @@ export default {
               label:'Field in metadata types',
               value:'fieldInMetadataTypes',
               description:'Show whether the field is referenced in the FieldDefinition fields of Custom Metadata Types'
+            },
+            {
+              label:'Field population by record type',
+              value:'fieldUtilization',
+              description:'Show in how many records the field is popuated, broken down by record type'
             }
           ]
         }

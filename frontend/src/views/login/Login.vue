@@ -31,6 +31,7 @@ export default {
 
   mounted(){
     console.log('login view is mounted');
+    this.$router.push('/dependencies');
   
   }
 }

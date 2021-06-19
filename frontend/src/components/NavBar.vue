@@ -108,18 +108,24 @@ export default {
     
     async logout(){
       await fetch('/oauth2/logout');
+      this.deleteSessionCookie();
       this.$router.push('/');
     },
 
     async getUserDetails(){
       let response = await fetch('/api/identity');
-      let json = await response.json();
-      this.orgUrl = json.url;
-      this.username = json.username;     
+      let {url,username} = await response.json();
+      this.orgUrl = url;
+      this.username = username;     
     },
 
     toggleMobileMenu(){
       this.showMobileMenu = !this.showMobileMenu;
+    },
+
+    deleteSessionCookie(){
+      const { $cookies } = this.$router.app.config.globalProperties;
+      $cookies.remove('connect.sid');
     },
 
     moveTo(path){

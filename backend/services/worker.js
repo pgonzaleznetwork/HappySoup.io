@@ -33,6 +33,9 @@ function start() {
         case 'USAGE':
           result = await jobs.usageJob(job);
             break;
+        case 'UTILIZATION':
+          result = await jobs.utilizationJob(job);
+          break;
     }
 
     // A job can return values that will be stored in Redis as JSON
