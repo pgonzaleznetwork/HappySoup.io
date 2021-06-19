@@ -165,6 +165,15 @@ export default {
             }
           ]
         }
+        else  if(this.selectedType == 'StandardField'){
+
+          return [{
+              label:'Field population by record type',
+              value:'fieldUtilization',
+              description:'Show in how many records the field is popuated, broken down by record type'
+            }]
+
+        }
         else if(this.selectedType == 'ApexClass'){
           return [
             {
