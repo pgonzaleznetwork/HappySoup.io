@@ -105,7 +105,7 @@ async function usageJob(job){
         response.utilization = await getUsageMetrics(connection,entryPoint.name);
       } catch (error) {
         response.utilization = {
-          error:`Error when calculating field utilization: ${error}`
+          error
         }
       }
     }

@@ -63,13 +63,22 @@
             </div>
         </section>
 
-        <section  v-show="activeTab == 'utilization'">
-            <p><span class="font-weight-500">Total number of records: </span>{{apiResponse.utilization.totalRecords.toLocaleString()}}</p>
-            <p><span class="font-weight-500">Total number of records populated: </span>{{apiResponse.utilization.totalRecordsPopulated.toLocaleString()}}</p>
-            <p><span class="font-weight-500">Percentage Populated: </span>{{apiResponse.utilization.percentagePopulated}}%</p>
-            <div class="canvas-container mt-5 mb-4 ml-3">
-                <canvas ref="utilizationCanvas"></canvas>
-            </div>
+        <section v-show="activeTab == 'utilization' && apiResponse.utilization">
+
+                <section v-if="apiResponse.utilization && !apiResponse.utilization.error">
+                    <p><span class="font-weight-500">Total number of records: </span>{{apiResponse.utilization.totalRecords.toLocaleString()}}</p>
+                    <p><span class="font-weight-500">Total number of records populated: </span>{{apiResponse.utilization.totalRecordsPopulated.toLocaleString()}}</p>
+                    <p><span class="font-weight-500">Percentage Populated: </span>{{apiResponse.utilization.percentagePopulated}}%</p>
+                </section>
+
+                <div class="canvas-container mt-5 mb-4 ml-3">
+                    <canvas ref="utilizationCanvas"></canvas>
+                </div>
+                      
+        </section>
+
+        <section v-if="activeTab == 'utilization' && apiResponse.utilization?.error">
+            <Error  :error="apiResponse.utilization.error"/> 
         </section>
 
     </div>
@@ -126,7 +135,7 @@ export default {
 
         displayStats(stats,type){
 
-            console.log('calling display status');
+            console.log('calling displayStats');
 
             //remove the contents of the previously initialized chart
             if(this.statsChart){
@@ -193,7 +202,7 @@ export default {
 
          displayUtilization(utilization){
 
-             console.log(utilization)
+             if(!this.apiResponse.utilization || this.apiResponse.utilization?.error) return;
 
             //remove the contents of the previously initialized chart
             if(this.utilizationChart){
@@ -225,7 +234,11 @@ export default {
 
             let utilizationCanvas = this.$refs.utilizationCanvas;
 
+            console.log('creating usage chart before exit')
+
             if(!utilizationCanvas) return;
+
+            console.log('creating usage chart')
 
             let ctx = utilizationCanvas.getContext('2d');
 
