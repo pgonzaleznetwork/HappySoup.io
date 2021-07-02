@@ -65,12 +65,8 @@
 
         <section v-show="activeTab == 'utilization' && apiResponse.utilization">
 
-                <section v-if="apiResponse.utilization && !apiResponse.utilization.error">
-                    <p><span class="font-weight-500">Total number of records: </span>{{apiResponse.utilization.totalRecords.toLocaleString()}}</p>
-                    <p><span class="font-weight-500">Total number of records populated: </span>{{apiResponse.utilization.totalRecordsPopulated.toLocaleString()}}</p>
-                    <p><span class="font-weight-500">Percentage Populated: </span>{{apiResponse.utilization.percentagePopulated}}%</p>
-                </section>
-
+                <Utilization :data="apiResponse.utilization"/>
+                
                 <div class="canvas-container mt-5 mb-4 ml-3">
                     <canvas ref="utilizationCanvas"></canvas>
                 </div>
@@ -93,6 +89,7 @@
 <script>
 
 import MetadataTree from '@/components/MetadataTree.vue';
+import Utilization from '@/components/Utilization.vue';
 import fileExports from '@/functions/fileExports'
 import MetadataTable from '@/components/MetadataTable.vue'
 import FileDownloadButtons from '@/components/FileDownloadButtons.vue'
@@ -104,7 +101,7 @@ export default {
       return {copyFile,downloadXml};
     },
 
-    components:{MetadataTree,MetadataTable,FileDownloadButtons},
+    components:{MetadataTree,MetadataTable,FileDownloadButtons,Utilization},
 
     props:['metadataTree','apiResponse'],
 
