@@ -74,7 +74,7 @@ export default {
     },
 
     async beforeMount(){
-        let res = await fetch('/api/supportedtypes');
+        let res = await fetch('/api/metadata');
         let types = await res.json();
 
         if(this.filter){
@@ -132,10 +132,23 @@ export default {
         },
 
         async getMembers(){
+
+            let data = {
+                metadataType:this.selectedType
+            }
+
+            let fetchOptions = {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
             
             this.done = false;
             this.$emit('typeSelected',this.selectedType);            
-            this.submitJob(`/api/metadata?mdtype=${this.selectedType}`);
+            this.submitJob(`/api/metadata`,fetchOptions);
 
         },
 

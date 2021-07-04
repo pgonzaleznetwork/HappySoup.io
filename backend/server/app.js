@@ -43,7 +43,7 @@ app.use((req,res,next) => {
   }  
 });
 
-app.use('/api',require('../routes/apiRouter'));
+app.use('/api',require('../routes/api/router'));
 app.use(express.static(path.join(__dirname, '../../frontend2/public'),{extensions: ['html', 'htm']}));
 
 
