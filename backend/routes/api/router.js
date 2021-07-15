@@ -23,6 +23,8 @@ let corsOptions = {
 const apiRouter = express.Router();
 apiRouter.use(parser.json());
 
+/********************** /metadata ENDPOINT ****************************************/
+
 apiRouter.route('/metadata')
 
 .get(
@@ -40,17 +42,18 @@ apiRouter.route('/metadata')
 );
 
 
-apiRouter.route('/dependencies')
+/********************** /boundaries ENDPOINT ****************************************/
+
+apiRouter.route('/boundaries')
 
 
-.get(
+.post(
     cors(corsOptions),
     sessionValidation.validateSessions,
-    validateParams,
-    require('./functions/submitDependencyJob')
+    require('./functions/submitBoundaryJob')
 )
 
-//any other method on dependencies/ is blocked
+//any other method on boundaries/ is blocked
 .all(
     (req,res,next) => {
         let metadataId = req.params.metadataId;
@@ -58,13 +61,13 @@ apiRouter.route('/dependencies')
     }
 );
 
+/********************** /usage ENDPOINT ****************************************/
+
 apiRouter.route('/usage')
 
-
-.get(
+.post(
     cors(corsOptions),
     sessionValidation.validateSessions,
-    validateParams,
     require('./functions/submitUsageJob')
 )
 
@@ -76,10 +79,11 @@ apiRouter.route('/usage')
     }
 );
 
+/********************** /cache ENDPOINT ****************************************/
 
-apiRouter.route('/deletecache')
+apiRouter.route('/cache')
 
-.get(
+.delete(
     cors(corsOptions),
     sessionValidation.validateSessions,
     async (req,res,next) => {
@@ -88,6 +92,8 @@ apiRouter.route('/deletecache')
         res.sendStatus(200);
     }
 );
+
+/********************** /oauthinfo ENDPOINT ****************************************/
 
 apiRouter.route('/oauthinfo/clientid')
 
@@ -98,15 +104,8 @@ apiRouter.route('/oauthinfo/clientid')
     }
 );
 
-apiRouter.route('/oauthinfo/instanceurl')
 
-.get(
-    cors(corsOptions),
-    sessionValidation.validateSessions,
-    async (req,res,next) => {
-        res.status(200).json(req.session.oauthInfo.instance_url);
-    }
-);
+/********************** /identity ENDPOINT ****************************************/
 
 apiRouter.route('/identity')
 
@@ -179,40 +178,6 @@ function isSupported(type){
     let supportedTypes = require('./functions/getMetadataTypes')().map(type => type.value);
 
     return (supportedTypes.indexOf(type) != -1);
-}
-
-
-function validateParams(req,res,next){
-
-    let path = req.path;
-
-    if(path == '/usage' || path == '/dependencies'){
-
-        let {name,id,type} = req.query;
-
-        if(!name || !id || !type){
-            throw new ErrorHandler(404,'Invalid parameters','Invalid parameters on dependency API');
-        }else{
-            if(!isSupported(type)){
-                throw new ErrorHandler(404,'Unsupported type','Unsupported type on dependency API');
-            }
-            if(name === ''){
-                throw new ErrorHandler(404,'Invalid name','Invalid name on dependency API');
-            }
-        }
-    }
-
-    if(path == '/metadata'){
-
-        let type = req.query.mdtype;
-
-        if(!isSupported(type)){
-            throw new ErrorHandler(404,'Unsupported type','Unsupported type on dependency API');
-        }
-    }
-
-    next();
-
 }
 
 

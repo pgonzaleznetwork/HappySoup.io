@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/login/Login.vue';
-import Dependencies from '../views/dependencies/Dependencies.vue';
+import Usage from '../views/usage/Usage.vue';
 import Configure from '../views/configure/Configure.vue';
 import Boundaries from '../views/boundaries/Boundaries.vue';
 import LayoutDictionary from '../views/layout-dictionary/LayoutDictionary.vue';
@@ -14,9 +14,9 @@ const routes = [
     component: Login,
   },
   {
-    path: '/dependencies',
-    name: 'Dependencies',
-    component: Dependencies,
+    path: '/usage',
+    name: 'Usage',
+    component: Usage,
     beforeEnter:requireAuth
   },
   {

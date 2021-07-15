@@ -3,10 +3,10 @@ import '@/assets/main.scss';
 import '@/assets/bulma-tooltip.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
-import TreeItem from '@/components/TreeItem.vue';
-import MetadataTree from '@/components/MetadataTree.vue';
-import Error from '@/components/Error';
-import Modal from '@/components/Modal';
+import TreeItem from '@/components/metadata-visualization/TreeItem.vue';
+import MetadataTree from '@/components/metadata-visualization/MetadataTree.vue';
+import Error from '@/components/ui/Error';
+import Modal from '@/components/ui/Modal';
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'

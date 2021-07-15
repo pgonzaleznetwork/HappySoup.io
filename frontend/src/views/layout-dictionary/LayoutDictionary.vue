@@ -65,13 +65,13 @@
 <script>
 
 
-import MetadataSelection from '@/components/MetadataSelection.vue';
-import Panel from '@/components/Panel.vue'
-import Flag from '@/components/Flag.vue'
+import MetadataSelection from '@/components/metadata-visualization/MetadataSelection.vue';
+import Panel from '@/components/ui/Panel.vue'
+import Flag from '@/components/ui/Flag.vue'
 import jobSubmission from '@/functions/jobSubmission'
-import MetadataTable from '@/components/MetadataTable.vue'
+import MetadataTable from '@/components/metadata-visualization/MetadataTable.vue'
 import fileExports from '@/functions/fileExports'
-import FileDownloadButtons from '@/components/FileDownloadButtons.vue'
+import FileDownloadButtons from '@/components/metadata-visualization/FileDownloadButtons.vue'
 
 export default {
 

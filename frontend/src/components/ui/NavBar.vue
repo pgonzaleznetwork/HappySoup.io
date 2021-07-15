@@ -16,7 +16,7 @@
     <div class="navbar-start">
       
 
-      <a class="navbar-item" @click="moveTo('/dependencies')" :class="{'active-tab':currentTab == '/dependencies'}">
+      <a class="navbar-item" @click="moveTo('/usage')" :class="{'active-tab':currentTab == '/usage'}">
           <span class="icon">
           <i class="fas fa-sitemap"></i>
           </span>
@@ -99,7 +99,7 @@ export default {
     return{
       username:'',
       showMobileMenu:false,
-      currentTab:'/dependencies',
+      currentTab:'/usage',
       orgUrl:''
     }
   },

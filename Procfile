@@ -1,2 +1,2 @@
 web: node ./backend/server/www
-worker: node ./backend/services/worker.js
+worker: node ./backend/db/queue/worker.js

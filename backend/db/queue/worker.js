@@ -1,7 +1,7 @@
 let throng = require('throng');
 let Queue = require("bull");
 let jobs = require('./jobs');
-let {url} = require('../db/redisConfig');
+let {url} = require('../redisConfig');
 
 // Spin up multiple processes to handle jobs to take advantage of more CPU cores
 // See: https://devcenter.heroku.com/articles/node-concurrency for more info
@@ -27,15 +27,12 @@ function start() {
         case 'LIST_METADATA':
           result = await jobs.listMetadataJob(job);
             break;
-        case 'DEPENDENCIES':
-          result = await jobs.dependencyJob(job);
+        case 'BOUNDARY':
+          result = await jobs.boundaryJob(job);
             break;
         case 'USAGE':
           result = await jobs.usageJob(job);
             break;
-        case 'UTILIZATION':
-          result = await jobs.utilizationJob(job);
-          break;
     }
 
     // A job can return values that will be stored in Redis as JSON

@@ -1,5 +1,5 @@
 let {cacheApi} = require('../../../db/caching');
-let workQueue = require('../../../db/queueConfig');
+let workQueue = require('../../../db/queue/queueConfig');
 let sessionValidation = require('../../../services/sessionValidation');
 
 async function submitListMetadataJob(req,res,next) {
@@ -27,7 +27,7 @@ async function submitListMetadataJob(req,res,next) {
             let jobId = `${sessionValidation.getIdentityKey(req)}:${cacheKey}${Date.now()}`
             
             let job = await workQueue.add(jobDetails,{jobId});
-            res.status(200).json({jobId:job.id});
+            res.status(201).json({jobId:job.id});
         }       
     }catch(error){
         next(error);

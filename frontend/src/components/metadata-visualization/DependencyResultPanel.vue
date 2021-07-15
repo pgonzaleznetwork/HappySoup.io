@@ -88,11 +88,11 @@
 
 <script>
 
-import MetadataTree from '@/components/MetadataTree.vue';
-import Utilization from '@/components/Utilization.vue';
+import MetadataTree from '@/components/metadata-visualization/MetadataTree.vue';
+import Utilization from '@/components/metadata-visualization/Utilization.vue';
 import fileExports from '@/functions/fileExports'
-import MetadataTable from '@/components/MetadataTable.vue'
-import FileDownloadButtons from '@/components/FileDownloadButtons.vue'
+import MetadataTable from '@/components/metadata-visualization/MetadataTable.vue'
+import FileDownloadButtons from '@/components/metadata-visualization/FileDownloadButtons.vue'
 
 export default {
 

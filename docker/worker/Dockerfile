@@ -8,4 +8,4 @@ RUN npm install
 
 COPY ./ /app 
 
-CMD ["node","backend/services/worker"]
+CMD ["node","backend/db/queue/worker"]

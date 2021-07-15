@@ -8,13 +8,12 @@
 
 <script>
 
-import TreeItem from '@/components/TreeItem.vue'
-import TheButton from '@/components/TheButton.vue'
-import MetadataTree from '@/components/MetadataTree.vue';
+import TreeItem from '@/components/metadata-visualization/TreeItem.vue'
+import MetadataTree from '@/components/metadata-visualization/MetadataTree.vue';
 
 export default {
 
-    components:{TreeItem,TheButton,MetadataTree},
+    components:{TreeItem,MetadataTree},
 
     name:'MetadataTree',
 

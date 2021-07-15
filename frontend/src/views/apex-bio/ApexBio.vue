@@ -35,7 +35,7 @@
 
 <script>
 
-import Panel from '@/components/Panel.vue'
+import Panel from '@/components/ui/Panel.vue'
 
 export default {
 

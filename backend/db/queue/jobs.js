@@ -1,15 +1,15 @@
 
 let Queue = require('bull');
-let {url} = require('../db/redisConfig');
+let {url} = require('../redisConfig');
 const QUEUE_NAME = 'happy-soup';
 let workQueue = new Queue(QUEUE_NAME, url);
-let redisOps = require('../db/redisOps');
+let redisOps = require('../redisOps');
 
 let {metadataAPI,restAPI} = require('sfdc-happy-api')();
-let sessionValidation = require('../services/sessionValidation');
-let {cacheApi} = require('../db/caching')
-let {ErrorHandler} = require('../services/errorHandling');
-let logError = require('../services/logging');
+let sessionValidation = require('../../services/sessionValidation');
+let {cacheApi} = require('../caching')
+let {ErrorHandler} = require('../../services/errorHandling');
+let logError = require('../../services/logging');
 const sfdcSoup = require('sfdc-soup');
 let getUsageMetrics = require('sfdc-field-utilization');
 
@@ -116,7 +116,7 @@ async function usageJob(job){
     }
   }
 
-async function dependencyJob(job){
+async function boundaryJob(job){
 
     let {entryPoint,sessionId} = job.data;
     let session = await getSession(sessionId);
@@ -131,19 +131,6 @@ async function dependencyJob(job){
       newCache:session.cache,
       response
     }
-}
-
-async function utilizationJob(job){
-
-  let {field,sessionId} = job.data;
-  let session = await getSession(sessionId);
-
-  let connection = sessionValidation.getConnection(session);
-  
-  let response = await getUsageMetrics(connection,field);
-
-  return {response};
-
 }
 
 function getIdentityKey(session){
@@ -200,4 +187,4 @@ function getStandardFields(){
 
 }
 
-module.exports = {dependencyJob,usageJob,listMetadataJob,utilizationJob};
+module.exports = {boundaryJob,usageJob,listMetadataJob};

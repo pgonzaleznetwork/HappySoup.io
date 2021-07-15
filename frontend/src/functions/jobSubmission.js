@@ -49,7 +49,21 @@ function jobSubmission(){
         }
     }
 
-    return {submitJob,apiError,apiResponse,done};
+    function createPostRequest(data){
+
+        let fetchOptions = {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }
+
+        return fetchOptions;
+    }
+
+    return {submitJob,apiError,apiResponse,done,createPostRequest};
 
 }
 

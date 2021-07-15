@@ -41,7 +41,7 @@
 import { ref, onMounted } from "vue";
 import { FilterMatchMode, FilterOperator } from "primevue/api";
 import {PrimeIcons} from 'primevue/api';
-import Pill from '@/components/Pill.vue'
+import Pill from '@/components/ui/Pill.vue'
 
 export default {
 

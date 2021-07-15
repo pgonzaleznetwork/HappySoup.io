@@ -1,5 +1,6 @@
-let workQueue = require('../../../db/queueConfig');
+let workQueue = require('../../../db/queue/queueConfig');
 let redisOps = require('../../../db/redisOps');
+let logError = require('../../../services/logging');
 
 async function getJobStatus(req,res,next){
     

@@ -51,9 +51,9 @@
 
 <script>
 
-import Autocomplete from '@/components/Autocomplete';
+import Autocomplete from '@/components/ui/Autocomplete';
 import jobSubmission from '@/functions/jobSubmission';
-import Error from '@/components/Error';
+import Error from '@/components/ui/Error';
 
 export default {
   components: { Autocomplete , Error},
@@ -61,8 +61,8 @@ export default {
     props:['filter','values','mode','parentIsLoading','buttonLabel'],
 
     setup(){
-      let {submitJob,apiError,apiResponse,done} = jobSubmission();
-      return {submitJob,apiError,apiResponse,done};
+      let {submitJob,apiError,apiResponse,done,createPostRequest} = jobSubmission();
+      return {submitJob,apiError,apiResponse,done,createPostRequest};
     },
 
     data(){
@@ -137,14 +137,7 @@ export default {
                 metadataType:this.selectedType
             }
 
-            let fetchOptions = {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }
+            let fetchOptions = this.createPostRequest(data);
             
             this.done = false;
             this.$emit('typeSelected',this.selectedType);            

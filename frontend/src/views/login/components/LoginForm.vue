@@ -75,7 +75,7 @@
 
 <script>
 
-import Alert from '@/components/Alert.vue'
+import Alert from '@/components/ui/Alert.vue'
 
 export default {
 

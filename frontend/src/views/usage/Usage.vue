@@ -79,11 +79,11 @@
 <script>
 
 
-import MetadataSelection from '@/components/MetadataSelection.vue';
-import Panel from '@/components/Panel.vue'
-import Flag from '@/components/Flag.vue'
+import MetadataSelection from '@/components/metadata-visualization/MetadataSelection.vue';
+import Panel from '@/components/ui/Panel.vue'
+import Flag from '@/components/ui/Flag.vue'
 import jobSubmission from '@/functions/jobSubmission'
-import DependencyResultPanel from '@/components/DependencyResultPanel.vue';
+import DependencyResultPanel from '@/components/metadata-visualization/DependencyResultPanel.vue';
 
 
 
@@ -92,8 +92,8 @@ export default {
     components:{MetadataSelection,Panel,Flag,DependencyResultPanel},
 
     setup(){
-      let {submitJob,apiError,apiResponse,done} = jobSubmission();
-      return {submitJob,apiError,apiResponse,done};
+      let {submitJob,apiError,apiResponse,done,createPostRequest} = jobSubmission();
+      return {submitJob,apiError,apiResponse,done,createPostRequest};
     },
 
    
@@ -127,9 +127,19 @@ export default {
       async submitUsageJob(){
 
         this.done = false;
-        let options = JSON.stringify(this.usageFlags);
-        let url = `api/usage?name=${this.selectedMember.name}&id=${this.selectedMember.id}&type=${this.selectedType}&options=${options}`;       
-        this.submitJob(url);
+
+        let data = {
+          entryPoint : {
+            name:this.selectedMember.name,
+            id:this.selectedMember.id,
+            type:this.selectedType,
+            options:this.usageFlags
+          }
+        }
+
+        let fetchOptions = this.createPostRequest(data);
+      
+        this.submitJob('api/usage',fetchOptions);
       }
     },
 

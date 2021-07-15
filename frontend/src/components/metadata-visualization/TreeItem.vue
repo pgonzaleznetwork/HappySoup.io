@@ -24,9 +24,9 @@
 
 <script>
 
-import MetadataTree from './MetadataTree.vue';
-import Pill from '@/components/Pill.vue'
-import TreeItem from '@/components/TreeItem.vue';
+import MetadataTree from '@/components/metadata-visualization/MetadataTree.vue';
+import Pill from '@/components/ui/Pill.vue'
+import TreeItem from '@/components/metadata-visualization/TreeItem.vue';
 
 export default {
 
