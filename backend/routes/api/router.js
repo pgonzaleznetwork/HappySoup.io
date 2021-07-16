@@ -10,6 +10,7 @@ let whitelist = process.env.CORS_DOMAINS.split(',');
 
 let corsOptions = {
   origin: function (origin, callback) {
+      console.log('the origin is',origin)
     //if the origin is in the whitelist or if its undefined, which 
     //happens when the API call is made from within the same origin
     if (whitelist.indexOf(origin) !== -1 || !origin) {
