@@ -31,7 +31,7 @@ app.use((req,res,next) => {
 app.use('/oauth2',require('../routes/oauthRouter'));
 
 //authentication for some public routes
-app.use((req,res,next) => {
+/*app.use((req,res,next) => {
 
   let authenticatedPublicRoutes = ['/dependencies.html','/dependencies'];
 
@@ -41,10 +41,18 @@ app.use((req,res,next) => {
   else{
     next();
   }  
-});
+});*/
 
 app.use('/api',require('../routes/api/router'));
-app.use(express.static(path.join(__dirname, '../../frontend2/public'),{extensions: ['html', 'htm']}));
+
+if(process.env.NODE_ENV == 'production'){
+  app.use(express.static(path.join(__dirname, '/public'),{extensions: ['html', 'htm']}));
+
+  // Handle SPA
+  app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+}
+
+
 
 
 // catch 404 and forward to error handler
