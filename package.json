@@ -35,7 +35,7 @@
     "redis": "^3.0.2",
     "sfdc-field-utilization": "4.0.0",
     "sfdc-happy-api": "2.4.0",
-    "sfdc-soup": "4.4.0",
+    "sfdc-soup": "4.6.0",
     "throng": "^4.0.0",
     "vue3-autocomplete": "1.0.1"
   },
