@@ -48,7 +48,8 @@ oauthRouter.route('/callback')
                 req.session.oauthInfo = json;
                 req.session.oauthSuccess = true;
                 req.session.cache = initCache();
-                res.redirect('/dependencies.html');
+                let url = process.env.NODE_ENV == 'dev' ? 'http://localhost:8080/usage' : '/usage'
+                res.redirect(url);
             }
         } catch (error) {
             error = new ErrorHandler(404,'oauth-failed','Fetch failed on oauth request');

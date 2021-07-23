@@ -27,25 +27,17 @@ app.use((req,res,next) => {
 
 });
 
-//unauthenticated route for oauth login
 app.use('/oauth2',require('../routes/oauthRouter'));
+app.use('/api',require('../routes/api/router'));
 
-//authentication for some public routes
-app.use((req,res,next) => {
+if(process.env.NODE_ENV == 'production'){
+  app.use(express.static(path.join(__dirname, '/public'),{extensions: ['html', 'htm']}));
 
-  let authenticatedPublicRoutes = ['/dependencies.html','/dependencies'];
+  // Handle SPA
+  app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+}
 
-  if(authenticatedPublicRoutes.indexOf(req.path) != -1 && !req.session.oauthSuccess){
-    res.redirect('/?no-session=true');
-  }
-  else{
-    next();
-  }  
-});
 
-app.use('/api',require('../routes/apiRouter'));
-app.use('/identity',require('../routes/identityRouter'));
-app.use(express.static(path.join(__dirname, '../../frontend/public'),{extensions: ['html', 'htm']}));
 
 
 // catch 404 and forward to error handler

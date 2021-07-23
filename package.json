@@ -3,11 +3,11 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "start": "heroku local",
+    "start": "(cd frontend && npm start) & export NODE_ENV=dev && heroku local",
     "debug": "node --inspect ./bin/www",
     "semantic-release": "semantic-release",
     "dc-build": "docker-compose up --build",
-    "local": " parallelshell 'node ./bin/www' 'node ./services/worker.js' ",
+    "local": " parallelshell 'node ./bin/www' 'node ./services/worker.js' 'cd frontend && npm start' ",
     "commit": "git-cz",
     "update-api": "npm install sfdc-happy-api@latest sfdc-soup@latest"
   },
@@ -31,10 +31,13 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "node-fetch": "2.6.1",
+    "primeflex": "2.0.0",
     "redis": "^3.0.2",
+    "sfdc-field-utilization": "4.0.0",
     "sfdc-happy-api": "2.4.0",
-    "sfdc-soup": "3.7.0",
-    "throng": "^4.0.0"
+    "sfdc-soup": "4.6.0",
+    "throng": "^4.0.0",
+    "vue3-autocomplete": "1.0.1"
   },
   "devDependencies": {
     "commitizen": "^4.2.0",

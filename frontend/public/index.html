@@ -1,100 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name=”description” content="Happy Soup provides 100% free and open source Salesforce Impact and Dependency Analysis, powered by the MetadataComponentDependency API">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">    
-    <link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico' />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/framework.css">
-    <link rel="stylesheet" href="css/index.css">
-    <script src="js/login.js" type="module"></script>  
-    <title>Happy Soup - Salesforce Impact & Dependency Analysis 100% free</title>
-</head>
-
-<body>
-
-  <template id="warning-template">
-      <div id="warning-template-text">
-      </div>
-  </template>
-
-  <main class="grid">
-
-    <section class="login">
-      <div class="login-inner">
-        <div id="logo">
-          <img src="images/logo.png" width="200px" height="100px"/>
-        </div>
-        <div class="base-x-line"></div>
-        <p id="company-tagline">Salesforce Impact & Dependency Analysis 100% free</p>
-        <p id="mobile-login">Use the desktop site to log in</p>
-        <div class="env-selection">
-            <label for="environment">Login Type  </label>
-
-            <select id="environment">
-            <option value="test">Sandbox</option>
-            <option value="login">Production</option>
-            <option value="domain">My Domain</option>
-          </select>
-        </div> 
-        <div id="domain-input-area" class="base-remove"><input type="text" placeholder="https://your-domain.my.salesforce.com" class="base-input" id="domain-input"></div>
-        <div id=privacy-statement>
-          <input id="privacy-checkbox" type="checkbox"/> <label for="privacy-checkbox">I agree to the Happy Soup </label> <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a> 
-        </div>
-        <button id="login-button" >Log in with Salesforce   <i class="fa fa-sign-in"></i></button>
-        
-        <section id="donation">
-          <p>If you enjoy using HappySoup.io, consider supporting us by making a small donation. This will help cover the Heroku costs
-            and helps us release awesome new features!
-          </p>
-          <form action="https://www.paypal.com/donate" method="post" target="_top">
-            <input type="hidden" name="business" value="XEWHTYGFC5QEE" />
-            <input type="hidden" name="item_name" value="Support HappySoup.io" />
-            <input type="hidden" name="currency_code" value="EUR" />
-            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-            <img alt="" border="0" src="https://www.paypal.com/en_IE/i/scr/pixel.gif" width="1" height="1" />
-          </form>            
-        </section>
-
-        
-          
-    </div>
-    
-    <footer>
-      <p>Concerned about security? Deploy the app to your own <strong>FREE</strong> Heroku account in less than 10 min. <strong>NO</strong> coding knowledge required!</p>
-      <div>
-        <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#one-click-deployment-to-your-own-heroku-account" target="_blank">
-          <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
-        </a>
-      </div>
-      </footer>
-    </section>
-    
-
-    <section class="info">
-      <div class="info-inner ">
-        <div class="taglines">
-          <p><i class="fa fa-check"></i>  100% free and open source</p>
-          <p><i class="fa fa-check"></i>  Salesforce Impact Analysis</p>
-          <p><i class="fa fa-check"></i>  Salesforce Dependency Analysis</p>
-          <p><i class="fa fa-check"></i>  Push the boundaries of the MetadataComponentDependency API</p>
-          <p><i class="fa fa-check"></i>  Create Deployment Boundaries and translate them into SFDX Scratch Orgs</p>
-          <p><i class="fa fa-check"></i>  Break up your metadata and plan your move to SFDX Unlocked Packages</p>
-        </div>
-        
-        <div class="video">
-          <iframe width="160" height="115" src="https://www.youtube.com/embed/2asljhebqlY" 
-          frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen></iframe>
-      </div>
-          
-    </div>
-    </section>
-
-  </main>
-
-</body>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <title>HappySoup | Don't break your Salesforce org</title>
+  </head>
+  <body >
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
 </html>

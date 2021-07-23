@@ -32,7 +32,8 @@ let sessionStore = new RedisStore({
 let sessionOptions = {
   secret:process.env.SESSION_SECRET,
   cookie:{
-    maxAge:EXPIRE_TIME
+    maxAge:EXPIRE_TIME,
+    httpOnly: false
   },
   resave:false,
   saveUninitialized:false,//the session is only stored once a change is made to it, which in this case is when the oauth

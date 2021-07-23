@@ -56,6 +56,9 @@ function getIdentityKey(req){
     return `${req.session.identity.orgId}.${req.session.identity.userId}`;
 }
 
+function getSessionKey(req){
+    return `sfhs-sess:${req.sessionID}`;
+}
 
 /**
  * Quick ping to salesforce to see if the oauth token is still alive
@@ -98,5 +101,6 @@ module.exports = {
     getConnection,
     logout,
     getIdentityKey,
+    getSessionKey,
     validateJobId
 }
