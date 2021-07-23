@@ -54,7 +54,7 @@
         </a>
 
         <div class="navbar-dropdown">
-          <router-link to="/configure">
+          <!--<router-link to="/configure">
           <a class="navbar-item">
             <span class="icon-text">
               <span class="icon">
@@ -63,7 +63,7 @@
               <span>Settings</span>
             </span>
           </a>
-          </router-link>
+          </router-link>-->
           <a class="navbar-item" :href="orgUrl" target="_blank">
             <span class="icon-text">
               <span class="icon">

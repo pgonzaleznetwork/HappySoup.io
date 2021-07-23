@@ -158,11 +158,7 @@ export default {
       flags(){
         if(this.selectedType == 'CustomField'){
           return [
-            {
-              label:'Enhanced report data',
-              value:'enhancedReportData',
-              description:'Show whether the field is used in report filters, groupings or columns. Only available for the first 100 reports'
-            },
+           
             {
               label:'Field in metadata types',
               value:'fieldInMetadataTypes',

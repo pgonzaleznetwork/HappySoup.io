@@ -290,7 +290,7 @@ export default {
             let text = `The ${type} ${name} `;
 
             if(isUsage){
-                text += `is being used by <b>${total} metadata items</b> (reports excluded). Changes to the ${type} <b>can impact these items</b>`
+                text += `is being used by <b>${total} metadata items</b>. Changes to the ${type} <b>can impact these items</b>`
             }
             else{
                 text += `depends <b>${total} metadata items</b>. All the metadata items below represent <b>what is needed to deploy this

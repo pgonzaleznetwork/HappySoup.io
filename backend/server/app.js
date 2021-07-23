@@ -27,22 +27,7 @@ app.use((req,res,next) => {
 
 });
 
-//unauthenticated route for oauth login
 app.use('/oauth2',require('../routes/oauthRouter'));
-
-//authentication for some public routes
-/*app.use((req,res,next) => {
-
-  let authenticatedPublicRoutes = ['/dependencies.html','/dependencies'];
-
-  if(authenticatedPublicRoutes.indexOf(req.path) != -1 && !req.session.oauthSuccess){
-    res.redirect('/?no-session=true');
-  }
-  else{
-    next();
-  }  
-});*/
-
 app.use('/api',require('../routes/api/router'));
 
 if(process.env.NODE_ENV == 'production'){
