@@ -136,7 +136,12 @@ export default {
                 }
             })
 
-             if(results.value.length) displayResults();
+             if(results.value.length) {
+               results.value.sort((a,b) =>{
+                 return (a.name > b.name) ? 1 : -1
+               });
+               displayResults();
+             }
 
         }, props.debounce)
     }
