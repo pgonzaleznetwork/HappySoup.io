@@ -50,7 +50,7 @@
           <span> {{username}}</span>
           <span class="icon">
             <i class="fas fa-caret-down"></i>
-          </span>
+          </span>         
         </a>
 
         <div class="navbar-dropdown">
@@ -64,6 +64,17 @@
             </span>
           </a>
           </router-link>-->
+          <router-link to="/session">
+          <a class="navbar-item">
+            <span class="icon-text">
+              <span class="icon">
+               <i class="fas fa-user-cog"></i>
+              </span>
+              <span>Session Data</span>
+              <span style="color:red; padding-left:2px">   New!!</span>
+            </span>
+          </a>
+          </router-link>
           <a class="navbar-item" :href="orgUrl" target="_blank">
             <span class="icon-text">
               <span class="icon">
