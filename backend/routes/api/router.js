@@ -16,7 +16,7 @@ let corsOptions = {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true)
     } else {
-      callback(new Error('Not allowed by CORS'))
+      callback(new Error(`${origin} is not configured for CORS. Please make sure that ${origin} is added to the CORS_DOMAIN envrionment variable`));
     }
   }
 }
@@ -111,6 +111,7 @@ apiRouter.route('/oauthinfo/clientid')
 apiRouter.route('/identity')
 
 .get(
+    cors(corsOptions),
     sessionValidation.validateSessions,
     async (req,res,next) => {
 
@@ -135,6 +136,30 @@ apiRouter.route('/identity')
             }
 
             res.status(200).json(req.session.identity);
+
+        } catch (error) {
+            next(error);
+        } 
+    }
+)
+
+/********************** /session ENDPOINT ****************************************/
+
+apiRouter.route('/session')
+
+.get(
+    cors(corsOptions),
+    sessionValidation.validateSessions,
+    async (req,res,next) => {
+
+        try {
+
+            let data = {
+                token:req.session.oauthInfo.access_token,
+                url:req.session.oauthInfo.instance_url
+            }
+
+            res.status(200).json(data);
 
         } catch (error) {
             next(error);

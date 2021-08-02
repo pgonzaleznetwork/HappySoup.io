@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "(cd frontend && npm start) & export NODE_ENV=dev && heroku local",
+    "build": "cd frontend && npm run build && cd ..",
     "debug": "node --inspect ./bin/www",
     "semantic-release": "semantic-release",
     "dc-build": "docker-compose up --build",

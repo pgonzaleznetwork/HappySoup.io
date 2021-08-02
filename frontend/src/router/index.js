@@ -6,6 +6,7 @@ import Boundaries from '../views/boundaries/Boundaries.vue';
 import LayoutDictionary from '../views/layout-dictionary/LayoutDictionary.vue';
 import ApexBio from '../views/apex-bio/ApexBio.vue';
 import NotFound from '../views/not-found/NotFound.vue';
+import Session from '@/views/session/Session.vue';
 
 const routes = [
   {
@@ -37,6 +38,12 @@ const routes = [
     path: '/apex-bio',
     name: 'ApexBio',
     component: ApexBio,
+    beforeEnter:requireAuth
+  },
+  {
+    path: '/session',
+    name: 'Session',
+    component: Session,
     beforeEnter:requireAuth
   },
   {
