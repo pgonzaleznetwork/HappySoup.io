@@ -47,6 +47,10 @@
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
       <div v-if="!isLoading && apiResponse">
 
+        <div class="notification is-warning is-light">
+            The layout dictionary only supports custom fields, custom buttons and inline visualforce pages. Support for standard fields is in development.
+        </div>
+
         <FileDownloadButtons @xml="downloadXml(apiResponse)"
             @excel="copyFile('excel',apiResponse)"
             @csv="copyFile('csv',apiResponse)"

@@ -297,6 +297,10 @@ export default {
                 component to an empty org (like a scratch org)</b>`
             }
 
+            if(type == 'StandardField'){
+                text += '<br> This page does <b>not</b> show if the standard field is used in page layouts. This feature is only available for custom fields.'
+            }
+
             return text;
         },
 
