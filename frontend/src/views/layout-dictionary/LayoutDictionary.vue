@@ -78,9 +78,9 @@ export default {
     components:{MetadataSelection,Panel,Flag,MetadataTable,FileDownloadButtons},
 
     setup(){
-      let {submitJob,apiError,apiResponse,done} = jobSubmission();
+      let {submitJob,apiError,apiResponse,done,createPostRequest} = jobSubmission();
       let {copyFile,downloadXml} = fileExports();
-      return {submitJob,apiError,apiResponse,done,copyFile,downloadXml};
+      return {submitJob,apiError,apiResponse,done,createPostRequest,copyFile,downloadXml};
     },
 
    
@@ -113,9 +113,18 @@ export default {
       async submitUsageJob(){
 
         this.done = false;
-        let options = JSON.stringify(this.usageFlags);
-        let url = `api/dependencies?name=${this.selectedMember.name}&id=${this.selectedMember.id}&type=${this.selectedType}&options=${options}`;       
-        this.submitJob(url);
+
+        let data = {
+          entryPoint : {
+            name:this.selectedMember.name,
+            id:this.selectedMember.id,
+            type:this.selectedType,
+          }
+        }
+
+        let fetchOptions = this.createPostRequest(data);
+      
+        this.submitJob('api/boundaries',fetchOptions);
       }
     },
 

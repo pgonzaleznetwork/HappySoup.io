@@ -5,6 +5,7 @@
         type="text"
         v-model="searchText"
         class="input"
+        :style="{ width: inputWidth  }"
         :disabled="disabled"
         @blur="hideResults"
         @keydown.enter = 'enter'
@@ -29,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, SetupContext, onMounted } from 'vue'
+import { ref, computed, SetupContext, onMounted, onUpdated } from 'vue'
 
 export default {
   name: 'Autocomplete',
@@ -37,6 +38,10 @@ export default {
     debounce: {
       type: String,
       default: 0
+    },
+    inputWidth:{
+      type: String,
+      default:'100%'
     },
     disabled:{
         type:Boolean,
@@ -75,7 +80,7 @@ export default {
   ],
   setup(props, context) {
     const autocompleteRef = ref()
-    let inputWidth = ref(0)
+    
     let searchText = ref('')
     let timeout
     let showResults = ref(true)
@@ -85,7 +90,11 @@ export default {
      * Same as Vue2 'mounted' function, used to get refs correctly
      */
     onMounted(() => {
-      inputWidth.value = '100%'
+      
+    })
+
+    onUpdated(()=>{
+      
     })
     /**
      * Triggered on input changes with a dynamic debounce
@@ -145,14 +154,7 @@ export default {
 
         }, props.debounce)
     }
-    /**
-     * Triggered on click on a result item
-     */
-    function clickItem(member) {
-      context.emit('memberSelected', member)
-      showResults.value = false
-      searchText.value = member.name;
-    }
+    
     /**
      * Called on focus
      */
@@ -188,10 +190,20 @@ export default {
         }
     }
 
+    /**
+     * Triggered on click on a result item
+     */
+    function clickItem(member) {
+      context.emit('memberSelected', member)
+      searchText.value = member.name;
+      hideResults();
+      
+    }
+
     function enter() {
-        let selectedMember = results.value[current.value];
-        searchText.value = selectedMember.name;
         context.emit('memberSelected', selectedMember)
+        let selectedMember = results.value[current.value];
+        searchText.value = selectedMember.name; 
         hideResults();
     }
 
@@ -240,7 +252,6 @@ export default {
       isActive,
       showResults,
       autocompleteRef,
-      inputWidth,
       displayResults,
       hideResults,
       handleInput,

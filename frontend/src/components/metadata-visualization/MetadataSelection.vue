@@ -29,6 +29,7 @@
             :disabled="isLoading || selectedType == ''"
             :suggestions="members"
             debounce=700
+            :inputWidth="calculatedWidth"
             @memberSelected="getSelectedMember"
             @empty="selectedMember = null">
             </Autocomplete>
@@ -109,6 +110,11 @@ export default {
             return this.apiResponse;
         },
 
+        calculatedWidth(){
+            let width = this.selectedType == 'Layout' ? '350px' : '100%';
+            return width;
+        }
+
     },
 
     watch: {
@@ -148,7 +154,7 @@ export default {
         renameSelectedLabel(){
             let label = this.$refs[this.selectedType].label;
             if(label.includes('(') && label.includes(')')) return;
-            this.$refs[this.selectedType].label = `${label} (${this.members.length})`;
+            this.$refs[this.selectedType].label = `${label} (${this.members.length})`;        
         }
     }
 
