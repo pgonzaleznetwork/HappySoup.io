@@ -16,10 +16,10 @@
                  </div>
             </template>
             <template #empty>
-                No customers found.
+                No metadata found
             </template>
             <template #loading>
-                Loading customers data. Please wait.
+               
             </template>
 
             <Column v-for="col in source.columns" :field="col.field" :header="col.header" :key="col.field"  style="min-width: 14rem">
