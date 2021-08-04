@@ -140,13 +140,18 @@ export default {
             }
 
             let availableBackgroundColors = [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
+                'rgba(46, 204, 113,1.0)',
+                'rgba(52, 152, 219,1.0)',
+                'rgba(231, 76, 60,1.0)',
+                'rgba(230, 126, 34,1.0)',
+                'rgba(241, 196, 15,1.0)',
+                'rgba(142, 68, 173,1.0)',
+                'rgba(196, 229, 56,1.0)',
+                'rgba(27, 20, 100,1.0)',
+                'rgba(237, 76, 103,1.0)',
+                'rgba(153, 128, 250,1.0)'
             ];
+
             let chartLabels = [];
             let chartValues = [];
 
@@ -157,9 +162,18 @@ export default {
 
             let backgroundColors = [];
 
+            let colorsUsed = 0;
             chartLabels.forEach(val => {
-                let randomValue = availableBackgroundColors[Math.floor(Math.random() * availableBackgroundColors.length)]; 
-                backgroundColors.push(randomValue);
+
+                //we used all the available colors so just pick a random one
+                if(colorsUsed > availableBackgroundColors){
+                    let randomValue = availableBackgroundColors[Math.floor(Math.random() * availableBackgroundColors.length)]; 
+                    backgroundColors.push(randomValue);
+                }
+                else{
+                    backgroundColors.push(availableBackgroundColors[colorsUsed]);
+                    colorsUsed++;
+                }  
             })
 
             let canvas = this.$refs.stats;
@@ -207,13 +221,18 @@ export default {
             }
 
             let availableBackgroundColors = [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
+                'rgba(46, 204, 113,1.0)',
+                'rgba(52, 152, 219,1.0)',
+                'rgba(231, 76, 60,1.0)',
+                'rgba(230, 126, 34,1.0)',
+                'rgba(241, 196, 15,1.0)',
+                'rgba(142, 68, 173,1.0)',
+                'rgba(196, 229, 56,1.0)',
+                'rgba(27, 20, 100,1.0)',
+                'rgba(237, 76, 103,1.0)',
+                'rgba(153, 128, 250,1.0)'
             ];
+
             let chartLabels = [];
             let chartValues = [];
 
@@ -224,18 +243,31 @@ export default {
 
             let backgroundColors = [];
 
+            let colorsUsed = 0;
             chartLabels.forEach(val => {
-                let randomValue = availableBackgroundColors[Math.floor(Math.random() * availableBackgroundColors.length)]; 
-                backgroundColors.push(randomValue);
+
+                //the empty set is also represented with the same color
+                if(val == 'empty'){
+                    backgroundColors.push('rgba(52, 73, 94,1.0)')
+                }
+                else{
+
+                    //we used all the available colors so just pick a random one
+                    if(colorsUsed > availableBackgroundColors){
+                        let randomValue = availableBackgroundColors[Math.floor(Math.random() * availableBackgroundColors.length)]; 
+                        backgroundColors.push(randomValue);
+                    }
+                    else{
+                        backgroundColors.push(availableBackgroundColors[colorsUsed]);
+                        colorsUsed++;
+                    }
+                }  
             })
 
             let utilizationCanvas = this.$refs.utilizationCanvas;
 
-            console.log('creating usage chart before exit')
-
             if(!utilizationCanvas) return;
 
-            console.log('creating usage chart')
 
             let ctx = utilizationCanvas.getContext('2d');
 

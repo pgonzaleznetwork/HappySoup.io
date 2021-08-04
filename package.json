@@ -33,7 +33,7 @@
     "node-fetch": "2.6.1",
     "primeflex": "2.0.0",
     "redis": "^3.0.2",
-    "sfdc-field-utilization": "4.0.0",
+    "sfdc-field-utilization": "8.0.0",
     "sfdc-happy-api": "2.4.0",
     "sfdc-soup": "4.6.0",
     "throng": "^4.0.0",
