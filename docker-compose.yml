@@ -18,7 +18,7 @@ services:
       - SFDC_API_VERSION=49.0
       - SESSION_SECRET=whatever
       - PORT=3000
-      - CORS_DOMAINS=http://localhost,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
+      - CORS_DOMAINS=http://localhost,http://localhost:3000,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
       - ENFORCE_SSL=false
   worker:
     build:
@@ -32,5 +32,5 @@ services:
       - SFDC_API_VERSION=49.0
       - SESSION_SECRET=whatever
       - PORT=3000
-      - CORS_DOMAINS=http://localhost,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
+      - CORS_DOMAINS=http://localhost,http://localhost:3000,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
       - ENFORCE_SSL=false
