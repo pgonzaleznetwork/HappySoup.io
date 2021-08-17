@@ -10,6 +10,7 @@ services:
     ports:
       - "3000:3000"
     environment:
+      - NODE_ENV=production
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - OAUTH_CLIENT_ID=3MVG9I5UQ_0k_hTmZuUMosHPf.2zqzHBqd0j.GMmnThrGhd53n4prfPpHNqSAPRrWzc7Hb0ul.s2m4VYoiWyZ
