@@ -166,18 +166,6 @@ function getStandardFields(){
   let allFields = [];
   let fieldsByObject = new Map();
 
-  let billingAddressFields = getAddressFields().map(field => {
-    return `Billing${field}`;
-  })
-
-  let ShippingAddressFields = getAddressFields().map(field => {
-    return `Shipping${field}`;
-  })
-
-  let MailingAddressFields = getAddressFields().map(field => {
-    return `Mailing${field}`;
-  })
-
   fieldsByObject.set('Opportunity',[
     'StageName',
     'Amount',
@@ -196,14 +184,8 @@ function getStandardFields(){
     'AnnualRevenue',
     'IsPersonAccount',
     'Type',
-    'ShippingAddress',
-    'ShippingCity',
-    'ShippingCountry',
-    'ShippingState',
-    'ShippingStreet',
-    'ShippingPostalCode',
-    ...billingAddressFields,
-    ...ShippingAddressFields
+    ...getAddressFields('Billing'),
+    ...getAddressFields('Shipping')
   ]);
 
   fieldsByObject.set('Case',[
@@ -217,14 +199,14 @@ function getStandardFields(){
   fieldsByObject.set('Contact',[
     'Birthdate',
     'LeadSource',
-    ...MailingAddressFields
+    ...getAddressFields('Mailing')
   ]);
 
   fieldsByObject.set('Lead', [
     'LeadSource',
     'Industry',
     'Status',
-    ...getAddressFields()
+    ...getAddressFields('')
   ]);
 
   for (let [object, fields] of fieldsByObject) {
@@ -242,8 +224,9 @@ function getStandardFields(){
 
 }
 
-function getAddressFields(){
-  return [
+function getAddressFields(prefix){
+  
+  fields =  [
     'Accuracy',
     'Address',
     'City',
@@ -256,6 +239,10 @@ function getAddressFields(){
     'Longitude',
     'Latitude',
   ]
+
+  fields = fields.map(field => `${prefix}field`);
+
+  return fields;
 }
 
 module.exports = {boundaryJob,usageJob,listMetadataJob};
