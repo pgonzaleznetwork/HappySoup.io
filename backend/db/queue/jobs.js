@@ -166,11 +166,66 @@ function getStandardFields(){
   let allFields = [];
   let fieldsByObject = new Map();
 
-  fieldsByObject.set('Opportunity',['StageName','Amount','CloseDate','IsClosed','ForecastCategory','HasOpportunityLineItem','Type','Probability','IsWon']);
-  fieldsByObject.set('Account',['Industry','AccountNumber','AnnualRevenue','IsPersonAccount','Type']);
-  fieldsByObject.set('Case',['ClosedDate','Origin','Priority','Status','Type']);
-  fieldsByObject.set('Contact',['Birthdate','LeadSource']);
-  fieldsByObject.set('Lead', ['LeadSource','Industry','Status']);
+  let billingAddressFields = getAddressFields().map(field => {
+    return `Billing${field}`;
+  })
+
+  let ShippingAddressFields = getAddressFields().map(field => {
+    return `Shipping${field}`;
+  })
+
+  let MailingAddressFields = getAddressFields().map(field => {
+    return `Mailing${field}`;
+  })
+
+  fieldsByObject.set('Opportunity',[
+    'StageName',
+    'Amount',
+    'CloseDate',
+    'IsClosed',
+    'ForecastCategory',
+    'HasOpportunityLineItem',
+    'Type',
+    'Probability',
+    'IsWon'
+  ]);
+  
+  fieldsByObject.set('Account',[
+    'Industry',
+    'AccountNumber',
+    'AnnualRevenue',
+    'IsPersonAccount',
+    'Type',
+    'ShippingAddress',
+    'ShippingCity',
+    'ShippingCountry',
+    'ShippingState',
+    'ShippingStreet',
+    'ShippingPostalCode',
+    ...billingAddressFields,
+    ...ShippingAddressFields
+  ]);
+
+  fieldsByObject.set('Case',[
+    'ClosedDate',
+    'Origin',
+    'Priority',
+    'Status',
+    'Type'
+  ]);
+
+  fieldsByObject.set('Contact',[
+    'Birthdate',
+    'LeadSource',
+    ...MailingAddressFields
+  ]);
+
+  fieldsByObject.set('Lead', [
+    'LeadSource',
+    'Industry',
+    'Status',
+    ...getAddressFields()
+  ]);
 
   for (let [object, fields] of fieldsByObject) {
     
@@ -185,6 +240,22 @@ function getStandardFields(){
   return allFields;
 
 
+}
+
+function getAddressFields(){
+  return [
+    'Accuracy',
+    'Address',
+    'City',
+    'Country',
+    'CountryCode',
+    'State',
+    'StateCode',
+    'Street',
+    'PostalCode',
+    'Longitude',
+    'Latitude',
+  ]
 }
 
 module.exports = {boundaryJob,usageJob,listMetadataJob};
