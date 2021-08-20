@@ -225,7 +225,7 @@ function getStandardFields(){
 }
 
 function getAddressFields(prefix){
-  
+
   fields =  [
     'Accuracy',
     'Address',
@@ -240,7 +240,7 @@ function getAddressFields(prefix){
     'Latitude',
   ]
 
-  fields = fields.map(field => `${prefix}field`);
+  fields = fields.map(field => `${prefix}${field}`);
 
   return fields;
 }
