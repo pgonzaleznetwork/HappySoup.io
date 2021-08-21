@@ -12,6 +12,7 @@ let {ErrorHandler} = require('../../services/errorHandling');
 let logError = require('../../services/logging');
 const sfdcSoup = require('sfdc-soup');
 let getUsageMetrics = require('sfdc-field-utilization');
+const bulkDependency = require('sfdc-dependency-api-bulk')
 
 async function listMetadataJob(job){
 
@@ -115,6 +116,21 @@ async function usageJob(job){
       response
     }
   }
+
+async function bulkUsageJob(job){
+
+  let {ids,sessionId} = job.data;
+  let session = await getSession(sessionId);
+
+  let connection = sessionValidation.getConnection(session);
+
+  let response = await bulkDependency.getUsage(ids,connection);
+
+  return {
+    response
+  }
+
+}
 
 async function boundaryJob(job){
 
@@ -245,4 +261,4 @@ function getAddressFields(prefix){
   return fields;
 }
 
-module.exports = {boundaryJob,usageJob,listMetadataJob};
+module.exports = {boundaryJob,usageJob,listMetadataJob,bulkUsageJob};

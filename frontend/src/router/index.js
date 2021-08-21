@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/login/Login.vue';
 import Usage from '../views/usage/Usage.vue';
+import BulkUsage from '../views/bulk-usage/BulkUsage';
 import Configure from '../views/configure/Configure.vue';
 import Boundaries from '../views/boundaries/Boundaries.vue';
 import LayoutDictionary from '../views/layout-dictionary/LayoutDictionary.vue';
@@ -18,6 +19,12 @@ const routes = [
     path: '/usage',
     name: 'Usage',
     component: Usage,
+    beforeEnter:requireAuth
+  },
+  {
+    path: '/bulk-usage',
+    name: 'BulkUsage',
+    component: BulkUsage,
     beforeEnter:requireAuth
   },
   {

@@ -20,6 +20,7 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup'; 
 import Dropdown from 'primevue/dropdown';
 import Calendar from 'primevue/calendar';
+import Listbox from 'primevue/listbox';
 import MultiSelect from 'primevue/multiselect';
 import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
@@ -39,6 +40,7 @@ app.component('Modal',Modal);
 app.component('MetadataTree', MetadataTree) 
 app.component('TableLite',TableLite)
 app.component('DataTable',DataTable)
+app.component('Listbox',Listbox);
 app.component('Column',Column)
 app.component('ColumnGroup',ColumnGroup)
 app.component('Dropdown',Dropdown)

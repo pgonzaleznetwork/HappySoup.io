@@ -80,6 +80,16 @@ apiRouter.route('/usage')
     }
 );
 
+/********************** /bulkusage ENDPOINT ****************************************/
+
+apiRouter.route('/bulkusage')
+
+.post(
+    cors(corsOptions),
+    sessionValidation.validateSessions,
+    require('./functions/submitBulkUsageJob')
+)
+
 /********************** /cache ENDPOINT ****************************************/
 
 apiRouter.route('/cache')
