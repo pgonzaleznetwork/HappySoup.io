@@ -70,7 +70,7 @@ async function listMetadataJob(job){
           });
         }
         else{
-          //single item is returned as an object
+          //single item is returned as an object.
           results.push({name:jsonResponse.fullName,id:jsonResponse.id});
         }
       }      
