@@ -114,16 +114,11 @@ export default {
 
         removeItem(event){
 
-            let newArray = this.selectedMembers.filter((member,index) => {
+            let filteredArray = this.selectedMembers.filter((member,index) => {
                 return index != event.index;
             })
 
-            console.log('NEW',newArray)
-
-            this.selectedMembers = newArray;
-
-            //this.selectedMembers.splice(event.index);
-            console.log(this.selectedMembers)
+            this.selectedMembers = filteredArray;
         },
 
         delesectInput(event){
