@@ -18,7 +18,7 @@
 
           <div>
             <div class="field">
-              <BulkMetadataSelection/>
+              <BulkMetadataSelection @submit="submitBulkUsageJob"/>
             </div>
           </div>
         </div>
@@ -29,7 +29,13 @@
     
     <template v-slot:results>
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
-      <DependencyResultPanel v-if="!isLoading && apiResponse" :metadata-tree="apiResponse.usageTree" :api-response="apiResponse"/>
+      <div v-if="!isLoading && apiResponse">
+        <FileDownloadButtons @xml="downloadXml(apiResponse)"
+            @excel="copyFile('excel',apiResponse)"
+            @csv="copyFile('csv',apiResponse)"
+          />
+         <MetadataTable :source="apiResponse.datatable" />
+      </div>
       <Error v-if="!isLoading && apiError" :error="apiError"/> 
     </template>
 
@@ -45,16 +51,19 @@ import BulkMetadataSelection from '@/components/metadata-visualization/BulkMetad
 import Panel from '@/components/ui/Panel.vue'
 import Flag from '@/components/ui/Flag.vue'
 import jobSubmission from '@/functions/jobSubmission'
-import DependencyResultPanel from '@/components/metadata-visualization/DependencyResultPanel.vue';
+import fileExports from '@/functions/fileExports'
+import MetadataTable from '@/components/metadata-visualization/MetadataTable.vue';
+import FileDownloadButtons from '@/components/metadata-visualization/FileDownloadButtons.vue'
 
 
 export default {
 
-    components:{Panel,Flag,DependencyResultPanel,BulkMetadataSelection},
+    components:{Panel,Flag,MetadataTable,BulkMetadataSelection,FileDownloadButtons},
 
     setup(){
       let {submitJob,apiError,apiResponse,done,createPostRequest} = jobSubmission();
-      return {submitJob,apiError,apiResponse,done,createPostRequest};
+      let {copyFile} = fileExports();
+      return {submitJob,apiError,apiResponse,done,createPostRequest,copyFile};
     },
 
    
@@ -69,38 +78,22 @@ export default {
     },
 
     methods:{
-      getSelectedType(selectedType){
-        this.selectedType = selectedType;
-      },
 
-      getSelectedMember(selectedMember){
-        this.selectedMember = selectedMember;
+      downloadXml(){
+        alert('package.xml is not available for bulk impact analysis at this time.');
       },
-
-      toggleModal(){
-        this.showModal = !this.showModal;
-      },
-
-      setFlag(data){
-        this.usageFlags[data.value] = data.ticked;
-      },
-
-      async submitUsageJob(){
+      
+      async submitBulkUsageJob(event){
 
         this.done = false;
 
         let data = {
-          entryPoint : {
-            name:this.selectedMember.name,
-            id:this.selectedMember.id,
-            type:this.selectedType,
-            options:this.usageFlags
-          }
+          ids : event
         }
 
         let fetchOptions = this.createPostRequest(data);
       
-        this.submitJob('api/usage',fetchOptions);
+        this.submitJob('api/bulkusage',fetchOptions);
       }
     },
 
@@ -116,50 +109,6 @@ export default {
         return !this.done;
       },
 
-      flags(){
-        if(this.selectedType == 'CustomField'){
-          return [
-           
-            {
-              label:'Field in metadata types',
-              value:'fieldInMetadataTypes',
-              description:'Show whether the field is referenced in the FieldDefinition fields of Custom Metadata Types'
-            },
-            {
-              label:'Field population by record type',
-              value:'fieldUtilization',
-              description:'Show in how many records the field is popuated, broken down by record type'
-            }
-          ]
-        }
-        else  if(this.selectedType == 'StandardField'){
-
-          return [{
-              label:'Field population by record type',
-              value:'fieldUtilization',
-              description:'Show in how many records the field is popuated, broken down by record type'
-            }]
-
-        }
-        else if(this.selectedType == 'ApexClass'){
-          return [
-            {
-              label:'Class in Metadata Types',
-              value:'classInMetadataTypes',
-              description:'Show whether the apex class is referenced in any field of any of Custom Metadata Type for dependency injection/table-driven triggers'
-            }
-          ]
-        }
-        else if(this.selectedType == 'CustomObject'){
-          return [
-            {
-              label:'Object in Metadata Types',
-              value:'objectInMetadataTypes',
-              description:'Show whether the object is referenced in the EntityDefinition fields of Custom Metadata Types'
-            }
-          ]
-        }
-      }
     }
 
 }
