@@ -35,7 +35,6 @@ export default {
     async mounted(){
         let res = await fetch('/api/session');
         let sessionData = await res.json();
-        console.log(sessionData)
         this.token = sessionData.token;
         this.url = sessionData.url;
     }

@@ -20,6 +20,7 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup'; 
 import Dropdown from 'primevue/dropdown';
 import Calendar from 'primevue/calendar';
+import Listbox from 'primevue/listbox';
 import MultiSelect from 'primevue/multiselect';
 import InputNumber from 'primevue/inputnumber';
 import InputText from 'primevue/inputtext';
@@ -30,15 +31,19 @@ import 'primeflex/primeflex.css';
 import 'primevue/resources/themes/saga-blue/theme.css'       
 import 'primevue/resources/primevue.min.css'                
 import 'primeicons/primeicons.css'
+import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
 
 const app = createApp(App)
 
 app.component('TreeItem', TreeItem) 
+app.component('Toast',Toast);
 app.component('Error',Error);
 app.component('Modal',Modal);
 app.component('MetadataTree', MetadataTree) 
 app.component('TableLite',TableLite)
 app.component('DataTable',DataTable)
+app.component('Listbox',Listbox);
 app.component('Column',Column)
 app.component('ColumnGroup',ColumnGroup)
 app.component('Dropdown',Dropdown)
@@ -54,5 +59,6 @@ router.app = app;
 app.use(router);
 app.use(PrimeVue);
 app.use(VueCookies);
+app.use(ToastService);
 
 app.mount('#app')

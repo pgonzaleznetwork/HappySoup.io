@@ -24,7 +24,10 @@ async function getJobStatus(req,res,next){
 
             let jobResult = job.returnvalue;
 
-            req.session.cache = jobResult.newCache;
+            if(jobResult.newCache){
+                req.session.cache = jobResult.newCache;
+            }
+
             response.response = jobResult.response;
 
             setTimeout(deleteJobInfo,10000,jobId);

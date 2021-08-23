@@ -1,8 +1,8 @@
 <template>
     <div>
-        <DataTable :value="source.data" :paginator="true" class="p-datatable-metadata p-datatable-sm" :rows="10"
+        <DataTable :value="source.data" :paginator="true" class="p-datatable-metadata p-datatable-sm" :rows="50"
             dataKey="id" :rowHover="true" v-model:filters="filters" filterDisplay="menu" :loading="loading"
-            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" :rowsPerPageOptions="[10,25,50]"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown" :rowsPerPageOptions="[10,25,50,100]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             responsiveLayout="scroll"
             >
