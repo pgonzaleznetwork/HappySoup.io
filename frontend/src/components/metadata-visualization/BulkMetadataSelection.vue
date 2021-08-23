@@ -108,6 +108,7 @@ export default {
         this.types = types.filter(type => {
             return !typesToExclude.includes(type.value);
         });
+
     },
 
     watch: {
