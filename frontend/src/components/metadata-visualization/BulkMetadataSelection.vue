@@ -94,9 +94,21 @@ export default {
     },
 
     async beforeMount(){
+        
         let res = await fetch('/api/metadata');
         let types = await res.json();
-        this.types = types;
+
+        let typesToExclude = [
+            'Layout',
+            'ValidationRule',
+            'StandardField',
+            'ApexTrigger'
+        ]
+
+        this.types = types.filter(type => {
+            return !typesToExclude.includes(type.value);
+        });
+
     },
 
     watch: {
