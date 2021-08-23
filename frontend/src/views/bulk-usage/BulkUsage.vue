@@ -18,7 +18,7 @@
 
           <div>
             <div class="field">
-              <BulkMetadataSelection @submit="submitBulkUsageJob"/>
+              <BulkMetadataSelection @submit="submitBulkUsageJob" :parentIsLoading="isLoading"/>
             </div>
           </div>
         </div>

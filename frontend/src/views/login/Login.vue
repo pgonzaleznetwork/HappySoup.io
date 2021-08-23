@@ -30,7 +30,6 @@ export default {
   components:{LoginForm,Info},
 
   mounted(){
-    console.log('login view is mounted');
     this.$router.push('/usage');
   
   }

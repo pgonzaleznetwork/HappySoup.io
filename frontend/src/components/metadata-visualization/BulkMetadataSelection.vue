@@ -6,7 +6,7 @@
                 <label class="label label-size">Metadata Type</label>
                 <div class="control has-icons-left">
                 <div class="select is-small" >
-                    <select v-model="selectedType" @change="getMembers" :disabled="isLoading">
+                    <select v-model="selectedType" @change="getMembers" :disabled="isLoading || parentIsLoading ">
                     <option value="" disabled selected hidden>Select...</option>
                     <option  v-for="type in types" :key="type.label" :value="type.value" :ref="type.value">
                         {{type.label}}
@@ -22,17 +22,33 @@
                 <p class="is-size-7">Loading metadata. This can take a minute in large orgs (specially sandboxes)</p>
                 <progress  class="progress is-small is-primary" max="100">15%</progress>
             </div>
-        <p style="margin-bottom:5px;">Select up to 25 members</p>
-        <Listbox  v-if="!isLoading" v-model="selectedMember" :options="suggestedMembers" optionLabel="name" :multiple="true" :filter="true" @change="captureSelected" @filter="processFilter"/>
+        <p style="margin-bottom:5px;font-size:12px;">Select up to 40 members</p>
+        <div class="field">
+            <label class="label label-size">Metadata Name</label>
+            <div class="control">
+                <MultiSelectAutoComplete
+                :key="selectedType"
+                :disabled="isLoading || selectedType == '' || parentIsLoading " 
+                :suggestions="members"
+                inputWidth="100%"
+                debounce=700
+                @memberSelected="getSelectedMember"
+                @empty="selectedMember = null">
+                </MultiSelectAutoComplete>
+          </div>
+        </div>
+        
+        <!--<Listbox  v-if="!isLoading" v-model="selectedMember" :options="suggestedMembers" optionLabel="name" :multiple="true" :filter="true" @change="captureSelected" @filter="processFilter"/>-->
         </section>
         <section class="selectedSection">
             <div>
-            <DataTable :key="tableKey" :value="selectedMembers" responsiveLayout="scroll" class="metadataTable" :scrollable="true" scrollHeight="400px" @row-click="removeItem">
+            <DataTable :key="tableKey" :rowHover="true" :value="selectedMembers" responsiveLayout="scroll" class="metadataTable" :scrollable="true" scrollHeight="400px" @row-click="removeItem">
                 <Column field="name" header="Name"></Column>
                 <Column field="type" header="Metadata Type"></Column>
                 <Column field="remove" header="Remove"></Column>
             </DataTable>
             </div>
+            <p style="text-align:center;margin-top:10px;font-weight:bold;">{{selectedMembers.length}} selected</p>
         </section>
     </section>
     <div class="field">
@@ -52,8 +68,11 @@
 
 import jobSubmission from '@/functions/jobSubmission';
 import Error from '@/components/ui/Error';
+import MultiSelectAutoComplete from '@/components/ui/MultiSelectAutoComplete';
 
 export default {
+
+    components:{MultiSelectAutoComplete},
 
     props:['parentIsLoading'],
 
@@ -68,7 +87,6 @@ export default {
             types:[],
             selectedType:'',
             members:[],
-            suggestedMembers:[],
             selectedMembers:[],
             isLoading:false,
             tableKey:0
@@ -112,6 +130,31 @@ export default {
 
     methods:{
 
+        getSelectedMember(event){
+
+            let {id,name} = event;
+            let member = {
+                id,
+                name,
+                type:this.selectedType,
+                remove:'Remove'
+            };
+
+            if(this.selectedMembers.length == 40){
+                alert(`You've reached the maximum number of selected items`);
+                return;
+            }
+            else{
+
+                let ids = this.selectedMembers.map(m => m.id);
+
+                //don't allow duplicates in the list
+                if(!ids.includes(member.id)){
+                    this.selectedMembers.push(member);
+                }
+            }    
+        },
+
         removeItem(event){
 
             let filteredArray = this.selectedMembers.filter((member,index) => {
@@ -119,49 +162,6 @@ export default {
             })
 
             this.selectedMembers = filteredArray;
-        },
-
-        delesectInput(event){
-
-            let lookupClicked = event.target.className == 'p-listbox-filter p-inputtext p-component';
-            let optionClicked = event.target.className == 'p-listbox-item p-highlight'
-
-            if(lookupClicked || optionClicked){
-               //valid click
-                
-            }
-            else{
-                //the user clicked outside the selection box
-                //so we remove the members so that the dropdown disappears
-                this.suggestedMembers = [];
-            }
-        },
-
-        captureSelected(event){
-
-            if(event.value.length == 25){
-                alert(`You've reached the maximum number of selected items`);
-            }
-            this.selectedMembers = event.value;
-        },
-
-        processFilter(event){
-            let keyword = event.value;
-
-            if(keyword == ''){
-                this.suggestedMembers = [];
-                return;
-            }
-
-            this.suggestedMembers = this.members.filter(member => {
-
-                let memberLowerCase = member.name.toLowerCase();
-                let keywordLowerCase = keyword.toLowerCase();
-
-                if(memberLowerCase.includes(keywordLowerCase)){
-                    return member;
-                }
-            });
         },
 
         async getMembers(){
@@ -189,7 +189,6 @@ export default {
         emitSubmit(){
 
             let ids = this.selectedMembers.map(m => m.id);
-            console.log(ids);
             this.$emit('submit',ids);   
         }
     }
@@ -212,5 +211,17 @@ export default {
     .button{
         margin-top: 20px;
     }
+
+    .pui-datatable thead th:nth-child(1),
+.pui-datatable tbody td:nth-child(1),
+.pui-datatable tfoot td:nth-child(1) {
+    width: 50px;
+}
+
+.pui-datatable thead th:nth-child(2),
+.pui-datatable tbody td:nth-child(2),
+.pui-datatable tfoot td:nth-child(2) {
+    width: 100px;
+}
 
 </style>

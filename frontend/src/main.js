@@ -31,10 +31,13 @@ import 'primeflex/primeflex.css';
 import 'primevue/resources/themes/saga-blue/theme.css'       
 import 'primevue/resources/primevue.min.css'                
 import 'primeicons/primeicons.css'
+import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
 
 const app = createApp(App)
 
 app.component('TreeItem', TreeItem) 
+app.component('Toast',Toast);
 app.component('Error',Error);
 app.component('Modal',Modal);
 app.component('MetadataTree', MetadataTree) 
@@ -56,5 +59,6 @@ router.app = app;
 app.use(router);
 app.use(PrimeVue);
 app.use(VueCookies);
+app.use(ToastService);
 
 app.mount('#app')
