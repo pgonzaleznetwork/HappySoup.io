@@ -17,7 +17,10 @@
             </span>
             <span><a :href="member.url" target="_blank">{{getDisplayName(member.name)}}</a></span>
             <Pill v-for="pill in member.pills" :pill="pill"/>
+            <a v-if="supportsNestedImpact(type)" class="nestedImpactLink" @click="getNestedTree(member)">Where is this used?</a>
         </span>
+        <progress   v-if="done == false && isMemberInProgress(member)" class="progress is-small is-primary" max="100">15%</progress>
+        <MetadataTree v-if="apiResponse" :metadata="apiResponse" :parent-open="isOpen"/>
         <MetadataTree v-if="member.references" :key="member.name" :metadata="member.references" :parent-open="isOpen"/>
   </li>
 </template>
@@ -27,6 +30,7 @@
 import MetadataTree from '@/components/metadata-visualization/MetadataTree.vue';
 import Pill from '@/components/ui/Pill.vue'
 import TreeItem from '@/components/metadata-visualization/TreeItem.vue';
+import jobSubmission from '@/functions/jobSubmission'
 
 export default {
 
@@ -36,9 +40,15 @@ export default {
 
     props:['type','members','parentOpen'],
 
+    setup(){
+      let {submitJob,apiError,apiResponse,done,createPostRequest} = jobSubmission();
+      return {submitJob,apiError,apiResponse,done,createPostRequest};
+    },
+
     data(){
         return{
             isOpen:false,
+            memberInProgress:null,
         }
     },
 
@@ -46,6 +56,37 @@ export default {
         toggle(){
             this.isOpen = !this.isOpen
         },
+
+        supportsNestedImpact(type){
+
+            let supported = ['ApexClass','ApexPage','CustomField','WebLink','EmailTemplate'];
+            return supported.includes(type);
+
+        },
+
+        async getNestedTree(member){
+
+            this.memberInProgress = member;
+
+            this.done = false;
+
+            console.log(member);
+
+            let data = {
+                entryPoint : {
+                    name:member.name,
+                    id:member.id,
+                    type:member.type,
+                    options:{
+                        treeOnly:true
+                    }
+                }
+            }
+
+            let fetchOptions = this.createPostRequest(data);
+        
+            this.submitJob('api/usage',fetchOptions);
+      },
 
         getDisplayName(name){
     
@@ -84,6 +125,10 @@ export default {
         font-weight:500;
     }
 
+    .progress{
+        width: 400px;
+    }
+
     .fa-folder, .fa-folder-open{
         color:$folder-color;
     }   
@@ -95,6 +140,11 @@ export default {
 
     .tag{
         margin-left: 12px;
+    }
+
+    .nestedImpactLink{
+        margin-left: 12px;
+        font-size: 10px;
     }
 
 </style>

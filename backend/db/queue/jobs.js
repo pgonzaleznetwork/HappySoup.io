@@ -111,6 +111,15 @@ async function usageJob(job){
       }
     }
 
+    //supported for nested impact analysis
+    //in which we only need the tree details
+    if(entryPoint.options.treeOnly){
+      let {usageTree} = response;
+      response = usageTree;
+      //THIS NEEDS TO MATCH IN THE TREE TO ONLY SHOW THE RESULTS FOR THAT BRANCH
+      response.key = `${entryPoint.name}${entryPoint.id}`;
+    }
+
     return {
       newCache:session.cache,
       response
