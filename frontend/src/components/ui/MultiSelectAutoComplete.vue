@@ -197,7 +197,7 @@ export default {
     function clickItem(member) {
         context.emit('memberSelected', member)
         searchText.value = member.name;
-        let style = 'background-color:#7ed6df';
+        let style = 'background-color:#d4f8dc';
 
         if(event.srcElement.nodeName == 'SPAN'){
             event.srcElement.parentElement.style = style;

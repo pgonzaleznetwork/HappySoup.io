@@ -22,9 +22,8 @@
                 <p class="is-size-7">Loading metadata. This can take a minute in large orgs (specially sandboxes)</p>
                 <progress  class="progress is-small is-primary" max="100">15%</progress>
             </div>
-        <p style="margin-bottom:5px;font-size:12px;">Select up to 40 members</p>
         <div class="field">
-            <label class="label label-size">Metadata Name</label>
+            <label class="label label-size">Metadata Name  (Select 1 or more)</label>
             <div class="control">
                 <MultiSelectAutoComplete
                 :key="selectedType"
@@ -53,7 +52,7 @@
     </section>
     <div class="field">
         <div class="control">
-            <button @click="emitSubmit" class="button is-info is-small" :disabled="isLoading || !isFormValid">
+            <button @click="emitSubmit" class="button is-info is-small" :disabled="isLoading || !isFormValid || parentIsLoading">
             <span class="icon">
                 <i class="fas fa-search"></i>
             </span>
