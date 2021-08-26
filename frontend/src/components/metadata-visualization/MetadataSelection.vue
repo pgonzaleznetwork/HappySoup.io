@@ -87,7 +87,8 @@ export default {
             }
             else if(this.filter == 'only'){
                 this.types = types.filter(type => {
-                    return type.value == this.values;
+                    return this.values.includes(type.value);
+                    //return type.value == this.values;
                 })
             }
         }

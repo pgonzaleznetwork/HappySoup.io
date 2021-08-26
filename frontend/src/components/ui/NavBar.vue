@@ -23,6 +23,13 @@
           <span style="margin-left:10px">Impact Analysis </span>
       </a>
 
+      <a class="navbar-item" @click="moveTo('/bulk-usage')" :class="{'active-tab':currentTab == '/bulk-usage'}">
+          <span class="icon">
+          <i class="fas fa-sitemap"></i>
+          </span>
+          <span style="margin-left:10px">Bulk Impact Analysis </span>
+      </a>
+
       <a  class="navbar-item"  @click="moveTo('/boundaries')" :class="{'active-tab':currentTab == '/boundaries'}">
         <span class="icon">
         <i class="fas fa-code-branch"></i>

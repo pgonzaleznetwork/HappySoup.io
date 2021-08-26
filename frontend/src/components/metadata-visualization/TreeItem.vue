@@ -10,6 +10,14 @@
         <span class="type" @click="toggle">{{type}} <span class="text-size">({{members.length}})</span> </span>
     </span>
   </div>
+  <Modal :is-active="showModal">
+        <template v-slot:title>
+          Where is this used?
+        </template>
+        <template v-slot:content>
+            <span v-html="waitingMessage"></span>
+        </template>
+      </Modal>
   <li v-if="isOpen" v-for="member in members" :key="member.id">
         <span class="icon-text">
             <span class="icon">
@@ -17,7 +25,11 @@
             </span>
             <span><a :href="member.url" target="_blank">{{getDisplayName(member.name)}}</a></span>
             <Pill v-for="pill in member.pills" :pill="pill"/>
+            <span data-tooltip="Drill down" @click="getNestedTree(member)" v-if="supportsNestedImpact(type) && !member.notUsed" class="icon is-small nestedImpactLink has-tooltip-arrow has-tooltip has-tooltip-right">
+                <i class="fas fa-sitemap" aria-hidden="true"></i>
+            </span>
         </span>
+        <progress  v-if="done == false && isMemberInProgress(member)" class="progress is-small is-primary" max="100">15%</progress>
         <MetadataTree v-if="member.references" :key="member.name" :metadata="member.references" :parent-open="isOpen"/>
   </li>
 </template>
@@ -27,6 +39,7 @@
 import MetadataTree from '@/components/metadata-visualization/MetadataTree.vue';
 import Pill from '@/components/ui/Pill.vue'
 import TreeItem from '@/components/metadata-visualization/TreeItem.vue';
+import jobSubmission from '@/functions/jobSubmission'
 
 export default {
 
@@ -36,9 +49,17 @@ export default {
 
     props:['type','members','parentOpen'],
 
+    setup(){
+      let {submitJob,apiError,apiResponse,done,createPostRequest} = jobSubmission();
+      return {submitJob,apiError,apiResponse,done,createPostRequest};
+    },
+
     data(){
         return{
             isOpen:false,
+            memberInProgress:{name:'HappySoupDefaultName'},
+            nestedTreesRequested:[],
+            showModal:false
         }
     },
 
@@ -46,6 +67,43 @@ export default {
         toggle(){
             this.isOpen = !this.isOpen
         },
+
+        supportsNestedImpact(type){
+
+            let supported = ['ApexClass','ApexPage','CustomField','WebLink','EmailTemplate','AuraDefinitionBundle'];
+            return supported.includes(type);
+
+        },
+
+        isMemberInProgress(member){
+            return this.memberInProgress == member;
+        },
+
+
+        async getNestedTree(member){
+
+            this.memberInProgress = member;
+            this.nestedTreesRequested.push(member);      
+            this.waitingMessage = `Searching where <b>${member.name}</b> is used. It'll take a min!`;      
+
+            this.done = false;
+            this.showModal = true;
+
+            let data = {
+                entryPoint : {
+                    name:member.name,
+                    id:member.id,
+                    type:member.type,
+                    options:{
+                        treeOnly:true
+                    }
+                }
+            }
+
+            let fetchOptions = this.createPostRequest(data);
+        
+            this.submitJob('api/usage',fetchOptions);
+      },
 
         getDisplayName(name){
     
@@ -72,6 +130,30 @@ export default {
                 this.isOpen = true;
                
             }
+        },
+
+        done: function (newDone, oldDone) {
+            if(!oldDone && newDone && !this.apiError){
+
+                let lastMemberRequested = this.nestedTreesRequested.pop();
+
+                //response is empty i.e the member is not used anywhere
+                if(this.apiResponse && Object.keys(this.apiResponse).length === 0){
+
+                    lastMemberRequested.notUsed = true;
+
+                    lastMemberRequested.pills.push({
+                        label:'Not used',
+                        type:'warning',
+                        description:'This item is not used anywhere'
+                    })
+                }
+                else{
+                lastMemberRequested.references = this.apiResponse;
+                }
+                
+                this.showModal = false;
+            }
         }
     }
 }
@@ -82,6 +164,11 @@ export default {
     .type{
         cursor: pointer;
         font-weight:500;
+    }
+
+    .progress{
+        width: 400px;
+        margin-top: 20px;
     }
 
     .fa-folder, .fa-folder-open{
@@ -95,6 +182,13 @@ export default {
 
     .tag{
         margin-left: 12px;
+    }
+
+    .nestedImpactLink{
+        margin-left: 14px;
+        font-size: 10px;
+        margin-top: 5px;
+        cursor: pointer;
     }
 
 </style>
