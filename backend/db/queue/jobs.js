@@ -116,8 +116,6 @@ async function usageJob(job){
     if(entryPoint.options.treeOnly){
       let {usageTree} = response;
       response = usageTree;
-      //THIS NEEDS TO MATCH IN THE TREE TO ONLY SHOW THE RESULTS FOR THAT BRANCH
-      response.key = `${entryPoint.name}${entryPoint.id}`;
     }
 
     return {

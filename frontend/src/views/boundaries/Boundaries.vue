@@ -37,8 +37,8 @@
               <MetadataSelection @typeSelected="getSelectedType" 
               @memberSelected="getSelectedMember" 
               @submitted="submitUsageJob"
-              filter="exclude" 
-              :values="typesToExclude"
+              filter="only" 
+              :values="typesToInclude"
               :parentIsLoading="isLoading"
               button-label="Show Deployment Boundary"/>
             </div>
@@ -84,7 +84,7 @@ export default {
       return{
         selectedType:'',
         selectedMember:{},
-        typesToExclude:['CustomLabel','Layout','StandardField'],
+        typesToInclude:['ApexTrigger','ApexClass','ApexPage','CustomField','ValidationRule'],
         showModal:false,
       }
     },

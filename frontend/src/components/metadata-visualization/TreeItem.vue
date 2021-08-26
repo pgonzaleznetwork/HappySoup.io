@@ -10,6 +10,14 @@
         <span class="type" @click="toggle">{{type}} <span class="text-size">({{members.length}})</span> </span>
     </span>
   </div>
+  <Modal :is-active="showModal">
+        <template v-slot:title>
+          Where is this used?
+        </template>
+        <template v-slot:content>
+            <span v-html="waitingMessage"></span>
+        </template>
+      </Modal>
   <li v-if="isOpen" v-for="member in members" :key="member.id">
         <span class="icon-text">
             <span class="icon">
@@ -17,10 +25,11 @@
             </span>
             <span><a :href="member.url" target="_blank">{{getDisplayName(member.name)}}</a></span>
             <Pill v-for="pill in member.pills" :pill="pill"/>
-            <a v-if="supportsNestedImpact(type)" class="nestedImpactLink" @click="getNestedTree(member)">Where is this used?</a>
+            <span data-tooltip="Drill down" @click="getNestedTree(member)" v-if="supportsNestedImpact(type) && !member.notUsed" class="icon is-small nestedImpactLink has-tooltip-arrow has-tooltip has-tooltip-right">
+                <i class="fas fa-sitemap" aria-hidden="true"></i>
+            </span>
         </span>
-        <progress   v-if="done == false && isMemberInProgress(member)" class="progress is-small is-primary" max="100">15%</progress>
-        <MetadataTree v-if="apiResponse" :metadata="apiResponse" :parent-open="isOpen"/>
+        <progress  v-if="done == false && isMemberInProgress(member)" class="progress is-small is-primary" max="100">15%</progress>
         <MetadataTree v-if="member.references" :key="member.name" :metadata="member.references" :parent-open="isOpen"/>
   </li>
 </template>
@@ -48,7 +57,9 @@ export default {
     data(){
         return{
             isOpen:false,
-            memberInProgress:null,
+            memberInProgress:{name:'HappySoupDefaultName'},
+            nestedTreesRequested:[],
+            showModal:false
         }
     },
 
@@ -59,18 +70,24 @@ export default {
 
         supportsNestedImpact(type){
 
-            let supported = ['ApexClass','ApexPage','CustomField','WebLink','EmailTemplate'];
+            let supported = ['ApexClass','ApexPage','CustomField','WebLink','EmailTemplate','AuraDefinitionBundle'];
             return supported.includes(type);
 
         },
 
+        isMemberInProgress(member){
+            return this.memberInProgress == member;
+        },
+
+
         async getNestedTree(member){
 
             this.memberInProgress = member;
+            this.nestedTreesRequested.push(member);      
+            this.waitingMessage = `Searching where <b>${member.name}</b> is used. It'll take a min!`;      
 
             this.done = false;
-
-            console.log(member);
+            this.showModal = true;
 
             let data = {
                 entryPoint : {
@@ -113,6 +130,30 @@ export default {
                 this.isOpen = true;
                
             }
+        },
+
+        done: function (newDone, oldDone) {
+            if(!oldDone && newDone && !this.apiError){
+
+                let lastMemberRequested = this.nestedTreesRequested.pop();
+
+                //response is empty i.e the member is not used anywhere
+                if(this.apiResponse && Object.keys(this.apiResponse).length === 0){
+
+                    lastMemberRequested.notUsed = true;
+
+                    lastMemberRequested.pills.push({
+                        label:'Not used',
+                        type:'warning',
+                        description:'This item is not used anywhere'
+                    })
+                }
+                else{
+                lastMemberRequested.references = this.apiResponse;
+                }
+                
+                this.showModal = false;
+            }
         }
     }
 }
@@ -127,6 +168,7 @@ export default {
 
     .progress{
         width: 400px;
+        margin-top: 20px;
     }
 
     .fa-folder, .fa-folder-open{
@@ -143,8 +185,10 @@ export default {
     }
 
     .nestedImpactLink{
-        margin-left: 12px;
+        margin-left: 14px;
         font-size: 10px;
+        margin-top: 5px;
+        cursor: pointer;
     }
 
 </style>

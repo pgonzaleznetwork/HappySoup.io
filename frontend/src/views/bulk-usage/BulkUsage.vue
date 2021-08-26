@@ -30,6 +30,9 @@
     <template v-slot:results>
       <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
       <div v-if="!isLoading && apiResponse">
+        <div class="notification is-warning is-light">
+            <span v-html="resultsDescription"></span>
+        </div>
         <FileDownloadButtons @xml="downloadXml(apiResponse)"
             @excel="copyFile('excel',apiResponse)"
             @csv="copyFile('csv',apiResponse)"
@@ -70,6 +73,7 @@ export default {
      data(){
       return{
         selectedType:'',
+        resultsDescription:`The Bulk Impact Analysis is <b>NOT</b> as powerful as the single impact analysis. If you want detailed information about a component, use the Impact Analysis tab`,
         selectedMember:{},
         usageFlags:{},
         typesToExclude:['ValidationRule','Layout'],
