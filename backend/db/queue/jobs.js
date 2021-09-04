@@ -232,6 +232,10 @@ function getStandardFields(){
     ...getAddressFields('')
   ]);
 
+  fieldsByObject.set('Asset', [
+    'SerialNumber'
+  ]);
+
   for (let [object, fields] of fieldsByObject) {
     
     fields.forEach(field => {
