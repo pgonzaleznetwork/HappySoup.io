@@ -70,7 +70,7 @@ export default {
 
         supportsNestedImpact(type){
 
-            let supported = ['ApexClass','ApexPage','CustomField','WebLink','EmailTemplate','AuraDefinitionBundle'];
+            let supported = ['ApexClass','ApexPage','CustomField','WebLink','EmailTemplate','AuraDefinitionBundle','Flow'];
             return supported.includes(type);
 
         },
