@@ -25,7 +25,7 @@
             </span>
             <span><a :href="member.url" target="_blank">{{getDisplayName(member.name)}}</a></span>
             <Pill v-for="pill in member.pills" :pill="pill"/>
-            <span data-tooltip="Drill down" @click="getNestedTree(member)" v-if="supportsNestedImpact(type) && !member.notUsed" class="icon is-small nestedImpactLink has-tooltip-arrow has-tooltip has-tooltip-right">
+            <span data-tooltip="Where is this used?" @click="getNestedTree(member)" v-if="supportsNestedImpact(member) && !member.notUsed" class="icon is-small nestedImpactLink has-tooltip-arrow has-tooltip has-tooltip-right">
                 <i class="fas fa-sitemap" aria-hidden="true"></i>
             </span>
         </span>
@@ -68,10 +68,11 @@ export default {
             this.isOpen = !this.isOpen
         },
 
-        supportsNestedImpact(type){
+        supportsNestedImpact(member){
 
-            let supported = ['ApexClass','ApexPage','CustomField','WebLink','EmailTemplate','AuraDefinitionBundle','Flow'];
-            return supported.includes(type);
+            let supported = ['ApexClass','ApexPage','CustomField','WebLink','EmailTemplate','AuraDefinitionBundle','Flow','CustomLabel'];
+
+            return (supported.includes(member.type) && member.name != member.id);
 
         },
 
