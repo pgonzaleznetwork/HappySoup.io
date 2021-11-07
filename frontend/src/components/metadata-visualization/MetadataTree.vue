@@ -30,4 +30,8 @@ export default {
         margin-left: 25px;
     }
 
+    li{
+        border-left: 1px dotted grey;
+    }
+
 </style>

@@ -48,7 +48,11 @@
                 </div>
                 
             </div>
-
+            <div class="treeHead">
+                <i class="fas fa-box-open"></i>
+                {{apiResponse.entryPoint.name}}
+            </div>
+            
             <MetadataTree :metadata="metadataTree" :parent-open="openTree"/> 
             
         </section>
@@ -363,6 +367,10 @@ export default {
 
 <style>
 
+    .treeHead{
+        font-weight:500;
+        margin-bottom: 10px;
+    }
 
     .canvas-container{
         width:800px;

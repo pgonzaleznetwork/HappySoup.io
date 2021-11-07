@@ -71,8 +71,18 @@ export default {
         supportsNestedImpact(member){
 
             let supported = ['ApexClass','ApexPage','CustomField','WebLink','EmailTemplate','AuraDefinitionBundle','Flow','CustomLabel'];
+            
+            /**
+             * Deployment boundary doesn't support nested impact analysis because
+             * it creates a confusing UI where you are not sure which components are being used vs
+             * which components are using other components
+             * 
+             * All deployment boundary component names include a special character ::: that allows
+             * them to have semi-unique names and prevents infinite recursion in the dependency tree
+             */
+            let isDeploymentBoundaryComponent = member.name.includes(':::');
 
-            return (supported.includes(member.type) && member.name != member.id);
+            return (supported.includes(member.type) && (member.name != member.id) && !isDeploymentBoundaryComponent);
 
         },
 
