@@ -198,7 +198,8 @@ function getStandardFields(){
     'HasOpportunityLineItem',
     'Type',
     'Probability',
-    'IsWon'
+    'IsWon',
+    ...getCommonFields()
   ]);
   
   fieldsByObject.set('Account',[
@@ -208,7 +209,8 @@ function getStandardFields(){
     'IsPersonAccount',
     'Type',
     ...getAddressFields('Billing'),
-    ...getAddressFields('Shipping')
+    ...getAddressFields('Shipping'),
+    ...getCommonFields()
   ]);
 
   fieldsByObject.set('Case',[
@@ -216,20 +218,25 @@ function getStandardFields(){
     'Origin',
     'Priority',
     'Status',
-    'Type'
+    'Type',
+    'Reason',
+    'Subject',
+    ...getCommonFields()
   ]);
 
   fieldsByObject.set('Contact',[
     'Birthdate',
     'LeadSource',
-    ...getAddressFields('Mailing')
+    ...getAddressFields('Mailing'),
+    ...getCommonFields()
   ]);
 
   fieldsByObject.set('Lead', [
     'LeadSource',
     'Industry',
     'Status',
-    ...getAddressFields('')
+    ...getAddressFields(''),
+    ...getCommonFields()
   ]);
 
   for (let [object, fields] of fieldsByObject) {
@@ -245,6 +252,10 @@ function getStandardFields(){
   return allFields;
 
 
+}
+
+function getCommonFields(){
+  return ['RecordType','Owner'];
 }
 
 function getAddressFields(prefix){
