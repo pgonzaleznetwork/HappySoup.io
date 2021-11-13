@@ -30,7 +30,6 @@ If you want to support HappySoup.io by helping us cover the Heroku costs, you ca
 </a> 
 
 
-
 ## :thumbsup: Features
 
 *  Impact Analysis (aka "Where is this used") for custom fields, email templates, apex classes, custom labels and many more. 
@@ -43,9 +42,7 @@ If you want to support HappySoup.io by helping us cover the Heroku costs, you ca
 
 [Watch full demo](https://www.youtube.com/watch?v=2asljhebqlY&t=6s) 
 
-<p align="center">
-  <img src="./github-images/happysoupmini.gif" >
-</p>
+
 
 ## Contents
 
