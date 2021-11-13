@@ -15,7 +15,7 @@ function jobSubmission(){
         let {jobId,error} = json;
     
         if(jobId){
-            intervalId = window.setInterval(checkJobStatus,8000,jobId);
+            intervalId = window.setInterval(checkJobStatus,6000,jobId);
         }     
         else if(error){
             apiError.value = json;
