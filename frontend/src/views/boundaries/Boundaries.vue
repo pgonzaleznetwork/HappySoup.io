@@ -43,6 +43,14 @@
               button-label="Show Deployment Boundary"/>
             </div>
           </div>
+          <div v-if="flags?.length" style="margin-left: 50px;">
+            <div >
+              <div class="has-text-weight-bold" style="margin-bottom:10px;">
+                <span class="label-size">Choose your toppings</span> 
+              </div>
+              <Flag v-for="flag in flags" :label="flag.label" :value="flag.value" :description="flag.description" @ticked="setFlag"/>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -66,13 +74,14 @@
 import MetadataSelection from '@/components/metadata-visualization/MetadataSelection.vue';
 import Panel from '@/components/ui/Panel.vue'
 import jobSubmission from '@/functions/jobSubmission'
+import Flag from '@/components/ui/Flag.vue'
 import DependencyResultPanel from '@/components/metadata-visualization/DependencyResultPanel.vue';
 import Error from '@/components/ui/Error';
 
 
 export default {
 
-    components:{MetadataSelection,Panel,DependencyResultPanel,Error},
+    components:{MetadataSelection,Panel,Flag,DependencyResultPanel,Error},
 
     setup(){
       let {submitJob,apiError,apiResponse,done,createPostRequest} = jobSubmission();
@@ -84,6 +93,7 @@ export default {
       return{
         selectedType:'',
         selectedMember:{},
+        boundaryFlags:{},
         typesToInclude:['ApexTrigger','ApexClass','ApexPage','CustomField','ValidationRule'],
         showModal:false,
       }
@@ -111,12 +121,17 @@ export default {
             name:this.selectedMember.name,
             id:this.selectedMember.id,
             type:this.selectedType,
+            options:this.boundaryFlags
           }
         }
 
         let fetchOptions = this.createPostRequest(data);
       
         this.submitJob('api/boundaries',fetchOptions);
+      },
+
+      setFlag(data){
+        this.boundaryFlags[data.value] = data.ticked;
       }
     },
 
@@ -129,7 +144,18 @@ export default {
 
       isLoading(){
         return !this.done;
+      },
+
+      flags(){
+        return [
+           {
+              label:'Include Managed Package Metadata in package.xml',
+              value:'includeManagedInPackageXml',
+              description:'Managed packages in the deployment boundary will be added to the package.xml, even though it is not possible to deploy managed metadata via the API.'
+            },
+        ]
       }
+
     }
 
 }
