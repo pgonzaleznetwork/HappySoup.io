@@ -239,6 +239,13 @@ function getStandardFields(){
     ...getCommonFields()
   ]);
 
+  fieldsByObject.set('Product2', [
+    'Family',
+    'Description',
+    'ProductCode',
+    'QuantityUnitOfMeasure'
+  ]);
+
   for (let [object, fields] of fieldsByObject) {
     
     fields.forEach(field => {

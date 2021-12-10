@@ -18,7 +18,7 @@
             <span v-html="waitingMessage"></span>
         </template>
       </Modal>
-  <li v-if="isOpen" v-for="member in members" :key="member.id">
+  <li v-show="isOpen" v-for="member in members" :key="member.id">
         <span class="icon-text">
             <span class="icon">
                 <i class="fas fa-code"></i>
