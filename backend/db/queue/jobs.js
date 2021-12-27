@@ -246,6 +246,22 @@ function getStandardFields(){
     'QuantityUnitOfMeasure'
   ]);
 
+  fieldsByObject.set('Campaign', [
+    'Status',
+    'Type',
+    'IsActive',
+    'StartDate',
+    'EndDate'
+  ]);
+
+  fieldsByObject.set('Order', [
+    'Status',
+    'Type',
+    'ActivatedDate',
+    'EffectiveDate',
+    'EndDate'
+  ]);
+
   for (let [object, fields] of fieldsByObject) {
     
     fields.forEach(field => {
