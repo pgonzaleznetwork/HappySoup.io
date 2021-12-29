@@ -199,6 +199,7 @@ function getStandardFields(){
     'Type',
     'Probability',
     'IsWon',
+    'LeadSource',
     ...getCommonFields()
   ]);
   
@@ -221,6 +222,7 @@ function getStandardFields(){
     'Type',
     'Reason',
     'Subject',
+    'ContactPhone',
     ...getCommonFields()
   ]);
 
