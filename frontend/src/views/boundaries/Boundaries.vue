@@ -94,7 +94,7 @@ export default {
         selectedType:'',
         selectedMember:{},
         boundaryFlags:{},
-        typesToInclude:['ApexTrigger','ApexClass','ApexPage','CustomField','ValidationRule'],
+        typesToInclude:['ApexTrigger','ApexClass','ApexPage','CustomField','ValidationRule','FlexiPage'],
         showModal:false,
       }
     },
