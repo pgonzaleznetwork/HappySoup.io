@@ -264,6 +264,12 @@ function getStandardFields(){
     'EndDate'
   ]);
 
+  fieldsByObject.set('OrderItem', [
+    'Quantity',
+    'Type',
+    'EndDate'
+  ]);
+
   for (let [object, fields] of fieldsByObject) {
     
     fields.forEach(field => {
