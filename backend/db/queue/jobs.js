@@ -1,8 +1,3 @@
-
-let Queue = require('bull');
-let {url} = require('../redisConfig');
-const QUEUE_NAME = 'happy-soup';
-let workQueue = new Queue(QUEUE_NAME, url);
 let redisOps = require('../redisOps');
 
 let {metadataAPI,restAPI} = require('sfdc-happy-api')();

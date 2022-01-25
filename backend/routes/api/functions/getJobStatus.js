@@ -51,7 +51,7 @@ async function getJobStatus(req,res,next){
 
 function deleteJobInfo(jobId){
     //redis key format -- bull:happy-soup:pgonzalez@test.com.uat:list-ApexClass1602182549998
-    let redisKey = `bull:happy-soup:${jobId}`;
+    let redisKey = `bull:${process.env.QUEUE_NAME}:${jobId}`;
     redisOps.redisDel(redisKey);
 }
 
