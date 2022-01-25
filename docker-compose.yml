@@ -20,6 +20,7 @@ services:
       - PORT=3000
       - CORS_DOMAINS=http://localhost,http://localhost:3000,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
       - ENFORCE_SSL=false
+      - QUEUE_NAME=happy_queue
   worker:
     build:
       context: .
@@ -34,3 +35,4 @@ services:
       - PORT=3000
       - CORS_DOMAINS=http://localhost,http://localhost:3000,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
       - ENFORCE_SSL=false
+      - QUEUE_NAME=happy_queue

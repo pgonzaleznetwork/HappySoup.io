@@ -1,7 +1,6 @@
 let throng = require('throng');
-let Queue = require("bull");
 let jobs = require('./jobs');
-let {url} = require('../redisConfig');
+let workQueue = require('../queue/queueConfig');
 
 // Spin up multiple processes to handle jobs to take advantage of more CPU cores
 // See: https://devcenter.heroku.com/articles/node-concurrency for more info
@@ -14,8 +13,6 @@ const workers = process.env.WEB_CONCURRENCY || 2;
 const maxJobsPerWorker = 50;
 
 function start() {
-  // Connect to the named work queue
-  let workQueue = new Queue('happy-soup', url);
 
   workQueue.process(maxJobsPerWorker, async (job) => {
 
