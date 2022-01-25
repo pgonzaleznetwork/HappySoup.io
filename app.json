@@ -21,6 +21,10 @@
         "description":"The network port were redis is running. 6379 should be used for local development. If using in heroku, use the port of your own heroku redis account",
         "value":"6379"
     },
+    "QUEUE_NAME":{
+      "description":"The name of the worker queue. Use default value",
+      "value":"happy_queue"
+  },
     "SESSION_SECRET":{
         "description":"A random word that you must specify. This will be used to encrypt the session cookies"
     },
