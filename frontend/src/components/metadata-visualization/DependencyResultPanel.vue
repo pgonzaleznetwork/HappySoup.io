@@ -1,8 +1,8 @@
 <template>
     <div v-if="apiResponseHasData">
 
-        <div class="notification is-warning is-light">
-            <span v-html="resultsDescription"></span>
+        <div class="notification is-danger is-light">
+            <span v-html="warningMessage"></span>
         </div>
 
         <div class="tabs is-boxed">
@@ -305,6 +305,14 @@ export default {
 
         apiResponseHasData(){
             return this.apiResponse && Object.keys(this.apiResponse.stats).length != 0;
+        },
+
+        warningMessage(){
+            return `
+                HappySoup uses the Dependency API to retrieve dependency information.
+                This API does not cover all metadata types. I encourage you to <a href="youtube.com">try Salto's 
+                100% free tier</a> as it covers all metadata types with it's easy to use full-text search.
+            `
         },
 
         resultsDescription(){

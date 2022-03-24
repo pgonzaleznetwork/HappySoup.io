@@ -1,7 +1,11 @@
 <template>
+<div id="nav-warning">Missing dependencies? Salto's 100% free tier fills the gaps! 
+  <a href="app.salto.io" target="_blank" rel="noopener noreferrer">Check it out here!</a> 
+</div>
   <div class="nav-container">
   <section class="container">
      <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div>text</div>
   <div class="navbar-brand">
     <span class="navbar-item is-size-4 has-text-weight-semibold">HappySoup.io</span>
 
@@ -20,7 +24,7 @@
           <span class="icon">
           <i class="fas fa-sitemap"></i>
           </span>
-          <span style="margin-left:10px">Impact Analysis </span>
+          <span style="margin-left:10px">Impact Analysis</span>
       </a>
 
       <a class="navbar-item" @click="moveTo('/bulk-usage')" :class="{'active-tab':currentTab == '/bulk-usage'}">
@@ -171,6 +175,19 @@ export default {
 </script>
 
 <style lang="scss">
+
+#nav-warning{
+  color: white;
+  background-color: #ff556a;
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+
+  a{
+    color: white;
+    text-decoration: underline;
+  }
+}
 
 .nav-container{
 
