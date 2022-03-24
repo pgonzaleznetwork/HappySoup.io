@@ -311,7 +311,7 @@ export default {
             return `
                 HappySoup uses the Dependency API to retrieve dependency information.
                 This API does not cover all metadata types. I encourage you to <a href="youtube.com">try Salto's 
-                100% free tier</a> as it covers all metadata types with it's easy to use full-text search.
+                100% free tier</a> as it covers all metadata types with its easy to use full-text search.
             `
         },
 
