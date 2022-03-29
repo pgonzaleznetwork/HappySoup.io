@@ -310,8 +310,7 @@ export default {
         warningMessage(){
             return `
                 HappySoup uses the Dependency API to retrieve dependency information.
-                This API does not cover all metadata types. I encourage you to <a href="youtube.com">try Salto's 
-                100% free tier</a> as it covers all metadata types with its easy to use full-text search.
+                This API does not cover all metadata types. I recommend you use <a style="font-weight:bold" href="youtube.com">this app</a> as it covers all metadata types with its easy to use full-text search.
             `
         },
 

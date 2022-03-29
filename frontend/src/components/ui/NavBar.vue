@@ -1,8 +1,9 @@
 <template>
-<div id="nav-warning">Missing dependencies? Salto's 100% free tier fills the gaps! 
-  <a href="app.salto.io" target="_blank" rel="noopener noreferrer">Check it out here!</a> 
-</div>
   <div class="nav-container">
+    <div id="nav-warning">Use HappySoup along with my 2nd favorite 
+      <a href="https://www.salto.io/blog/salesforce-metadata-reimagined-goodbye-xml" target="_blank" rel="noopener noreferrer">app</a>
+        to do impact analysis the right way!
+    </div>
   <section class="container">
      <nav class="navbar" role="navigation" aria-label="main navigation">
       <div>text</div>
@@ -178,10 +179,12 @@ export default {
 
 #nav-warning{
   color: white;
-  background-color: #ff556a;
-  font-size: 20px;
+  background-color: #6d48d9;
+  font-size: 15px;
   text-align: center;
   font-weight: bold;
+  padding-bottom: 10px;
+  padding-top: 10px;
 
   a{
     color: white;

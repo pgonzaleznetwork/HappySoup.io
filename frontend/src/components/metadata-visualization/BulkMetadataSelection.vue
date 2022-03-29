@@ -219,8 +219,9 @@ export default {
         @extend .text-size;
     }
 
-    .button{
+    .button.is-info{
         margin-top: 20px;
+        background-color: $alternative-background;
     }
 
     .pui-datatable thead th:nth-child(1),
