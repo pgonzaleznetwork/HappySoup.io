@@ -178,8 +178,8 @@ export default {
 <style lang="scss">
 
 #nav-warning{
-  color: white;
-  background-color:$alternative-background;
+  color: black;
+  background-color:#FBB62B;
   font-size: 15px;
   text-align: center;
   font-weight: bold;
@@ -187,7 +187,7 @@ export default {
   padding-top: 10px;
 
   a{
-    color: white;
+    color: black;
     text-decoration: underline;
   }
 }
