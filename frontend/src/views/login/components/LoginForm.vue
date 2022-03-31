@@ -239,6 +239,7 @@ img {
 
 a{
   text-decoration: underline;
+  color:$alternative-background;
 }
 
 .button.is-link{

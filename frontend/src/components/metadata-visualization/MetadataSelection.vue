@@ -18,7 +18,7 @@
         </div>
         <div class="field" v-if="!done">
             <p class="is-size-7">Loading metadata. This can take a minute in large orgs (specially sandboxes)</p>
-          <progress  class="progress is-small is-primary" max="100">15%</progress>
+          <progress  class="progress is-small is-link" max="100">15%</progress>
         </div>
         <Error v-if="!isLoading && apiError" :error="apiError"/>
         <div class="field">
@@ -171,5 +171,6 @@ export default {
     section{
         max-width: 362px;
     }
+
 
 </style>

@@ -20,7 +20,7 @@
             </div>
             <div class="field" v-if="!done">
                 <p class="is-size-7">Loading metadata. This can take a minute in large orgs (specially sandboxes)</p>
-                <progress  class="progress is-small is-primary" max="100">15%</progress>
+                <progress  class="progress is-small is-link" max="100">15%</progress>
             </div>
         <div class="field">
             <label class="label label-size">Metadata Name  (Select 1 or more)</label>

@@ -42,7 +42,7 @@
         <section v-show="activeTab == 'tree'">
             <div class="is-flex is-flex-direction-row is-justify-content-space-between mb-4">
                 <div>
-                    <button class="button is-small is-info is-light" @click="toggleTree">
+                    <button class="button is-small is-link is-light" id="tree-button" @click="toggleTree">
                         {{treeControlLabel}}
                     </button>
                 </div>
@@ -310,7 +310,8 @@ export default {
         warningMessage(){
             return `
                 HappySoup uses the Dependency API to retrieve dependency information.
-                This API does not cover all metadata types. I recommend you use <a style="font-weight:bold" href="youtube.com">this app</a> as it covers all metadata types with its easy to use full-text search.
+                This API does not cover all metadata types. I recommend you use <a style="font-weight:bold" href="youtube.com">this app</a> 
+                along with HappySoup as it covers all metadata types with its easy to use full-text search.
             `
         },
 
@@ -372,7 +373,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" >
 
     .treeHead{
         font-weight:500;
@@ -388,5 +389,9 @@ export default {
     canvas{
         background-color:white;
     }
+
+   
+
+    
 
 </style>

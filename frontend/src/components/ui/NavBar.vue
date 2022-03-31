@@ -179,7 +179,7 @@ export default {
 
 #nav-warning{
   color: white;
-  background-color: #6d48d9;
+  background-color:$alternative-background;
   font-size: 15px;
   text-align: center;
   font-weight: bold;
