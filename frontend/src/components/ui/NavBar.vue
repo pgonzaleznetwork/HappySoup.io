@@ -1,7 +1,7 @@
 <template>
   <div class="nav-container">
     <div id="nav-warning">Use HappySoup along with my 2nd favorite 
-      <a href="https://www.salto.io/blog/salesforce-metadata-reimagined-goodbye-xml" target="_blank" rel="noopener noreferrer">app</a>
+      <a href="https://www.salto.io/blog/salto-free-tier-takes-salesforce-impact-analysis-to-the-next-level" target="_blank" rel="noopener noreferrer">app</a>
         to do impact analysis the right way!
     </div>
   <section class="container">
