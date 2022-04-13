@@ -28,7 +28,7 @@
 
     
     <template v-slot:results>
-      <progress v-if="isLoading" class="progress is-small is-success" max="100">15%</progress>
+      <progress v-if="isLoading" class="progress is-small is-link" max="100">15%</progress>
       <div v-if="!isLoading && apiResponse">
         <div class="notification is-warning is-light">
             <span v-html="resultsDescription"></span>

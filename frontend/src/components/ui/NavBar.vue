@@ -1,7 +1,12 @@
 <template>
   <div class="nav-container">
+    <div id="nav-warning">Use HappySoup along with my 2nd favorite 
+      <a href="https://www.salto.io/blog/salto-free-tier-takes-salesforce-impact-analysis-to-the-next-level" target="_blank" rel="noopener noreferrer">app</a>
+        to do impact analysis the right way!
+    </div>
   <section class="container">
      <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div>text</div>
   <div class="navbar-brand">
     <span class="navbar-item is-size-4 has-text-weight-semibold">HappySoup.io</span>
 
@@ -20,7 +25,7 @@
           <span class="icon">
           <i class="fas fa-sitemap"></i>
           </span>
-          <span style="margin-left:10px">Impact Analysis </span>
+          <span style="margin-left:10px">Impact Analysis</span>
       </a>
 
       <a class="navbar-item" @click="moveTo('/bulk-usage')" :class="{'active-tab':currentTab == '/bulk-usage'}">
@@ -171,6 +176,21 @@ export default {
 </script>
 
 <style lang="scss">
+
+#nav-warning{
+  color: black;
+  background-color:#FBB62B;
+  font-size: 15px;
+  text-align: center;
+  font-weight: bold;
+  padding-bottom: 10px;
+  padding-top: 10px;
+
+  a{
+    color: black;
+    text-decoration: underline;
+  }
+}
 
 .nav-container{
 

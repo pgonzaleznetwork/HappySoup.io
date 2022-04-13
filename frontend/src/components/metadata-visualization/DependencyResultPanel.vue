@@ -1,8 +1,8 @@
 <template>
     <div v-if="apiResponseHasData">
 
-        <div class="notification is-warning is-light">
-            <span v-html="resultsDescription"></span>
+        <div class="notification is-danger is-light">
+            <span v-html="warningMessage"></span>
         </div>
 
         <div class="tabs is-boxed">
@@ -42,7 +42,7 @@
         <section v-show="activeTab == 'tree'">
             <div class="is-flex is-flex-direction-row is-justify-content-space-between mb-4">
                 <div>
-                    <button class="button is-small is-info is-light" @click="toggleTree">
+                    <button class="button is-small is-link is-light" id="tree-button" @click="toggleTree">
                         {{treeControlLabel}}
                     </button>
                 </div>
@@ -307,6 +307,14 @@ export default {
             return this.apiResponse && Object.keys(this.apiResponse.stats).length != 0;
         },
 
+        warningMessage(){
+            return `
+                HappySoup uses the Dependency API to retrieve dependency information.
+                This API does not cover all metadata types. I recommend you use <a style="font-weight:bold" target="_blank" href="https://app.salto.io/login?isSalesforce=true&utm_source=happy_soup&utm_medium=referrals&isFreeTier=true">Salto's Free Tier</a> 
+                along with HappySoup as it covers all metadata types with its easy to use full-text search.
+            `
+        },
+
         resultsDescription(){
 
             let isUsage = this.apiResponse.hasOwnProperty('usageTree');
@@ -365,7 +373,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" >
 
     .treeHead{
         font-weight:500;
@@ -381,5 +389,9 @@ export default {
     canvas{
         background-color:white;
     }
+
+   
+
+    
 
 </style>

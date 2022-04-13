@@ -29,7 +29,7 @@
                 <i class="fas fa-sitemap" aria-hidden="true"></i>
             </span>
         </span>
-        <progress  v-if="done == false && isMemberInProgress(member)" class="progress is-small is-primary" max="100">15%</progress>
+        <progress  v-if="done == false && isMemberInProgress(member)" class="progress is-small is-link" max="100">15%</progress>
         <MetadataTree v-if="member.references" :key="member.name" :metadata="member.references" :parent-open="isOpen"/>
   </li>
 </template>

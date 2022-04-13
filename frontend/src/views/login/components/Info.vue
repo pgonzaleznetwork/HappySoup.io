@@ -26,7 +26,9 @@ export default {
 
 <style lang="scss" scoped>
 
-    
+    .has-text-info{
+        color:$alternative-background !important;
+    }
 
     .info{
         max-width: 500px;

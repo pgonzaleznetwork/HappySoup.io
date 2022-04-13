@@ -28,7 +28,7 @@ export default {
 <style lang="scss" scoped>
 
     .message-body{
-        border-color: $success-color;
+        border-color: $alternative-background;
         padding-bottom: 1px;
     }
 

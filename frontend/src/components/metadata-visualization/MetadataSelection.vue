@@ -18,7 +18,7 @@
         </div>
         <div class="field" v-if="!done">
             <p class="is-size-7">Loading metadata. This can take a minute in large orgs (specially sandboxes)</p>
-          <progress  class="progress is-small is-primary" max="100">15%</progress>
+          <progress  class="progress is-small is-link" max="100">15%</progress>
         </div>
         <Error v-if="!isLoading && apiError" :error="apiError"/>
         <div class="field">
@@ -38,7 +38,7 @@
 
         <div class="field">
             <div class="control">
-                <button @click="emitSubmit" class="button is-info is-small" :disabled="isLoading || !isFormValid">
+                <button @click="emitSubmit" class="button is-link is-small" :disabled="isLoading || !isFormValid">
                 <span class="icon">
                     <i class="fas fa-search"></i>
                 </span>
@@ -164,9 +164,13 @@ export default {
 
 <style lang="scss" scoped>
 
+    .button.is-link{
+        background-color: $alternative-background;
+    }
 
     section{
         max-width: 362px;
     }
+
 
 </style>

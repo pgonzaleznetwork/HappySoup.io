@@ -56,7 +56,7 @@
 
     <div class="field">
       <div class="control">
-        <button class="button is-info" :disabled="!isFormValid">
+        <button class="button is-link" :disabled="!isFormValid">
           <span class="icon">
             <i class="fas fa-cloud"></i>
           </span>
@@ -233,12 +233,18 @@ img {
 .line {
   height: 5px;
   margin: 0 auto;
-  background: #3498db;
+  background: $alternative-background;
   width: 300px;
 }
 
 a{
   text-decoration: underline;
+  color:$alternative-background;
 }
+
+.button.is-link{
+    background-color: $alternative-background;
+  }
+
 </style>
 
