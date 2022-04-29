@@ -5,6 +5,7 @@ import BulkUsage from '../views/bulk-usage/BulkUsage';
 import Configure from '../views/configure/Configure.vue';
 import Boundaries from '../views/boundaries/Boundaries.vue';
 import LayoutDictionary from '../views/layout-dictionary/LayoutDictionary.vue';
+import WorkflowInfo from '../views/workflows/WorkflowInfo.vue';
 import ApexBio from '../views/apex-bio/ApexBio.vue';
 import NotFound from '../views/not-found/NotFound.vue';
 import Session from '@/views/session/Session.vue';
@@ -14,6 +15,12 @@ const routes = [
     path: '/',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/workflows',
+    name: 'WorkflowInfo',
+    component: WorkflowInfo,
+    beforeEnter:requireAuth
   },
   {
     path: '/usage',
@@ -41,12 +48,7 @@ const routes = [
     beforeEnter:requireAuth
     
   },
-  {
-    path: '/apex-bio',
-    name: 'ApexBio',
-    component: ApexBio,
-    beforeEnter:requireAuth
-  },
+  
   {
     path: '/session',
     name: 'Session',

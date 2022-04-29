@@ -1,7 +1,7 @@
 <template>
     <section>
         <div class="field">
-            <label class="label label-size">Metadata Type</label>
+            <label class="label label-size" >{{ dropdownName }} </label>
             <div class="control has-icons-left">
             <div class="select is-small" >
                 <select v-model="selectedType" @change="getMembers" :disabled="isLoading">
@@ -22,7 +22,7 @@
         </div>
         <Error v-if="!isLoading && apiError" :error="apiError"/>
         <div class="field">
-            <label class="label label-size">Metadata Name</label>
+            <label class="label label-size">{{ autoCompleteName }}</label>
             <div class="control">
             <Autocomplete
             :key="selectedType"
@@ -59,7 +59,22 @@ import Error from '@/components/ui/Error';
 export default {
   components: { Autocomplete , Error},
 
-    props:['filter','values','mode','parentIsLoading','buttonLabel'],
+    props:{
+        filter:String,
+        values:Array,
+        parentIsLoading:Boolean,
+        buttonLabel:String,
+        dropdownName:{
+            type:String,
+            default:'Metadata Type'
+        },
+        autoCompleteName:{
+            type:String,
+            default:'Metaata Name'
+        }
+    },
+
+   // props:['filter','values','mode','parentIsLoading','buttonLabel','dropdownName','autoCompleteName'],
 
     setup(){
       let {submitJob,apiError,apiResponse,done,createPostRequest} = jobSubmission();
