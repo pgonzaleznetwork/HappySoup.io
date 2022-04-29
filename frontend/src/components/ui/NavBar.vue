@@ -22,9 +22,9 @@
       
       <a class="navbar-item" @click="moveTo('/workflows')" :class="{'active-tab':currentTab == '/workflows'}">
           <span class="icon">
-          <i class="fas fa-sitemap"></i>
+          <i class="fas fa-book"></i>
           </span>
-          <span style="margin-left:10px">Workflow Info </span>
+          <span style="margin-left:10px">Workflow Migration Info </span>
       </a>
 
       <a class="navbar-item" @click="moveTo('/usage')" :class="{'active-tab':currentTab == '/usage'}">
