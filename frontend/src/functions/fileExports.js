@@ -16,7 +16,15 @@ function fileExports(){
 
         if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
             var textarea = document.createElement('textarea');
-            textarea.textContent = data[type];
+
+            if(typeof data == 'object'){
+                textarea.textContent = data[type];
+            }
+            else{
+                textarea.textContent = data;
+            }
+
+            
             textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in Microsoft Edge.
             document.body.appendChild(textarea);
             textarea.select();

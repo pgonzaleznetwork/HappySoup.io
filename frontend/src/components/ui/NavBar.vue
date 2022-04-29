@@ -20,6 +20,12 @@
   <div class="navbar-menu" :class="{'is-active':showMobileMenu}">
     <div class="navbar-start">
       
+      <a class="navbar-item" @click="moveTo('/workflows')" :class="{'active-tab':currentTab == '/workflows'}">
+          <span class="icon">
+          <i class="fas fa-sitemap"></i>
+          </span>
+          <span style="margin-left:10px">Workflow Info </span>
+      </a>
 
       <a class="navbar-item" @click="moveTo('/usage')" :class="{'active-tab':currentTab == '/usage'}">
           <span class="icon">
@@ -34,6 +40,8 @@
           </span>
           <span style="margin-left:10px">Bulk Impact Analysis </span>
       </a>
+
+       
 
       <a  class="navbar-item"  @click="moveTo('/boundaries')" :class="{'active-tab':currentTab == '/boundaries'}">
         <span class="icon">
@@ -122,7 +130,7 @@ export default {
     return{
       username:'',
       showMobileMenu:false,
-      currentTab:'/usage',
+      currentTab:'/workflows',
       orgUrl:''
     }
   },

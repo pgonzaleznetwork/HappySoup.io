@@ -1,19 +1,22 @@
 <template>
 
   <div class="is-flex is-flex-direction-row is-justify-content-flex-end mb-4">
-        <button @click="xml" class="button is-small ">
+
+        <button  v-if="!hideXml" @click="xml" class="button is-small ">
             <span class="icon xml">
                 <i class="fa fa-download"></i>
             </span>
             <span class="font-weight-500">Download package.xml</span>
         </button>
-        <button @click="excel" class="button is-small ml-3">
+
+        <button  v-if="!hideExcel" @click="excel" class="button is-small ml-3">
             <span class="icon" style="color:green">
                 <i class="fas fa-file-excel"></i>
             </span>
             <span class="font-weight-500">Copy (Excel)</span>
         </button>
-        <button @click="csv" class="button is-small ml-3">
+
+        <button  v-if="!hideCsv" @click="csv" class="button is-small ml-3">
             <span class="icon">
                 <i class="fas fa-file-csv"></i>
             </span>
@@ -24,6 +27,8 @@
 
 <script>
 export default {
+
+    props:['hideXml','hideCsv','hideExcel'],
 
     methods:{
 

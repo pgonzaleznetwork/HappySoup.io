@@ -30,7 +30,7 @@ export default {
   components:{LoginForm,Info},
 
   mounted(){
-    this.$router.push('/usage');
+    this.$router.push('/workflows');
   
   }
 }
