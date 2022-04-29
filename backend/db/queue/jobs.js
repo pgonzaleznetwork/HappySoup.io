@@ -134,6 +134,21 @@ async function bulkUsageJob(job){
 
 }
 
+async function workflowInfoJob(job){
+
+  let {entryPoint,sessionId} = job.data;
+  let session = await getSession(sessionId);
+
+  let connection = sessionValidation.getConnection(session);
+
+  let soupApi = sfdcSoup(connection,entryPoint);
+  let response = await soupApi.getWorkflowInfo();
+
+  return {
+    response
+  }
+}
+
 async function boundaryJob(job){
 
     let {entryPoint,sessionId} = job.data;
@@ -305,4 +320,4 @@ function getAddressFields(prefix){
   return fields;
 }
 
-module.exports = {boundaryJob,usageJob,listMetadataJob,bulkUsageJob};
+module.exports = {boundaryJob,usageJob,listMetadataJob,bulkUsageJob,workflowInfoJob};

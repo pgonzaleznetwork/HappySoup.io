@@ -62,6 +62,25 @@ apiRouter.route('/boundaries')
     }
 );
 
+/********************** /workflows ENDPOINT ****************************************/
+
+apiRouter.route('/workflows')
+
+
+.post(
+    cors(corsOptions),
+    sessionValidation.validateSessions,
+    require('./functions/submitWorkflowInfoJob')
+)
+
+//any other method on boundaries/ is blocked
+.all(
+    (req,res,next) => {
+        let metadataId = req.params.metadataId;
+        res.status(403).send(`${req.method} not allowed on workflows/${metadataId}`);
+    }
+);
+
 /********************** /usage ENDPOINT ****************************************/
 
 apiRouter.route('/usage')
