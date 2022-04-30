@@ -50,12 +50,12 @@
         <span style="margin-left:10px">Deployment Boundaries </span>
       </a>
 
-      <a  class="navbar-item"  @click="moveTo('/layout-dictionary')" :class="{'active-tab':currentTab == '/layout-dictionary'}">
+      <!--<a  class="navbar-item"  @click="moveTo('/layout-dictionary')" :class="{'active-tab':currentTab == '/layout-dictionary'}">
         <span class="icon">
         <i class="fas fa-book"></i>
         </span>
         <span style="margin-left:10px">Page Layout Dictionary </span> 
-      </a>
+      </a>-->
 
       
 

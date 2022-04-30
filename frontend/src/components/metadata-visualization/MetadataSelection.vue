@@ -70,7 +70,7 @@ export default {
         },
         autoCompleteName:{
             type:String,
-            default:'Metaata Name'
+            default:'Metadata Name'
         }
     },
 
