@@ -310,7 +310,7 @@ export default {
         warningMessage(){
             return `
                 HappySoup uses the Dependency API to retrieve dependency information.
-                This API does not cover all metadata types. I recommend you use <a style="font-weight:bold" target="_blank" href="https://app.salto.io/login?isSalesforce=true&utm_source=happy_soup&utm_medium=referrals&isFreeTier=true">Salto's Free Tier</a> 
+                This API does not cover all metadata types. I recommend you use <a style="font-weight:bold" target="_blank" href="https://app.salto.io/login?isSalesforce=true&isFreeTier=true?utm_source=HappySoup&utm_medium=referral">Salto's Free Tier</a> 
                 along with HappySoup as it covers all metadata types with its easy to use full-text search.
             `
         },
