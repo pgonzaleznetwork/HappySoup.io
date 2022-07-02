@@ -1,9 +1,9 @@
 <template>
     <div v-if="apiResponseHasData">
 
-        <div class="notification is-danger is-light">
+        <!--<div class="notification is-danger is-light">
             <span v-html="warningMessage"></span>
-        </div>
+        </div>-->
 
         <div class="tabs is-boxed">
             <ul>
