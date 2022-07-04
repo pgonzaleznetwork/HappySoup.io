@@ -36,7 +36,7 @@
     "sfdc-dependency-api-bulk": "4.0.0",
     "sfdc-field-utilization": "9.0.0",
     "sfdc-happy-api": "2.4.0",
-    "sfdc-soup": "^18.2.1",
+    "sfdc-soup": "18.3.0",
     "throng": "^4.0.0",
     "vue3-autocomplete": "1.0.1"
   },
