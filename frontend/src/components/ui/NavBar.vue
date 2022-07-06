@@ -1,7 +1,7 @@
 <template>
   <div class="nav-container">
     <div id="nav-warning">Use HappySoup along with my 2nd favorite 
-      <a href="https://app.salto.io/login?isSalesforce=true&isFreeTier=true&utm_source=HappySoup&utm_medium=referral" target="_blank" rel="noopener noreferrer">app</a>
+      <a href="https://app.salto.io/login?isSalesforce=true&isFreeTier=true&utm_source=HappySoup&utm_medium=referral&utm_campaign=In%20app%20banner%20%7C%20HappySoup" target="_blank">app</a>
         to do impact analysis the right way!
     </div>
   <section class="container">
@@ -201,6 +201,8 @@ export default {
 }
 
 .nav-container{
+
+  font-size: 13px;
 
   background-color: $background-color;
 

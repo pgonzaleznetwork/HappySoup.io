@@ -5,9 +5,13 @@
       Workflow Migration Info
     </template>
 
+    
+
     <template v-slot:tip>
 
       <p>This tool lets you export all the information of the workflow rules for a given object, in an easy to understand format. You can use this to audit your workflows and decide which ones to move over the flows</p>
+
+      <iframe width="360" height="215" src="https://www.youtube.com/embed/X6k2msXeAgM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
       <Modal :is-active="showModal" @closeModal="toggleModal">
         <template v-slot:title>
@@ -49,8 +53,8 @@
       <progress v-if="isLoading" class="progress is-small is-link" max="100">15%</progress>
       <div v-if="!isLoading && apiResponse">
 
-        <div class="notification is-warning is-light">
-            Done! Click the "Copy" button below, and then paste the results in a file that can be imported to a spreadsheet.
+        <div class="notification is-success is-light">
+            Done! Click the "Copy" button below and  paste the results in a file .csv file. Then upload that to a spreadsheet (check the video above for more details!)
         </div>
 
         <FileDownloadButtons 
