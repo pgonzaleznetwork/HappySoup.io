@@ -6,13 +6,7 @@
           <p class="is-size-6">Keeping your org clean and healthy is a basic right, so this one is on us!</p>
           <p class="has-text-weight-semibold"><i class="has-text-info fas fa-laptop-code"></i> Salesforce Impact Analysis</p>
           <p class="is-size-6">"Where is this used?" analysis across many metadata types</p>
-          <p class="has-text-weight-semibold"><i class="has-text-info fas fa-file-code"></i> Salesforce Dependency Analysis</p>
-          <p class="is-size-6">Visualize metadata dependencies in tree, csv and package.xml format</p>
-          <p class="has-text-weight-semibold"><i class="has-text-info fas fa-sitemap"></i> The only way to discover Deployment Boundaries</p>
-          <p class="is-size-6">Your org is made up of a large group of Deployment Boundaries, identify them in one click</p>
-          <p class="has-text-weight-semibold"><i class="has-text-info fab fa-codepen"></i>  Break up your metadata and plan your move to SFDX</p>
-          <p class="is-size-6">Export an entire Deployment Boundary in a deployment-ready package.xml to and deploy it to scratch orgs or unlocked packages</p>
-          <p class="has-text-weight-semibold"> Not convinced? Watch an  <a target="_blank" href="https://www.youtube.com/watch?v=2asljhebqlY">awesome demo!</a> <i class="fab fa-youtube"></i></p>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/LgdJouoE3HE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>  
     </div>
     </div>
