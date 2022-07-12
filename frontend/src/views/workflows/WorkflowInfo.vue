@@ -54,8 +54,11 @@
       <div v-if="!isLoading && apiResponse">
 
         <div class="notification is-success is-light">
-            Done! Click the "Copy" button below and  paste the results in a file .csv file. Then upload that to a spreadsheet (check the video above for more details!)
+            Done! Click the <b>Copy (csv)</b> button below and  paste the results in a .csv file. Then upload that to a spreadsheet (check the <a href="https://youtu.be/X6k2msXeAgM" target="_blank">video above</a> for more details!)
         </div>
+        <p style="margin-left:20px">Before you migrate to flow, check out my <b><a href="https://www.salto.io/salesforce-flows-cheatsheet?utm_source=HappySoup&utm_medium=referral&utm_campaign=Content%20%7C%20Flows%20Cheat%20Sheet" target="_blank">
+            Ultimate Salesforce Flow Cheatsheet</a></b>!
+        </p>
 
         <FileDownloadButtons 
             :hideExcel=true

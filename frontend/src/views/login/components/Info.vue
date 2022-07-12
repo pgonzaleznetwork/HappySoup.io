@@ -1,13 +1,14 @@
 <template>
    <div class="info">
-      <div>
-        <div class="is-size-5 ">
-          <p class="has-text-weight-semibold"><i class="has-text-info fas fa-wallet"></i>  100% free and open source</p>
-          <p class="is-size-6">Keeping your org clean and healthy is a basic right, so this one is on us!</p>
-          <p class="has-text-weight-semibold"><i class="has-text-info fas fa-laptop-code"></i> Salesforce Impact Analysis</p>
-          <p class="is-size-6">"Where is this used?" analysis across many metadata types</p>
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/LgdJouoE3HE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>  
+      <div class="ad">
+        <a href="https://dataimporter.io?source=happysoup" target="_blank" >
+            <img src="../../../assets/dataimporter.png" />
+        </a>
+        <div class="copy">
+        <a href="https://dataimporter.io?source=happysoup" target="_blank">
+        Explore new ways to automate your Salesforce data imports
+        </a>
+        </div>
     </div>
     </div>
 </template>
@@ -19,6 +20,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+    .ad{
+        text-align: center;
+
+        
+    }
 
     .has-text-info{
         color:$alternative-background !important;
