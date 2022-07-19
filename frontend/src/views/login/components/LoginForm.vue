@@ -48,6 +48,14 @@
     <div class="field">
       <div class="control">
         <label>
+          If you enjoy HappySoup, consider <a href="https://www.buymeacoffee.com/happysoup" target="_blank">buying me a coffee</a>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <label>
           <input v-model="privacyAccepted" type="checkbox" />
           I agree to the HappySoup.io <a  href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a>
         </label>
