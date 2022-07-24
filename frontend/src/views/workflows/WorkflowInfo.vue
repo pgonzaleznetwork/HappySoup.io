@@ -53,6 +53,10 @@
       <progress v-if="isLoading" class="progress is-small is-link" max="100">15%</progress>
       <div v-if="!isLoading && apiResponse">
 
+        <a href="https://www.stackforce.one/#/portal/signup" target="_blank">
+            <img src="../../assets/forcestack.png" style="max-width:500px"/>
+        </a>
+
         <div class="notification is-success is-light">
             Done! Click the <b>Copy (csv)</b> button below and  paste the results in a .csv file. Then upload that to a spreadsheet (check the <a href="https://youtu.be/X6k2msXeAgM" target="_blank">video above</a> for more details!)
         </div>
