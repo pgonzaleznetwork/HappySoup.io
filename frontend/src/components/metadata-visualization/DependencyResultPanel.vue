@@ -5,8 +5,8 @@
             <span v-html="warningMessage"></span>
         </div>-->
 
-        <a href="https://www.stackforce.one/#/portal/signup" target="_blank">
-            <img src="../../assets/forcestack.png" style="max-width:500px"/>
+        <a href="https://www.stackforce.one" target="_blank">
+            <img src="../../assets/stackforce-ad.png" style="max-width:500px"/>
         </a>
         <div class="tabs is-boxed">
             <ul>
