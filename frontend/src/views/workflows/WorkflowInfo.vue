@@ -53,6 +53,8 @@
       <progress v-if="isLoading" class="progress is-small is-link" max="100">15%</progress>
       <div v-if="!isLoading && apiResponse">
 
+        <p>Do you enjoy HappySoup? Check out my new and unique microblog!</p>
+        <br>
         <a href="https://www.stackforce.one" target="_blank">
             <img src="../../assets/stackforce-ad.png" style="max-width:500px"/>
         </a>

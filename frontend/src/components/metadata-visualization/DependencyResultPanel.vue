@@ -5,6 +5,8 @@
             <span v-html="warningMessage"></span>
         </div>-->
 
+        <p>Do you enjoy HappySoup? Check out my new and unique microblog!</p>
+        <br>
         <a href="https://www.stackforce.one" target="_blank">
             <img src="../../assets/stackforce-ad.png" style="max-width:500px"/>
         </a>

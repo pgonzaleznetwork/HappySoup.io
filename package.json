@@ -9,7 +9,8 @@
     "dc-build": "docker-compose up --build",
     "local": " parallelshell 'node ./bin/www' 'node ./services/worker.js' 'cd frontend && npm start' ",
     "commit": "git-cz",
-    "update-api": "npm install sfdc-happy-api@latest sfdc-soup@latest"
+    "update-api": "npm install sfdc-happy-api@latest sfdc-soup@latest",
+    "ui": "cd frontend && npm run build && cd .. && code backend/server/public/index.html"
   },
   "engines": {
     "node": "14.x"
