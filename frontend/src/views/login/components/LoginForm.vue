@@ -64,12 +64,7 @@
 
     <div class="field">
       <div class="control">
-        <button class="button is-link" :disabled="!isFormValid">
-          <span class="icon">
-            <i class="fas fa-cloud"></i>
-          </span>
-          <span>Log in with Salesforce</span>
-        </button>
+        
       </div>
     </div>
     <p><a  href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#happysoupio" target="_blank">Documentation</a></p>
