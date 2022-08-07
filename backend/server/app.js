@@ -18,7 +18,13 @@ if(process.env.ENFORCE_SSL == 'true'){
 }
 
 app.use((req,res,next) => {
-  res.redirect(301,'https://github.com/pgonzaleznetwork/sfdc-happy-soup#one-click-deployment-to-your-own-heroku-account')
+
+  if(req.hostname == 'sfdc-happy-soup.herokuapp.com'){
+    res.redirect(301,'https://happysoup.io');
+  }else{
+    next();
+  }  
+
 });
 
 app.use('/oauth2',require('../routes/oauthRouter'));
