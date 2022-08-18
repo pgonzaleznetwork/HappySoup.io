@@ -6,6 +6,7 @@ import Configure from '../views/configure/Configure.vue';
 import Boundaries from '../views/boundaries/Boundaries.vue';
 import LayoutDictionary from '../views/layout-dictionary/LayoutDictionary.vue';
 import WorkflowInfo from '../views/workflows/WorkflowInfo.vue';
+import Dreamforce from '../views/dreamforce/Dreamforce.vue';
 import ApexBio from '../views/apex-bio/ApexBio.vue';
 import NotFound from '../views/not-found/NotFound.vue';
 import Session from '@/views/session/Session.vue';
@@ -15,6 +16,11 @@ const routes = [
     path: '/',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/cicd',
+    name: 'Dreamforce',
+    component: Dreamforce,
   },
   {
     path: '/workflows',
