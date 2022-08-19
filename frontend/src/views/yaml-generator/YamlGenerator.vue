@@ -10,43 +10,105 @@
           </select>
         </div>
         <div class="icon is-small is-left">
-          <i class="fas fa-server"></i>
+          <i class="fas fa-building"></i>
+        </div>
+      </div>
+    </div>
+
+     <div class="field">
+      <label class="label">Event</label>
+      <p class="explanation">
+        The event in your git repository that triggers this workflow
+      </p>
+      <div class="control has-icons-left">
+        <div class="select">
+          <select v-model="trigger">
+            <option selected value="pull_request">Pull request is opened/updated</option>
+            <option selected value="push">On push</option>
+            <option selected value="workflow_dispatch">Executed manually</option>
+            <option selected value="release">Release is created</option>
+          </select>
+        </div>
+        <div class="icon is-small is-left">
+          <i class="fas fa-code-branch"></i>
         </div>
       </div>
     </div>
 
     <div class="field">
       <label class="label">Job type</label>
+      <p class="explanation">
+        What do you want to automate against the target org
+      </p>
       <div class="control has-icons-left">
         <div class="select">
           <select v-model="jobType">
-            <option selected value="tests">Run all tests</option>
-            <option selected value="github">Validate deployment</option>
-            <option selected value="github">Deployment</option>
+            <option selected value="tests">Run tests only</option>
+            <option selected value="validation">Validate deployment</option>
+            <option selected value="deployment">Deployment</option>
           </select>
         </div>
         <div class="icon is-small is-left">
-          <i class="fas fa-server"></i>
+          <i class="fas fa-briefcase"></i>
         </div>
       </div>
     </div>
 
     <div class="field" v-if="jobType != 'tests'">
       <label class="label">Deployment type</label>
+      <p class="explanation">
+        You can deploy the entire metadata in the sfdx project or only the 
+        metadata that has been created/updated in the commit
+      </p>
       <div class="control has-icons-left">
         <div class="select">
           <select v-model="deploymentType">
-            <option selected value="github">Deploy entire sfdx project</option>
-            <option selected value="github">Deploy delta (changed files)</option>
+            <option selected value="all">Deploy entire sfdx project</option>
+            <option selected value="delta">Deploy delta (changed files)</option>
           </select>
         </div>
         <div class="icon is-small is-left">
-          <i class="fas fa-server"></i>
+          <i class="fas fa-code"></i>
         </div>
       </div>
     </div>
 
-     <div class="field">
+    
+
+    <div class="field" v-if="showBranchesAndPaths">
+      <label class="label">Target branches</label>
+      <p class="explanation">
+        You can configure a workflow to run only for events that target specific branches. 
+        You can enter multiple branches separted by a comma
+      </p>
+      <div class="control has-icons-right">
+        <input
+          class="input"
+          v-model="branches"
+          type="text"
+          @keyup="showMe"
+          placeholder="Leave blank if this applies to any branch"
+        />
+      </div>
+    </div>
+
+    <div class="field" v-if="showBranchesAndPaths">
+      <label class="label">Run when changes are made to these paths</label>
+      <p class="explanation">
+        When using the push and pull request events, you can configure a workflow to run based on what file paths are changed.
+        By default, we are tracking changes inside the force-app/** directory
+      </p>
+      <div class="control has-icons-right">
+        <input
+          class="input"
+          v-model="paths"
+          type="text"
+          placeholder="force-app/** (default)"
+        />
+      </div>
+    </div>
+
+    <div class="field">
       <label class="label">Target org name</label>
       <div class="control has-icons-right">
         <input
@@ -57,48 +119,9 @@
           placeholder="UAT"
         />
       </div>
-    </div>
-
-     <div class="field">
-      <label class="label">Run workfow when</label>
-      <div class="control has-icons-left">
-        <div class="select">
-          <select v-model="trigger">
-            <option selected value="pr">Pull request is opened</option>
-            <option selected value="push">Push is made</option>
-            <option selected value="manual">Executed manually</option>
-            <option selected value="release">Release is created</option>
-          </select>
-        </div>
-        <div class="icon is-small is-left">
-          <i class="fas fa-server"></i>
-        </div>
-      </div>
-    </div>
-
-    <div class="field" v-if="showBranchesAndPaths">
-      <label class="label">Target branches</label>
-      <div class="control has-icons-right">
-        <input
-          class="input"
-          v-model="branches"
-          type="text"
-          @keyup="showMe"
-          placeholder="Leave blank if any"
-        />
-      </div>
-    </div>
-
-    <div class="field" v-if="showBranchesAndPaths">
-      <label class="label">Run when changes are made to these paths</label>
-      <div class="control has-icons-right">
-        <input
-          class="input"
-          v-model="paths"
-          type="text"
-          placeholder="force-app/** (default)"
-        />
-      </div>
+      <p class="help is-danger">
+        This field is required
+      </p>
     </div>
 
     <div class="field">
@@ -164,7 +187,7 @@
 
     <div class="field">
       <div class="control">
-        <button class="button is-link" :disabled="!isFormValid">
+        <button class="button is-link" :disabled="!isFormValid" @click="submit" >
           <span class="icon">
             <i class="fas fa-cloud"></i>
           </span>
@@ -182,18 +205,42 @@ export default {
         return {
             cicdProvider: "Github Actions",
             jobType:'tests',
-            loginType: "test",
             trigger:'',
+            deploymentType:'',
             runPMD:false,
-            clientId:'',
-            showError:false
+            paths:'force-app/**',
+            targetOrg:''
         };
+    },
+
+    methods:{
+
+        submit(){
+
+            let job = {
+                cicdProvider : this.cicdProvider,
+                jobType : this.jobType,
+                trigger: this.trigger,
+                deploymentType: this.deploymentType,
+                runPMD: this.runPMD,
+                paths: this.paths,
+                targetOrg: this.targetOrg
+            }
+
+            console.log(job);
+        }
+
     },
 
     computed: {
 
         showBranchesAndPaths() {
-            return ['pr','push'].includes(this.trigger);
+            return ['pull_request','push'].includes(this.trigger);
+        },
+
+        isFormValid(){
+            return (this.cicdProvider && this.jobType
+                && this.trigger && this.targetOrg)
         }
 
     }
@@ -214,6 +261,14 @@ form {
 .pmd{
     margin-left: 50px;
     margin-bottom: 30px;
+}
+
+.explanation {
+    margin-bottom: 12px;
+}
+
+.field{
+    margin-bottom: 25px;
 }
 
 </style>>
