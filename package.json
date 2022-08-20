@@ -39,7 +39,8 @@
     "sfdc-happy-api": "2.4.0",
     "sfdc-soup": "18.4.0",
     "throng": "^4.0.0",
-    "vue3-autocomplete": "1.0.1"
+    "vue3-autocomplete": "1.0.1",
+    "yaml": "^2.1.1"
   },
   "devDependencies": {
     "commitizen": "^4.2.0",

@@ -12,20 +12,7 @@ function jobSubmission(){
         let res = await fetch(url,fetchOptions);
         let json = await res.json();
     
-        let {jobId,error} = json;
-    
-        if(jobId){
-            intervalId = window.setInterval(checkJobStatus,6000,jobId);
-        }     
-        else if(error){
-            apiError.value = json;
-            done.value = true;
-        }
-        //got cached data
-        else{
-            apiResponse.value = json;
-            done.value = true;
-        }
+        return json;
     }
 
     async function checkJobStatus(jobId){

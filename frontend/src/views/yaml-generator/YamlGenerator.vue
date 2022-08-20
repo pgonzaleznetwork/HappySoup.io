@@ -222,7 +222,15 @@
 </template>
 
 <script>
+
+import jobSubmission from '@/functions/jobSubmission'
+
 export default {
+
+    setup(){
+      let {submitJob,createPostRequest} = jobSubmission();
+      return {submitJob,createPostRequest};
+    },
 
     data() {
         return {
@@ -245,7 +253,7 @@ export default {
 
     methods:{
 
-        submit(){
+        async submit(){
 
             let job = {
                 cicdProvider : this.cicdProvider,
@@ -263,7 +271,9 @@ export default {
                 pmdSecurity:this.pmdSecurity,
             }
 
-            console.log(job);
+            let response = await this.submitJob('api/yaml',this.createPostRequest(job));
+
+            console.log(JSON.stringify(response));
         }
 
     },
