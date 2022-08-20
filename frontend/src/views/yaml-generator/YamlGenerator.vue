@@ -15,24 +15,20 @@
       </div>
     </div>
 
-     <div class="field">
-      <label class="label">Event</label>
-      <p class="explanation">
-        The event in your git repository that triggers this workflow
-      </p>
-      <div class="control has-icons-left">
-        <div class="select">
-          <select v-model="trigger">
-            <option selected value="pull_request">Pull request is opened/updated</option>
-            <option selected value="push">On push</option>
-            <option selected value="workflow_dispatch">Executed manually</option>
-            <option selected value="release">Release is created</option>
-          </select>
-        </div>
-        <div class="icon is-small is-left">
-          <i class="fas fa-code-branch"></i>
-        </div>
+    <div class="field">
+      <label class="label">Target org name</label>
+      <div class="control has-icons-right">
+        <input
+          class="input"
+          v-model="targetOrg"
+          type="text"
+          @keyup="showMe"
+          placeholder="UAT"
+        />
       </div>
+      <p class="help is-danger">
+        This field is required
+      </p>
     </div>
 
     <div class="field">
@@ -53,6 +49,26 @@
         </div>
       </div>
     </div>
+
+     <div class="field">
+      <label class="label">Event</label>
+      <p class="explanation">
+        The event in your git repository that triggers this workflow
+      </p>
+      <div class="control has-icons-left">
+        <div class="select">
+          <select v-model="trigger">
+            <option selected value="pull_request">Pull request is opened/updated</option>
+            <option selected value="push">On push</option>
+          </select>
+        </div>
+        <div class="icon is-small is-left">
+          <i class="fas fa-code-branch"></i>
+        </div>
+      </div>
+    </div>
+
+    
 
     <div class="field" v-if="jobType != 'tests'">
       <label class="label">Deployment type</label>
@@ -109,20 +125,27 @@
     </div>
 
     <div class="field">
-      <label class="label">Target org name</label>
-      <div class="control has-icons-right">
-        <input
-          class="input"
-          v-model="targetOrg"
-          type="text"
-          @keyup="showMe"
-          placeholder="UAT"
-        />
-      </div>
-      <p class="help is-danger">
-        This field is required
+      <label class="label">Specify Tests</label>
+      <p class="explanation">
+        You can run all tests or tests specified by the developer in the pull request body. The latter option <span style="font-weight:bold; color:red">requires</span> you to use
+        <a href="https://github.com/pgonzaleznetwork/dreamforce22-org/blob/main/pull_request_template.md" target="_blank">this pull request 
+        template</a> and for <a href="https://github.com/pgonzaleznetwork/dreamforce22-org/blob/main/parsePR.js" target="_blank">this file</a> to exist 
+        in the root directory of your project. 
       </p>
+      <div class="control has-icons-left">
+        <div class="select">
+          <select v-model="testsType">
+            <option selected value="all">Run all tests</option>
+            <option selected value="specified">Run tests specified in pull request</option>
+          </select>
+        </div>
+        <div class="icon is-small is-left">
+          <i class="fas fa-check"></i>
+        </div>
+      </div>
     </div>
+
+    
 
     <div class="field">
       <div class="control">
@@ -149,7 +172,7 @@
         <div class="field">
         <div class="control">
             <label>
-            <input v-model="pmdBestPractice" type="checkbox" />
+            <input v-model="pmdBestPractices" type="checkbox" />
             Best Practices
             </label>
         </div>
@@ -209,7 +232,14 @@ export default {
             deploymentType:'',
             runPMD:false,
             paths:'force-app/**',
-            targetOrg:''
+            targetOrg:'',
+            testsType:'',
+            pmdDesign:false,
+            pmdBestPractices:false,
+            pmdPerformance:false,
+            pmdCodeStyle:false,
+            pmdSecurity:false,
+
         };
     },
 
@@ -224,7 +254,13 @@ export default {
                 deploymentType: this.deploymentType,
                 runPMD: this.runPMD,
                 paths: this.paths,
-                targetOrg: this.targetOrg
+                targetOrg: this.targetOrg,
+                testsType: this.testsType,
+                pmdDesign:this.pmdDesign,
+                pmdBestPractices:this.pmdBestPractices,
+                pmdPerformance:this.pmdPerformance,
+                pmdCodeStyle:this.pmdCodeStyle,
+                pmdSecurity:this.pmdSecurity,
             }
 
             console.log(job);
