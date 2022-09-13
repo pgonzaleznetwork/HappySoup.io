@@ -1,6 +1,12 @@
 <template>
     <div v-if="apiResponseHasData">
 
+        <a href="https://www.salto.io/not-another-devops-platform?utm_source=happy_soup&utm_medium=referral&utm_campaign=not%20another%20devops%20platfom%20sep%202022&utm_term=brand&utm_content=in%20app%20banner" target="_blank" >
+            <img src="../../assets/saltoad.jpg">
+        </a>
+        <br>
+        <br>
+
         <!--<div class="notification is-danger is-light">
             <span v-html="warningMessage"></span>
         </div>-->
