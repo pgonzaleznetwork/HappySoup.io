@@ -40,12 +40,12 @@ If you want to support HappySoup.io by helping us cover the Heroku costs, you ca
 ## Contents
 
 * [What is a Happy Soup?](#what-is-a-happy-soup)
-* [Who is this for](#question-who-is-this-for)
+* [Who is this for](#who-is-this-for)
 * [How we enhaced the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api)
 * [Security](#no_entry_sign-security)
 * [One-click deployment to your own Heroku account](#one-click-deployment-to-your-own-heroku-account)
 * [Docker deployment](#docker-deployment)
-* [Build your own apps using the core npm library](#Build-your-own-apps-using-the-core-npm-library)
+* [Build your own apps using the core npm library](#build-your-own-apps-using-the-core-npm-library)
 * [Privacy Policy](#privacy-policy)
 
 ## What is a Happy Soup?
@@ -84,7 +84,7 @@ Salesforce Happy Soup is built on top of the `MetadataComponentDependency` tooli
 
 As said above, Salesforce Happy Soup has **fixed all** this issues so that you can focus on learning about your dependencies rather than fighting the API! :facepunch:
 
-[Back to top](#salesforce-happy-soup)
+[Back to top](#happysoupio)
 
 ## :no_entry_sign: Security
 
@@ -107,9 +107,7 @@ Every time a request is made to the app, the request goes through the following 
 * Once CORS is validated, we check that the request contains a cookie, which is encrypted. The cookie is then used to retrieve a server-side session. If the session does not exist or has expired, the user is sent back to the login page.
 * Once the server-side session is verified, we check that the user has a valid session with their Salesforce org. If the user doesn't have a valid session with Salesforce, we send the user back to the login page.
 
-[Back to top](#salesforce-happy-soup)
-
-[Back to top](#salesforce-happy-soup)
+[Back to top](#happysoupio)
 
 ## One-click Deployment to your own Heroku Account
 
@@ -185,7 +183,7 @@ If you want to use the app locally on your computer, you can easily create the a
 
 [Tutorial: Installing HappySoup.io with Docker](https://www.youtube.com/watch?v=WQhz91JSl3o)
 
-[Back to top](#salesforce-happy-soup)
+[Back to top](#happysoupio)
 
 ## Build your own apps using the core npm library
 
@@ -193,7 +191,7 @@ Salesforce Happy Soup is built on top of the [sfdc-soup](https://github.com/pgon
 
 Head over that its repository to learn how you can create your apps.
 
-[Back to top](#salesforce-happy-soup)
+[Back to top](#happysoupio)
 
 
 ## Privacy Policy
@@ -278,4 +276,4 @@ If at any time you want to get the data that we have from your org, you can cont
 
 If at any time you want Happy Soup to stop processing your data and you are unable to log out (because you no longer have access to the original device you logged in with), you can email us at pgonzaleznetwork@gmail.com and we will delete all your information.
 
-[Back to top](#salesforce-happy-soup)
+[Back to top](#happysoupio)
