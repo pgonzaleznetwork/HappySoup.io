@@ -8,41 +8,34 @@
   <a href="#one-click-deployment-to-your-own-heroku-account">
     <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
   </a>
-
 </div>
 
+HappySoup.io helps you keep your salesforce org clean and healthy by helping you see metadata dependencies in ways that have never been possible before (at least not for free!).
 
-HappySoup.io helps you keep your salesforce org clean and healthy by helping you see metadata dependencies in ways that have never been possible before (at least not for free!). 
-
-Our LinkedIn page has a lot of information on new features, blog posts, etc., so it's worth following if you are interested   .
-
+Our LinkedIn page has a lot of information on new features, blog posts, etc., so it's worth following if you are interested.
 
 <a href="https://www.linkedin.com/company/happy-soup-app">
     <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white">
-  </a> 
+  </a>
 </br></br>
 <p>
 If you want to support HappySoup.io by helping us cover the Heroku costs, you can make a donation using the link below</p>
 
-
-<a href="https://www.paypal.com/donate?business=XEWHTYGFC5QEE&item_name=Support+HappySoup.io&currency_code=EUR ">
+<a href="https://www.paypal.com/donate?business=XEWHTYGFC5QEE&item_name=Support+HappySoup.io&currency_code=EUR">
     <img src="./github-images/btn_donate_SM.gif">
-</a> 
-
+</a>
 
 ## :thumbsup: Features
 
-*  Impact Analysis (aka "Where is this used") for custom fields, email templates, apex classes, custom labels and many more. 
-* The first and **only** app that creates [Deployment Boundaries](https://www.salesforceben.com/introduction-to-deployment-boundaries/) 
-*  Easily export the dependencies to excel, csv files or package.xml 
-*  [Bypass all the limitations of the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api) 
-*  Intuitive UI, easy to follow tree structure 
-*  Log in from anywhere, no installation required 
-*  Available as a web app, local app or Docker app - forget about all security concerns!
+* Impact Analysis (aka "Where is this used") for custom fields, email templates, apex classes, custom labels and many more.
+* The first and **only** app that creates [Deployment Boundaries](https://www.salesforceben.com/introduction-to-deployment-boundaries/)
+* Easily export the dependencies to excel, csv files or package.xml
+* [Bypass all the limitations of the MetadataComponentDependency API](#how-we-enhaced-the-metadatacomponentdependency-api)
+* Intuitive UI, easy to follow tree structure
+* Log in from anywhere, no installation required
+* Available as a web app, local app or Docker app - forget about all security concerns!
 
-[Watch full demo](https://www.youtube.com/watch?v=2asljhebqlY&t=6s) 
-
-
+[Watch full demo](https://www.youtube.com/watch?v=2asljhebqlY&t=6s)
 
 ## Contents
 
@@ -71,32 +64,29 @@ If you want to support HappySoup.io by helping us cover the Heroku costs, you ca
 **Administrators** 
 
 * Find all the metadata used in page layout (fields, buttons, inline pages, etc) and export it to excel to review opportunities for optimization
-* Don't break your org! Know the impact of making changes to a field, validation rule, etc 
+* Don't break your org! Know the impact of making changes to a field, validation rule, etc
 
 ## How we enhaced the MetadataComponentDependency API
 
 Salesforce Happy Soup is built on top of the `MetadataComponentDependency` tooling API. While this API is great, it has huge limitations that make it hard to work with (**spolier**: we bypass all these!)
 
-* Custom field names are returned without the object name and without the _ _ c suffix. For example `Opportunity.Revenue__c` becomes `Revenue`. This makes it very hard to know which fields are actually being referenced. The only way around this is to manually and painfully retrieve additional information through the Tooling and Metadata API.
+* Custom field names are returned without the object name and without the __c suffix. For example `Opportunity.Revenue__c` becomes `Revenue`. This makes it very hard to know which fields are actually being referenced. The only way around this is to manually and painfully retrieve additional information through the Tooling and Metadata API.
 
 * Validation rules names are also returned without the object prefix, so `Account.ValidationRule` becomes `ValidationRule`. If you want to export this via package.xml, again you'd have to use other APIs to retrieve this information.
 
-* Objects referenced via a lookup field are not returned. For example, if you have a custom field `Account.RelatedToAnotherObject__c` pointing to `RelatedToAnotherObject__c`, that object is not brought back as a dependency, which is obviously wrong because you can't deploy that custom field to an org where that object doesn't exist. 
+* Objects referenced via a lookup field are not returned. For example, if you have a custom field `Account.RelatedToAnotherObject__c` pointing to `RelatedToAnotherObject__c`, that object is not brought back as a dependency, which is obviously wrong because you can't deploy that custom field to an org where that object doesn't exist.
 
-* Global Value Sets are not returned when picklist fields depend on them. 
+* Global Value Sets are not returned when picklist fields depend on them.
 
-* Lookup filters are returned with cryptic names depending on whether they belong to a custom object or a standard one. 
+* Lookup filters are returned with cryptic names depending on whether they belong to a custom object or a standard one.
 
 * The app will tell you if a field is used in an apex class in read or write mode. For example, if a field is used in an assignment expression, then you know the class is assigning values to that field. The app will show you this with a visual indicator; something that the raw API cannot do.  
 
 As said above, Salesforce Happy Soup has **fixed all** this issues so that you can focus on learning about your dependencies rather than fighting the API! :facepunch:
 
-
- 
-
 [Back to top](#salesforce-happy-soup)
 
-## :no_entry_sign: Security 
+## :no_entry_sign: Security
 
 We understand security is very important in the Salesforce ecosystem. Read our [Privacy Policy](#privacy-policy) to understand what data is collected and how it is used. This section only addresses technical security
 
@@ -106,13 +96,13 @@ Your access token will be temporarily stored in a redis database which is provis
 
 Access to the database is restricted and the credentials are not stored anywhere in the source code; it is managed via environment variables.
 
-This mechanism is the same way Workbench, OrgDoctor, MavensMate and other open source projects work. 
+This mechanism is the same way Workbench, OrgDoctor, MavensMate and other open source projects work.
 
 **Server-side security**
 
 Every time a request is made to the app, the request goes through the following layers of security:
 
-* Every HTTP request is encrypted with SSL certificates managed by Heroku. 
+* Every HTTP request is encrypted with SSL certificates managed by Heroku.
 * We use CORS to validate HTTP requests made from a web browser.
 * Once CORS is validated, we check that the request contains a cookie, which is encrypted. The cookie is then used to retrieve a server-side session. If the session does not exist or has expired, the user is sent back to the login page.
 * Once the server-side session is verified, we check that the user has a valid session with their Salesforce org. If the user doesn't have a valid session with Salesforce, we send the user back to the login page.
@@ -123,7 +113,7 @@ Every time a request is made to the app, the request goes through the following 
 
 ## One-click Deployment to your own Heroku Account
 
-You can use the following button to quickly install/deploy the application to your own Heroku Account 
+You can use the following button to quickly install/deploy the application to your own Heroku Account
 
 <a href="https://heroku.com/deploy?template=https://github.com/pgonzaleznetwork/sfdc-happy-soup/tree/master">
   <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
@@ -136,7 +126,7 @@ When you click the button and log in to your Heroku account, you'll see a page s
 **NOTE** When you see this page, you can add **dummy** values on the empty Config Vars. We'll come back and edit them with the real values at a later step.
 
 <p align="center">
-  <img src="./github-images/herokudeployment.png" >
+  <img src="./github-images/herokudeployment.png">
 </p>
 
 Once you've added dummy values, just click the **Deploy App** button. Once the app is deployed, you'll be able to launch it and at a minimum, see the login page. Congratulations!!
@@ -150,16 +140,16 @@ For the app to be able to use OAuth tokens, it needs to be connected to a Connec
 The OAuth configuration for the Connected App needs to look like this:
 
 <p align="center">
-  <img src="./github-images/oauthconfig.png" >
+  <img src="./github-images/oauthconfig.png">
 </p>
 
 **It is very important that you change the Callback URL to point to your heroku app domain name, which is the name that you chose when deploying the app**
 
-For example, if your app name is `mycompany-happysoup.herokuapp.com` then the Callback URL must be `mycompany-happysoup.herokuapp.com/oauth2/callback` . You must also add the following URL so that you can run the app locally using the `heroku local` command
+For example, if your app name is `mycompany-happysoup.herokuapp.com` then the Callback URL must be `mycompany-happysoup.herokuapp.com/oauth2/callback`. You must also add the following URL so that you can run the app locally using the `heroku local` command
 
 `http://localhost:3000/oauth2/callback`
 
-Note that if you changed the default `PORT` environment variable in the deployment page, you need to update the localhost port in the callback URL as well. 
+Note that if you changed the default `PORT` environment variable in the deployment page, you need to update the localhost port in the callback URL as well.
 
 Once you have created the Connected App, get the Client Secret and Client Id; we'll need them in the next step.
 
@@ -170,7 +160,7 @@ Finally we come back to the Config Vars.
 You can edit the Config Vars at at `https://dashboard.heroku.com/apps/YOUR-APP-NAME > Settings > Reveal Config Vars`
 
 <p align="center">
-  <img src="./github-images/configvars.png" >
+  <img src="./github-images/configvars.png">
 </p>
 
 All the other variables should be configured already, including `REDIS_URL` which is automatically added by Heroku since redis is required to deploy the app.
@@ -199,9 +189,9 @@ If you want to use the app locally on your computer, you can easily create the a
 
 ## Build your own apps using the core npm library
 
-Salesforce Happy Soup is built on top of the [sfdc-soup](https://github.com/pgonzaleznetwork/sfdc-soup/tree/master) NodeJs library, which is an API that returns an entire salesforce dependency tree in different formats, including JSON, excel and others. 
+Salesforce Happy Soup is built on top of the [sfdc-soup](https://github.com/pgonzaleznetwork/sfdc-soup/tree/master) NodeJs library, which is an API that returns an entire salesforce dependency tree in different formats, including JSON, excel and others.
 
-Head over that its repository to learn how you can create your apps. 
+Head over that its repository to learn how you can create your apps.
 
 [Back to top](#salesforce-happy-soup)
 
@@ -210,7 +200,7 @@ Head over that its repository to learn how you can create your apps.
 
 It's important that you understand what information Happy Soup collects, uses how and how you can control it.
 
->  Remember that you can always [deploy the app to your own Heroku account](#one-click-deployment-to-your-own-heroku-account) or use it [locally](#docker-deployment), in which case you need need to worry about security.
+> Remember that you can always [deploy the app to your own Heroku account](#one-click-deployment-to-your-own-heroku-account) or use it [locally](#docker-deployment), in which case you need need to worry about security.
 
 Our full Privacy Policy can be found [here](https://pgonzaleznetwork.github.io/privacy.html). The sections below contain the specifics about how your Salesforce data is used and what your options are to stop access to your data.
 
@@ -242,7 +232,7 @@ The specific objects that are queried are as follows
 * `LightningComponentBundle`
 * `AuraComponentBundle`
 
-Other objects may be added as we further enhance our dependency analysis capabilities. 
+Other objects may be added as we further enhance our dependency analysis capabilities.
 
 All this metadata, along with the results of a dependency query that you execute via the UI, will be cached in a secure server side session that is isolated to your own session with Happy Soup.
 
@@ -252,7 +242,7 @@ The session data and its cache is deleted when any of the below options occurs f
 
 * 8 hours have passed since you logged into Happy Soup. This is because the access token provided by Salesforce will also live for 8 hours. This means that you can use Happy Soup for a maximum of 8 hours using the same org, without having to log in again. After 8 hours, the session is completely deleted.
 * When you log out manually. When a logout is performed, the session is completely deleted.
-* The app tries to issue a request to Salesforce but the access token has been revoked. When this occurs, the session is completely deleted. 
+* The app tries to issue a request to Salesforce but the access token has been revoked. When this occurs, the session is completely deleted.
 
 **Cookies**
 
@@ -266,17 +256,17 @@ We use cookies and local storage the following information:
 Happy Soup uses the following software:
 
 * Heroku Redis: Used to store your session and to process all the jobs that are submitted to the app.
-* Logentries: Logging and monitoring software. Logs are stored for 7 days and some logs may include the names of your metadata. For example, when submitted a job to see the usage of a custom field, the custom field name is appended to the URL. This URL will be in the logs for a maximum of 7 days. 
+* Logentries: Logging and monitoring software. Logs are stored for 7 days and some logs may include the names of your metadata. For example, when submitted a job to see the usage of a custom field, the custom field name is appended to the URL. This URL will be in the logs for a maximum of 7 days.
 
 ## Your Rights
 
 **Right to be forgotten**
 
-If you want Happy Soup to immediately delete all the data we have collected from your org, you can use the Logout button on the main page. 
+If you want Happy Soup to immediately delete all the data we have collected from your org, you can use the Logout button on the main page.
 
 When this button is clicked, the server session is completely deleted and cannot be recovered.
 
-If you no longer have access to the browser or device from which you initated a session with Happy Soup but still want to prevent Happy Soup from accessing your org's metadata, you can go to your `Salesforce org > Setup > Connected Apps Oauth Usage > `Find the token for Salesforce Happy Soup and revoke it. 
+If you no longer have access to the browser or device from which you initated a session with Happy Soup but still want to prevent Happy Soup from accessing your org's metadata, you can go to your `Salesforce org > Setup > Connected Apps Oauth Usage > `Find the token for Salesforce Happy Soup and revoke it.
 
 Happy Soup will no longer be able to use the access token and you'll be logged out the moment you try to use the app again.
 
@@ -286,6 +276,6 @@ If at any time you want to get the data that we have from your org, you can cont
 
 **Right of Restriction of Processing**
 
-If at any time you want Happy Soup to stop processing your data and you are unable to log out (because you no longer have access to the original device you logged in with), you can email us at pgonzaleznetwork@gmail.com and we will delete all your information. 
+If at any time you want Happy Soup to stop processing your data and you are unable to log out (because you no longer have access to the original device you logged in with), you can email us at pgonzaleznetwork@gmail.com and we will delete all your information.
 
 [Back to top](#salesforce-happy-soup)
