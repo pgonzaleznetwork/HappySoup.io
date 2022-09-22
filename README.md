@@ -54,14 +54,14 @@ If you want to support HappySoup.io by helping us cover the Heroku costs, you ca
 
 ## Who is this for
 
-**Developers & Architects**
+### Developers & Architects
 
 * Discover [Deployment Boundaries](https://www.salesforceben.com/introduction-to-deployment-boundaries/) that can be the baseline for a scratch org or unlocked packages
 * Quickly get a package.xml of your deployment boundary
-Get immediate insights with built-in charts
+* Get immediate insights with built-in charts
 * Drill down to the last dependent metadata in an easy-to-follow tree structure
 
-**Administrators** 
+### Administrators
 
 * Find all the metadata used in page layout (fields, buttons, inline pages, etc) and export it to excel to review opportunities for optimization
 * Don't break your org! Know the impact of making changes to a field, validation rule, etc
@@ -71,16 +71,11 @@ Get immediate insights with built-in charts
 Salesforce Happy Soup is built on top of the `MetadataComponentDependency` tooling API. While this API is great, it has huge limitations that make it hard to work with (**spoiler: we bypass all these!**)
 
 * Custom field names are returned without the object name and the `__c` suffix. For example `Opportunity.Revenue__c` becomes `Revenue`. This makes it very hard to know which fields are being referenced. The only way around this is to manually and painfully retrieve additional information through the Tooling and Metadata API.
-
 * Validation rules names are also returned without the object prefix, so `Account.ValidationRule` becomes `ValidationRule`. If you want to export this via package.xml, again you'd have to use other APIs to retrieve this information.
-
 * Objects referenced via a lookup field are not returned. For example, if you have a custom field `Account.RelatedToAnotherObject__c` pointing to `RelatedToAnotherObject__c`, that object is not brought back as a dependency, which is wrong because you can't deploy that custom field to an org where that object doesn't exist.
-
 * Global Value Sets are not returned when picklist fields depend on them.
-
 * Lookup filters are returned with cryptic names depending on whether they belong to a custom object or a standard one.
-
-* The app will tell you if a field is used in an apex class in either read or write mode. For example, if a field is used in an assignment expression, then you know the class is assigning values to that field. The app will show you this with a visual indicator; something that the raw API cannot do.  
+* The app will tell you if a field is used in an apex class in either read or write mode. For example, if a field is used in an assignment expression, then you know the class is assigning values to that field. The app will show you this with a visual indicator; something that the raw API cannot do.
 
 As said above, Salesforce Happy Soup has **fixed all** these issues so that you can focus on learning about your dependencies rather than fighting the API! :facepunch:
 
@@ -90,7 +85,7 @@ As said above, Salesforce Happy Soup has **fixed all** these issues so that you 
 
 We understand security is very important in the Salesforce ecosystem. Read our [Privacy Policy](#privacy-policy) to understand what data is collected and how it is used. This section only addresses technical security
 
-**How is your token stored**
+### How is your token stored
 
 Your access token will be temporarily stored in a Redis database which is provisioned by Heroku. The token is then retrieved by the server every time you use the app, as long as you have a valid server-side session with the app and the required cookies.
 
@@ -98,7 +93,7 @@ Access to the database is restricted and the credentials are not stored anywhere
 
 This mechanism is the same way Workbench, OrgDoctor, MavensMate and other open source projects work.
 
-**Server-side security**
+### Server-side security
 
 Every time a request is made to the app, the request goes through the following layers of security:
 
@@ -131,7 +126,7 @@ Once you've added dummy values, just click the **Deploy App** button. Once the a
 
 Now, the steps to get the app fully working are as follows:
 
-**1. Create a Connected App in any org**
+### 1. Create a Connected App in any org
 
 For the app to be able to use OAuth tokens, it needs to be connected to a Connected App. The original app uses a Connected App that lives in one of our organizations; for your app, you can then use a Connected App in **any org** as well - it doesn't matter what org it is, but we recommend using a dev or production org because sandboxes are eventually refreshed.
 
@@ -151,7 +146,7 @@ Note that if you changed the default `PORT` environment variable in the deployme
 
 Once you have created the Connected App, get the Client Secret and Client Id; we'll need them in the next step.
 
-**2. Editing the Config Vars**
+### 2. Editing the Config Vars
 
 Finally, we come back to the Config Vars.
 
@@ -203,7 +198,7 @@ Our full Privacy Policy can be found [here](https://pgonzaleznetwork.github.io/p
 
 ## Information Collected
 
-**Your Personal Information**
+### Your Personal Information
 
 Your Salesforce `username`, `email` and `display name` will be captured when you log in to Happy Soup.
 
@@ -211,7 +206,7 @@ This information is used to display your username details on the header of the H
 
 Your Salesforce Org Id and User Id (not the username/email) are also used as a key to submit asynchronous jobs to Happy Soup's app server. This allows us to group all your requests in a single area of the database.
 
-**Your Salesforce Org's Metadata**
+### Your Salesforce Org's Metadata
 
 To be able to analyze your dependencies, we need to query your org's metadata. Some metadata is queried only to get its name, while other metadata is queried to inspect its contents and find dependencies (i.e apex classes)
 
@@ -241,14 +236,14 @@ The session data and its cache is deleted when any of the below options occurs f
 * When you log out manually. When a logout action is performed, the session is completely deleted.
 * The app tries to issue a request to Salesforce but the access token has been revoked. When this occurs, the session is completely deleted.
 
-**Cookies**
+### Cookies
 
 We use cookies and local storage for the following information:
 
 * Your session id cookie
 * The Salesforce domain you used. This will help you quickly log in the next time you use the app.
 
-**Third-Party Apps/Providers**
+### Third-Party Apps/Providers
 
 Happy Soup uses the following software:
 
@@ -257,7 +252,7 @@ Happy Soup uses the following software:
 
 ## Your Rights
 
-**Right to be forgotten**
+### Right to be forgotten
 
 If you want Happy Soup to immediately delete all the data we have collected from your org, you can use the Logout button on the main page.
 
@@ -267,11 +262,11 @@ If you no longer have access to the browser or device from which you initiated a
 
 Happy Soup will no longer be able to use the access token and you'll be logged out the moment you try to use the app again.
 
-**Right to Access Data**
+### Right to Access Data
 
 If at any time you want to get the data that we have from your org, you can contact us at pgonzaleznetwork@gmail.com. Note that because all the data we collect from you is deleted in 8 hours, we can only provide you with your data if it's still in our database.
 
-**Right of Restriction of Processing**
+### Right of Restriction of Processing
 
 If at any time you want Happy Soup to stop processing your data and you are unable to log out (because you no longer have access to the original device you logged in with), you can email us at pgonzaleznetwork@gmail.com and we will delete all your information.
 
