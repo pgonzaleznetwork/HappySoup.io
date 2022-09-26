@@ -178,6 +178,37 @@ If you want to use the app locally on your computer, you can easily create the a
 
 [Tutorial: Installing HappySoup.io with Docker](https://www.youtube.com/watch?v=WQhz91JSl3o)
 
+These steps describe the process in the video above, using example text (**in bold**) which should be updated to match your environment:
+
+### Prerequisites Not Covered here
+
+1. Install Docker and docker-compose
+1. Clone the git repository
+1. Admin access granted to a Salesforce organization
+
+### Create a Salesforce Connected App
+
+1. Setup > Apps > Connected Apps > New (alternate path: Setup > Apps > App Manager > New Connected App)
+1. Connected App Name: **Salesforce Happy Soup**
+1. API Name: **Salesforce_Happy_Soup**
+1. Contact Email: **first.last@example.com**
+1. Enable Oath Settings: (checked)
+1. Callback URL: `http://localhost:3000/oauth2/callback`
+1. Selected OAuth Scopes: `Access the identity URL service (id, profile, email, address, phone); Manage user data via APIs (api); Full access (full); Perform requests at any time (refresh_token, offline_access)`
+1. Save
+
+### Connect Happy Soup to Salesforce
+
+1. Open the `docker-compose.yml` file in the git repository.
+1. Update `OAUTH_CLIENT_ID` & `OAUTH_CLIENT_SECRET` with the values from the new Connected App.  Note that each is defined twice and both should be updated.
+1. Start the Docker containers: `docker-compose up`
+1. In a web browser, open `http://localhost:3000`
+1. Login Type: `My Domain` or `Production`
+1. If using `My Domain` enter in your Salesforce organization URL.
+1. I agree to the Happy Soup Privacy Policy: (checked)
+1. `Log in with Salesforce`
+1. Allow Access?  `Allow`
+
 [Back to top](#happysoupio)
 
 ## Build your own apps using the core npm library
