@@ -208,9 +208,9 @@ Head over that its repository to learn how you can create your apps.
 
 ## Privacy Policy
 
-It's important that you understand what information Happy Soup collects, uses how and how you can control it.
+It's important that you understand what information Happy Soup collects, uses and how you can control it.
 
->  Remember that you can always [deploy the app to your own Heroku account](#one-click-deployment-to-your-own-heroku-account) or use it [locally](#docker-deployment), in which case you need need to worry about security.
+>  Remember that you can always [deploy the app to your own Heroku account](#one-click-deployment-to-your-own-heroku-account) or use it [locally](#docker-deployment), in which case you don't need to worry about security.
 
 Our full Privacy Policy can be found [here](https://pgonzaleznetwork.github.io/privacy.html). The sections below contain the specifics about how your Salesforce data is used and what your options are to stop access to your data.
 
