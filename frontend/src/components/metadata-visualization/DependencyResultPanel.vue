@@ -5,7 +5,7 @@
             <img src="../../assets/saltoad.jpg">
         </a>-->
         <a href="https://pages.salto.io/salto-ci-cd?utm_campaign=CI%2FCD%20Webinar%20%7C%20Oct%2022&utm_content=224307638&utm_medium=social&utm_source=happysoup&hss_channel=lcp-18967753" target="_blank" >
-            <img src="../../assets/cicdsession.png" style="height:800px" >
+            <img src="../../assets/saltoad2.jpg" style="height:800px" >
         </a>
         <br>
         <br>
