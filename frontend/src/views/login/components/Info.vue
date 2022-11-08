@@ -1,8 +1,8 @@
 <template>
    <div class="info">
       <div class="ad">
-        <a href="https://pages.salto.io/salto-ci-cd?utm_campaign=CI%2FCD%20Webinar%20%7C%20Oct%2022&utm_content=224307638&utm_medium=social&utm_source=happysoup&hss_channel=lcp-18967753" target="_blank" >
-            <img src="../../../assets/cicdsession.png" />
+        <a href="https://app.salto.io/login?isSalesforce=true&isFreeTier=true&utm_source=HappySoup&utm_medium=referral&utm_campaign=In%20app%20banner%20%7C%20HappySoup" target="_blank" >
+            <img src="../../../assets/saltoadd.jpg" />
         </a>
        <!-- <div class="copy">
         <a href="https://dataimporter.io?source=happysoup" target="_blank">
