@@ -2,7 +2,7 @@
    <div class="info">
       <div class="ad">
         <a href="https://app.salto.io/login?isSalesforce=true&isFreeTier=true&utm_source=HappySoup&utm_medium=referral&utm_campaign=In%20app%20banner%20%7C%20HappySoup" target="_blank" >
-            <img src="../../../assets/saltoadd.jpg" />
+            <img src="../../../assets/saltoad.jpg" />
         </a>
        <!-- <div class="copy">
         <a href="https://dataimporter.io?source=happysoup" target="_blank">
