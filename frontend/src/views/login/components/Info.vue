@@ -5,7 +5,7 @@
         <a href="https://app.salto.io/login?isSalesforce=true&isFreeTier=true&utm_source=HappySoup&utm_medium=referral&utm_campaign=In%20app%20banner%20%7C%20HappySoup" target="_blank" >
             <img src="../../../assets/saltoad.jpg" />
         </a>
-        <p>Impact analysis, data and deployments for CPQ</p>
+        <p>Impact analysis, data and metadata deployments for CPQ</p>
        <!-- <div class="copy">
         <a href="https://dataimporter.io?source=happysoup" target="_blank">
         Explore new ways to automate your Salesforce data imports
