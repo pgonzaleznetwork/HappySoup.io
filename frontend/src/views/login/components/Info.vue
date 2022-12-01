@@ -1,11 +1,11 @@
 <template>
    <div class="info">
       <div class="ad">
-        <p><i>Where is this CPQ attribute used?</i></p>
-        <a href="https://app.salto.io/login?isSalesforce=true&isFreeTier=true&utm_source=HappySoup&utm_medium=referral&utm_campaign=In%20app%20banner%20%7C%20HappySoup" target="_blank" >
-            <img src="../../../assets/saltoad.jpg" />
+       
+        <a href="https://www.salto.io/better-than-change-sets?utm_source=happy_soup&utm_medium=refer[…]C%20december%202022&utm_content=better_than_change_sets_banner" target="_blank" >
+            <img src="../../../assets/saltoPro1.png" />
         </a>
-        <p>Impact analysis, data and metadata deployments for CPQ</p>
+        
        <!-- <div class="copy">
         <a href="https://dataimporter.io?source=happysoup" target="_blank">
         Explore new ways to automate your Salesforce data imports

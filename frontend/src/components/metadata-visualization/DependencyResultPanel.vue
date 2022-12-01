@@ -1,11 +1,8 @@
 <template>
     <div v-if="apiResponseHasData">
 
-        <!--<a href="https://www.salto.io/not-another-devops-platform?utm_source=happy_soup&utm_medium=referral&utm_campaign=not%20another%20devops%20platfom%20sep%202022&utm_term=brand&utm_content=in%20app%20banner" target="_blank" >
-            <img src="../../assets/saltoad.jpg">
-        </a>-->
-        <a href="https://pages.salto.io/salto-ci-cd?utm_campaign=CI%2FCD%20Webinar%20%7C%20Oct%2022&utm_content=224307638&utm_medium=social&utm_source=happysoup&hss_channel=lcp-18967753" target="_blank" >
-            <img src="../../assets/saltoad2.jpg"  >
+        <a href="https://www.salto.io/better-than-change-sets?utm_source=happy_soup&utm_medium=referral&utm_campaign=pro%20tier%20official%20launch%20%7C%20december%202022&utm_content=better_than_change_sets_banner_v4" target="_blank" >
+            <img src="../../assets/saltoPro2.png"  style="max-width: 400px;">
         </a>
         <br>
         <br>
