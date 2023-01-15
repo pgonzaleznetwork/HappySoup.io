@@ -6,7 +6,8 @@ require('dotenv').config();
  * Module dependencies.
  */
 
-let app = require('./app');
+let {app} = require('./app');
+let {sessionStore} = require('./app');
 let debug = require('debug')('sfdc-dep-viewer:server');
 let http = require('http');
 
@@ -30,6 +31,9 @@ let server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+sessionStore.on('disconnect', function(){
+  console.log('DB FULL');
+  });
 
 /**
  * Normalize a port into a number, string, or false.

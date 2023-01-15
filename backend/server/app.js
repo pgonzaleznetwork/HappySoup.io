@@ -2,7 +2,7 @@ let createError = require('http-errors');
 let express = require('express');
 let path = require('path');
 let logger = require('morgan');
-let sessionConfig = require('./sessions');
+let {sessionConfig,sessionStore} = require('./sessions');
 let {handleError} = require('../services/errorHandling');
 var enforce = require('express-sslify');
 require('dotenv').config();
@@ -59,4 +59,4 @@ app.use(function(err, req, res, next) {
 
 });
 
-module.exports = app;
+module.exports = {app,sessionStore};

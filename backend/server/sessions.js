@@ -43,4 +43,4 @@ let sessionOptions = {
 
 let sessionConfig = session(sessionOptions);
 
-module.exports = sessionConfig;
+module.exports = {sessionConfig,sessionStore};
