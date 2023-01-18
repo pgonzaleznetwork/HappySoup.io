@@ -2,7 +2,7 @@ version: '3'
 
 services:
   redis:
-    image: 'redis'
+    image: 'redis:5.0.12-alpine'
   webapp:
     build:
       context: .
@@ -21,6 +21,7 @@ services:
       - CORS_DOMAINS=http://localhost,http://localhost:3000,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
       - ENFORCE_SSL=false
       - QUEUE_NAME=happy_queue
+      - DELETE_JOB_IMMEDIATELY=true
   worker:
     build:
       context: .
@@ -36,3 +37,4 @@ services:
       - CORS_DOMAINS=http://localhost,http://localhost:3000,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
       - ENFORCE_SSL=false
       - QUEUE_NAME=happy_queue
+      - DELETE_JOB_IMMEDIATELY=true
