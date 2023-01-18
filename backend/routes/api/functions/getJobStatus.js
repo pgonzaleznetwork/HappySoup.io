@@ -30,7 +30,9 @@ async function getJobStatus(req,res,next){
 
             response.response = jobResult.response;
 
-            setTimeout(deleteJobInfo,10000,jobId);
+            if(process.env.DELETE_JOB_IMMEDIATELY){
+                deleteJobInfo(jobId);
+            }
 
             res.status(200).json(response);
             
