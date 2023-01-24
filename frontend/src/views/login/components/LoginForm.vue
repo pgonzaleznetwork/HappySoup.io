@@ -111,7 +111,7 @@ export default {
     },
 
     validDomain(){
-      return (this.domain.indexOf('my.salesforce.com') != -1 && this.domain.indexOf('https://') == 0);
+      return (this.domain.indexOf('my.salesforce') != -1 && this.domain.indexOf('https://') == 0);
     },
 
     domainColor(){
