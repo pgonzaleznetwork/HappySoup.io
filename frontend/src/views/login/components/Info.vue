@@ -1,17 +1,8 @@
 <template>
    <div class="info">
-      <div class="ad">
-       
-        <a href="https://www.salto.io/better-than-change-sets?utm_source=happy_soup&utm_medium=refer[…]C%20december%202022&utm_content=better_than_change_sets_banner" target="_blank" >
-            <img src="../../../assets/saltoPro1.png" />
-        </a>
-        
-       <!-- <div class="copy">
-        <a href="https://dataimporter.io?source=happysoup" target="_blank">
-        Explore new ways to automate your Salesforce data imports
-        </a>
-        </div>-->
-    </div>
+
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeOhD_NzUax0A0nVP3A0leh6aWCsa4z1a4kDpCa2XgZv3pS2Q/viewform?embedded=true" width="640" height="700" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+
     </div>
 </template>
 
