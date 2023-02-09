@@ -1,6 +1,6 @@
 
 
-function logError(text,details){
+function logError(text,details,level){
 
     let {error} = details;
 
