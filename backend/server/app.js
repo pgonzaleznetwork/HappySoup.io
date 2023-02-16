@@ -7,11 +7,32 @@ let {handleError} = require('../services/errorHandling');
 var enforce = require('express-sslify');
 require('dotenv').config();
 
+const pino = require('pino');
+const appLogger = pino({
+  formatters: {
+      level: (label) => {
+        return { level: label };
+      },
+    }
+  }
+)
+
+let childLogger;
+
 let app = express();
 
 app.use(sessionConfig);
 app.use(logger('dev'));
 app.use(express.json());
+
+app.use((req,res,next) => {
+
+  childLogger = appLogger.child({
+    sessionId: req.sessionID,
+  });
+
+  next();
+})
 
 if(process.env.ENFORCE_SSL == 'true'){
   app.use(enforce.HTTPS({ trustProtoHeader: true }));
@@ -49,11 +70,8 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
 
   err.statusCode = (err.statusCode || 500);
-  if(err.detail){
-    console.log(err.detail);
-  }
 
-  console.log(err.stack);
+  childLogger.error(err);
 
   handleError(err,res);
 
