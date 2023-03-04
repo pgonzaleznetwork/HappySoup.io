@@ -42,7 +42,7 @@
     "vue3-autocomplete": "1.0.1"
   },
   "devDependencies": {
-    "commitizen": "^4.2.0",
+    "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.2.1",
     "eslint": "^7.7.0",
     "nodemon": "^2.0.4",
