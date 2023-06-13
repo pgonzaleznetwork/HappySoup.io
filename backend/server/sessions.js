@@ -8,6 +8,8 @@ if(redisConfig.password){
   redisClient.auth(redisConfig.password);
 }
 
+(async () => { await redisClient.connect(); })();
+
 require('dotenv').config();
 
 /**
