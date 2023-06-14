@@ -10,10 +10,12 @@ services:
     command: >
       redis-server
       --tls-port 6379
+      --port 0
       --tls-cert-file /usr/local/etc/redis/redis-server.crt
       --tls-key-file /usr/local/etc/redis/redis-server.key
       --tls-ca-cert-file /usr/local/etc/redis/ca.crt
       --tls-auth-clients no
+      --tls-replication yes
   webapp:
     build:
       context: .
