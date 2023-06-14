@@ -3,6 +3,11 @@ version: '3'
 services:
   redis:
     image: 'redis:7.0.11'
+    volumes:
+      - ./certs/redis-server.crt:/usr/local/etc/redis/redis-server.crt
+      - ./certs/redis-server.key:/usr/local/etc/redis/redis-server.key
+      - ./certs/ca.crt:/usr/local/etc/redis/ca.crt
+    command: redis-server --tls-port 6379 --tls-cert-file /usr/local/etc/redis/redis-server.crt --tls-key-file /usr/local/etc/redis/redis-server.key --tls-ca-cert-file /usr/local/etc/redis/ca.crt
   webapp:
     build:
       context: .
