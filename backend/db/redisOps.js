@@ -2,10 +2,10 @@ let redis = require('redis');
 let { promisify } = require("util");
 let redisConfig = require('./redisConfig');
 
-console.log('before redis create client');
-console.log(redisConfig);
+
+
 let redisClient = redis.createClient(redisConfig);
-console.log('after redis create client');
+
 if(redisConfig.password){
   redisClient.auth(redisConfig.password);
 }
