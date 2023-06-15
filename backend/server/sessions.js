@@ -3,10 +3,14 @@ const redis = require('redis');
 let RedisStore = require('connect-redis')(session);
 let redisConfig = require('../db/redisConfig');
 
-let redisClient = redis.createClient(redisConfig.port,redisConfig.host);
+let redisClient = redis.createClient(redisConfig);
 if(redisConfig.password){
   redisClient.auth(redisConfig.password);
 }
+
+
+
+//(async () => { await redisClient.connect(); })();
 
 require('dotenv').config();
 

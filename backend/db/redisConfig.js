@@ -25,4 +25,8 @@ else{
     config.url = `redis://${config.host}:${config.port}`;
 }
 
+config.tls = {
+    rejectUnauthorized: false
+}
+
 module.exports = config;

@@ -2,7 +2,20 @@ version: '3'
 
 services:
   redis:
-    image: 'redis:5.0.12-alpine'
+    image: 'redis:7.0.11'
+    volumes:
+      - ./certs/redis-server.crt:/usr/local/etc/redis/redis-server.crt
+      - ./certs/redis-server.key:/usr/local/etc/redis/redis-server.key
+      - ./certs/ca.crt:/usr/local/etc/redis/ca.crt
+    command: >
+      redis-server
+      --tls-port 6379
+      --port 0
+      --tls-cert-file /usr/local/etc/redis/redis-server.crt
+      --tls-key-file /usr/local/etc/redis/redis-server.key
+      --tls-ca-cert-file /usr/local/etc/redis/ca.crt
+      --tls-auth-clients no
+      --tls-replication yes
   webapp:
     build:
       context: .
@@ -14,7 +27,7 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - OAUTH_CLIENT_ID=3MVG9I5UQ_0k_hTmZuUMosHPf.2zqzHBqd0j.GMmnThrGhd53n4prfPpHNqSAPRrWzc7Hb0ul.s2m4VYoiWyZ
-      - OAUTH_CLIENT_SECRET=
+      - OAUTH_CLIENT_SECRET=934DB30A5380514968DC292A07E6C9808884DE14CF9A175B475EBEB67F462CE9
       - SFDC_API_VERSION=49.0
       - SESSION_SECRET=whatever
       - PORT=3000
