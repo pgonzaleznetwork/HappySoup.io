@@ -26,9 +26,7 @@ export default {
         color:$alternative-background !important;
     }
 
-    .info{
-        max-width: 500px;
-    }
+   
 
     p{
         margin-bottom: 15px;
