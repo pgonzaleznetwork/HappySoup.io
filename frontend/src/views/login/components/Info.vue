@@ -1,7 +1,9 @@
 <template>
    <div class="info">
 
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeOhD_NzUax0A0nVP3A0leh6aWCsa4z1a4kDpCa2XgZv3pS2Q/viewform?embedded=true" width="640" height="700" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+   <a href="https://app.salto.io/signup?utm_medium=referral&utm_source=pablos_blog&utm_campaign=cpq%20campaign&business_applications__c=Salesforce" target="_blank" >
+        <img src="../../../assets/cpq.jpg" />
+    </a>
 
     </div>
 </template>
