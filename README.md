@@ -146,6 +146,8 @@ Note that if you changed the default `PORT` environment variable in the deployme
 
 Once you have created the Connected App, get the Client Secret and Client Id; we'll need them in the next step.
 
+**Important**: Make sure you uncheck "Require Proof Key for Code Exchange (PKCE) Extension for Supported Authorization Flows" setting on the Connected App. 
+
 ### 2. Editing the Config Vars
 
 Finally, we come back to the Config Vars.
