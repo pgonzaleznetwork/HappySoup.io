@@ -9,17 +9,8 @@
     <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
   </a>
 </div>
-
-HappySoup.io helps you keep your salesforce org clean and healthy by helping you see metadata dependencies in ways that have never been possible before (at least not for free!).
-
-Our LinkedIn page has a lot of information on new features, blog posts, etc., so it's worth following if you are interested.
-
-<a href="https://www.linkedin.com/company/happy-soup-app">
-    <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white">
-  </a>
-</br></br>
-<p>
-If you want to support HappySoup.io by helping us cover the Heroku costs, you can make a donation using the link below</p>
+<p>HappySoup.io helps you keep your salesforce org clean and healthy by helping you see metadata dependencies in ways that have never been possible before (at least not for free!).</p>
+<p>If you want to support HappySoup.io by helping us cover the Heroku costs, you can make a donation using the link below</p>
 
 <a href="https://www.paypal.com/donate?business=XEWHTYGFC5QEE&item_name=Support+HappySoup.io&currency_code=EUR">
     <img src="./github-images/btn_donate_SM.gif">
@@ -145,6 +136,8 @@ For example, if your app name is `mycompany-happysoup.herokuapp.com` then the Ca
 Note that if you changed the default `PORT` environment variable in the deployment page, you need to update the localhost port in the callback URL as well.
 
 Once you have created the Connected App, get the Client Secret and Client Id; we'll need them in the next step.
+
+**Important**: Make sure you uncheck "Require Proof Key for Code Exchange (PKCE) Extension for Supported Authorization Flows" setting on the Connected App. 
 
 ### 2. Editing the Config Vars
 
