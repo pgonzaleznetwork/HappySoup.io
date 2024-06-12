@@ -1,9 +1,5 @@
 <template>
   <div class="nav-container">
-    <div id="nav-warning">Use HappySoup along with 
-      <a href="https://app.salto.io/login?isSalesforce=true&isFreeTier=true&utm_source=HappySoup&utm_medium=referral&utm_campaign=In%20app%20banner%20%7C%20HappySoup" target="_blank">Salto's 100% FREE app</a>
-        to do impact analysis the right way! Standards fields, full-text search and more!
-    </div>
   <section class="container">
      <nav class="navbar" role="navigation" aria-label="main navigation">
       <div>text</div>
