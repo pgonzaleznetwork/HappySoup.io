@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "npm run serve",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider && npm run serve",
+    "serve": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build"
   },
   "dependencies": {
     "@creativebulma/bulma-tooltip": "1.2.0",

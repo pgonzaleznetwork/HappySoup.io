@@ -1,8 +1,8 @@
 <template>
    <div class="info">
 
-   <a href="https://app.salto.io/signup?utm_medium=referral&utm_source=pablos_blog&utm_campaign=cpq%20campaign&business_applications__c=Salesforce" target="_blank" >
-        <img src="../../../assets/cpq.jpg" />
+   <a href="https://www.pablogonzalez.io/" target="_blank" >
+        <img src="../../../assets/pabloblog.png" />
     </a>
 
     </div>
