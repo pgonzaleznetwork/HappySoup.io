@@ -1,7 +1,7 @@
 <template>
    <div class="info">
 
-   <a href="https://www.pablogonzalez.io/" target="_blank" >
+   <a href="https://www.pablogonzalez.io/clean-coders" target="_blank" >
         <img src="../../../assets/pabloblog.png" />
     </a>
 
