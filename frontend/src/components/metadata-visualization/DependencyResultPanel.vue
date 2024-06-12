@@ -1,9 +1,5 @@
 <template>
     <div v-if="apiResponseHasData">
-
-        <a href="https://www.salto.io/better-than-change-sets?utm_source=happy_soup&utm_medium=referral&utm_campaign=pro%20tier%20official%20launch%20%7C%20december%202022&utm_content=better_than_change_sets_banner_v4" target="_blank" >
-            <img src="../../assets/salto-banner.png"  style="max-width: 500px;">
-        </a>
         <br>
         <br>
 
