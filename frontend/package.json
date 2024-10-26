@@ -5,7 +5,8 @@
   "scripts": {
     "start": "export NODE_OPTIONS=--openssl-legacy-provider && npm run serve",
     "serve": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
-    "build": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build"
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
+    "stop": "export NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service stop"
   },
   "dependencies": {
     "@creativebulma/bulma-tooltip": "1.2.0",

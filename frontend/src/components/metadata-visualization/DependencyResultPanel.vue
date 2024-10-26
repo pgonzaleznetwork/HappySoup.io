@@ -3,9 +3,11 @@
         <br>
         <br>
 
-        <!--<div class="notification is-danger is-light">
-            <span v-html="warningMessage"></span>
-        </div>-->
+        <div style="margin:20px;width:300px">
+            <a href="https://www.learn-apex.com/onboarding/email" target="_blank" >
+            <img src="../../assets/Learn_apex_Ads.png"  />
+       </a>
+        </div>
         <div class="tabs is-boxed">
             <ul>
                 <li :class="{'is-active':activeTab == 'tree'}">

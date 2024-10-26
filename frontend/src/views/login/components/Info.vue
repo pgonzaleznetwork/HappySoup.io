@@ -1,8 +1,8 @@
 <template>
    <div class="info">
 
-   <a href="https://www.pablogonzalez.io/clean-coders" target="_blank" >
-        <img src="../../../assets/pabloblog.png" />
+   <a href="https://www.learn-apex.com/onboarding/email" target="_blank" >
+        <img src="../../../assets/face-learn-apex.com.png" />
     </a>
 
     </div>
