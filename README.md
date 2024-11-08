@@ -189,6 +189,8 @@ These steps describe the process in the video above, using example text (**in bo
 1. Callback URL: `http://localhost:3000/oauth2/callback`
 1. Selected OAuth Scopes: `Access the identity URL service (id, profile, email, address, phone); Manage user data via APIs (api); Full access (full); Perform requests at any time (refresh_token, offline_access)`
 1. Save
+1. Edit the app's settings and untick the "Require Proof Key for Code Exchange (PKCE) Extension for Supported Authorization Flows" option, which is checked by default.
+1. Save again
 
 ### Connect Happy Soup to Salesforce
 
