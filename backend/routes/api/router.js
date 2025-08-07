@@ -185,6 +185,7 @@ apiRouter.route('/session')
 
             let data = {
                 token:req.session.oauthInfo.access_token,
+                refreshToken:req.session.oauthInfo.refresh_token,
                 url:req.session.oauthInfo.instance_url
             }
 

@@ -10,6 +10,7 @@
 
      <template v-slot:results>
         <p><b>Token</b>: {{token}}</p>
+        <p><b>Refresh Token</b>: {{refreshToken}}</p>
         <p><b>URL</b>: {{url}}</p>
        
      </template>
@@ -28,6 +29,7 @@ export default {
     data(){
         return{
             token:'',
+            refreshToken:'',
             url:''
         }
     },
@@ -36,6 +38,7 @@ export default {
         let res = await fetch('/api/session');
         let sessionData = await res.json();
         this.token = sessionData.token;
+        this.refreshToken = sessionData.refreshToken;
         this.url = sessionData.url;
     }
 
