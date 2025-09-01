@@ -41,6 +41,7 @@ services:
       context: .
       dockerfile: ./docker/worker/Dockerfile
     environment:
+      - MONGODB_URL=mongodb://admin:happysoup_dev_2024@mongodb:27017/happysoup?authSource=admin
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - OAUTH_CLIENT_ID=3MVG9I5UQ_0k_hTmZuUMosHPf.2zqzHBqd0j.GMmnThrGhd53n4prfPpHNqSAPRrWzc7Hb0ul.s2m4VYoiWyZ

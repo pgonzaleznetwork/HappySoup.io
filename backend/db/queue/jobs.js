@@ -89,6 +89,13 @@ async function usageJob(job){
     let {entryPoint,sessionId} = job.data;
     let session = await getSession(sessionId);
 
+    try {
+      logEvent('usageJob',entryPoint,sessionId);
+    }
+    catch(error){
+      console.error('Error logging event:', error);
+    }
+
     let cache = cacheApi(session.cache);
     let connection = sessionValidation.getConnection(session);
 
@@ -124,6 +131,13 @@ async function bulkUsageJob(job){
   let {ids,sessionId} = job.data;
   let session = await getSession(sessionId);
 
+  try {
+    logEvent('bulkUsageJob',ids,sessionId);
+  }
+  catch(error){
+    console.error('Error logging event:', error);
+  }
+
   let connection = sessionValidation.getConnection(session);
 
   let response = await bulkDependency.getUsage(ids,connection);
@@ -139,6 +153,15 @@ async function workflowInfoJob(job){
   let {entryPoint,sessionId} = job.data;
   let session = await getSession(sessionId);
 
+  try {
+    
+    logEvent('workflowInfoJob',entryPoint,sessionId);
+  }
+  catch(error){
+    console.error('Error logging event:', error);
+  }
+
+
   let connection = sessionValidation.getConnection(session);
 
   let soupApi = sfdcSoup(connection,entryPoint);
@@ -153,6 +176,14 @@ async function boundaryJob(job){
 
     let {entryPoint,sessionId} = job.data;
     let session = await getSession(sessionId);
+
+    try {
+      
+      logEvent('boundaryJob',entryPoint,sessionId);
+    }
+    catch(error){
+      console.error('Error logging event:', error);
+    }
 
     let cache = cacheApi(session.cache);
     let connection = sessionValidation.getConnection(session);
@@ -318,6 +349,40 @@ function getAddressFields(prefix){
   fields = fields.map(field => `${prefix}${field}`);
 
   return fields;
+}
+
+async function logEvent(event,entryPoint,sessionId){
+  const session = await getSession(sessionId);
+  const {orgId,userId} = session.identity;
+  const eventData = {
+    event,
+    metadataType:entryPoint.type,
+    options:entryPoint.options,
+    orgId,
+    userId,
+    timestamp: new Date()
+  }
+  
+  // Save event data to MongoDB
+  await saveEventData(eventData);
+}
+
+async function saveEventData(eventData) {
+  const { MongoClient } = require('mongodb');
+  const client = new MongoClient(process.env.MONGODB_URL);
+  
+  try {
+    await client.connect();
+    const db = client.db();
+    const collection = db.collection('events');
+    
+    await collection.insertOne(eventData);
+    console.log('Event data saved successfully:', eventData.event);
+  } catch (error) {
+    console.error('Error saving event data:', error);
+  } finally {
+    await client.close();
+  }
 }
 
 module.exports = {boundaryJob,usageJob,listMetadataJob,bulkUsageJob,workflowInfoJob};
