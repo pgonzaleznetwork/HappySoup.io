@@ -49,7 +49,7 @@
       <div class="control">
         <label>
           <input v-model="privacyAccepted" type="checkbox" />
-          I agree to the HappySoup.io <a  href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a>
+          I agree to the HappySoup.io <a  href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank">Privacy Policy</a> <span class="is-size-7 has-text-grey-dark">(last updated Sept 1, 2025)</span>
         </label>
       </div>
     </div>

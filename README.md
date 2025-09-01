@@ -264,6 +264,27 @@ The session data and its cache is deleted when any of the below options occurs f
 * When you log out manually. When a logout action is performed, the session is completely deleted.
 * The app tries to issue a request to Salesforce but the access token has been revoked. When this occurs, the session is completely deleted.
 
+### Information We Retain About Your Org
+
+In addition to the temporary session data described above, HappySoup also collects and stores **basic statistics about your Salesforce org**. This includes information such as:
+
+- Counts of active users and admins  
+- Counts of Apex classes, custom objects, custom fields, and flows  
+- General information about your org, such as org name, org ID, and edition (e.g., Enterprise, Unlimited)  
+- Whether you are connecting from a production org or a sandbox  
+
+We collect this information to:  
+
+- Better understand how HappySoup is being used across different types of orgs  
+- Improve the performance and scalability of the product  
+- Inform future product enhancements and prioritize features based on customer needs  
+- Communicate with users about product updates and opportunities that are most relevant to their org size and complexity  
+
+We do **not** collect or store the actual contents of your metadata (e.g., field names, code, or configuration details). Only high-level counts and statistics are retained.  
+
+This information is stored securely and is never sold to third parties. It may be shared only with trusted service providers who support the operation of HappySoup, under strict confidentiality and data protection agreements.
+
+
 ### Cookies
 
 We use cookies and local storage for the following information:
