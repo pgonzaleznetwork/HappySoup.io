@@ -102,12 +102,18 @@ async function getUserDetails(oauthInfo){
     const sameUser = await connection.query(`SELECT ProfileId FROM User WHERE Id = '${user_id}'`);
     const sameUserProfileId = sameUser.records[0].ProfileId;
 
+    const profileInfo = await connection.query(`SELECT Id, Name FROM Profile WHERE Id = '${sameUserProfileId}'`);
+    const profileName = profileInfo.records[0].Name;
+
     
     const otherAdmins = await connection.query(`SELECT ProfileId FROM User WHERE ProfileId = '${sameUserProfileId}' AND IsActive = true`);
     const otherAdminCount = otherAdmins.totalSize;
 
     let nativeApexClasses = await connection.query(`SELECT Id, Name FROM ApexClass WHERE NamespacePrefix = ''`);
     const nativeApexClassCount = nativeApexClasses.totalSize;
+
+    const lightningComponents = await connection.tooling.query(`SELECT Id FROM LightningComponentBundle`);
+    const lightningComponentCount = lightningComponents.totalSize;
 
     const flows = await connection.tooling.query(`SELECT Id FROM FlowDefinition`);
     const flowCount = flows.totalSize;
@@ -118,9 +124,17 @@ async function getUserDetails(oauthInfo){
     const customObjects = await connection.tooling.query(`SELECT Id FROM CustomObject`);
     const customObjectCount = customObjects.totalSize;
 
+    const visualforcePages = await connection.query(`SELECT Id FROM ApexPage`);
+    const visualforcePageCount = visualforcePages.totalSize;
 
-    let orgInfo = await connection.query('SELECT Id, Name FROM Organization');
+    const installedPackages = await connection.tooling.query(`SELECT SubscriberPackage.Name FROM InstalledSubscriberPackage`);
+    const packageNames = installedPackages.records.map(record => record.SubscriberPackage.Name);
+    const packageCount = installedPackages.totalSize;
+
+
+    let orgInfo = await connection.query('SELECT Id, Name, OrganizationType FROM Organization');
     const orgName = orgInfo.records[0].Name;
+    const orgEdition = orgInfo.records[0].OrganizationType;
 
     const EntireUserInfo = {
         email,
@@ -128,14 +142,20 @@ async function getUserDetails(oauthInfo){
         emailDomain:extractDomainFromEmail(email),
         usernameDomain:extractDomainFromEmail(username),
         name:`${first_name} ${last_name}`,
+        profileName,
         organization_id,
+        orgName,
+        orgEdition,
         activeUserCount,
         otherAdminCount,
         nativeApexClassCount,
         flowCount,
         customFieldCount,
         customObjectCount,
-        orgName
+        lightningComponentCount,
+        visualforcePageCount,
+        packageNames,
+        packageCount
     }
     console.log('EntireUserInfo',EntireUserInfo);
     
