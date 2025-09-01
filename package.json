@@ -13,10 +13,11 @@
     "ui": "cd frontend && npm run build && cd .. && code backend/server/public/index.html"
   },
   "engines": {
-    "node": "14.x"
+    "node": "18.x"
   },
   "dependencies": {
     "@jsforce/jsforce-node": "^3.10.4",
+    "abort-controller": "^3.0.0",
     "bull": "^3.7.0",
     "connect-redis": "^4.0.4",
     "cookie-parser": "~1.4.4",

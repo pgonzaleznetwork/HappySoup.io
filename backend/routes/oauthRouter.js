@@ -1,5 +1,11 @@
 const express = require('express');
 require('dotenv').config();
+
+// Add AbortController polyfill for Node.js < 15
+if (!global.AbortController) {
+    global.AbortController = require('abort-controller');
+}
+
 let sessionValidation = require('../services/sessionValidation');
 let fetch = require('node-fetch');
 let {initCache} = require('../db/caching');
