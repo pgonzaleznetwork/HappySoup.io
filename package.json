@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "start":"docker-compose down --volumes && docker-compose up --build",
+    "start": "docker-compose down --volumes && docker-compose up --build",
     "heroku-local": "(cd frontend && npm start) & export NODE_ENV=dev && heroku local",
     "debug": "node --inspect ./bin/www",
     "semantic-release": "semantic-release",
@@ -16,6 +16,7 @@
     "node": "14.x"
   },
   "dependencies": {
+    "@jsforce/jsforce-node": "^3.10.4",
     "bull": "^3.7.0",
     "connect-redis": "^4.0.4",
     "cookie-parser": "~1.4.4",
@@ -30,6 +31,7 @@
     "foreman": "^3.0.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "mongodb": "^4.17.2",
     "morgan": "~1.9.1",
     "node-fetch": "2.6.1",
     "primeflex": "2.0.0",

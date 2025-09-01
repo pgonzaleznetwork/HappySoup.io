@@ -35,6 +35,7 @@ services:
       - ENFORCE_SSL=false
       - QUEUE_NAME=happy_queue
       - DELETE_JOB_IMMEDIATELY=true
+      - MONGODB_URL=mongodb://admin:happysoup_dev_2024@mongodb:27017/happysoup?authSource=admin
   worker:
     build:
       context: .
@@ -51,3 +52,18 @@ services:
       - ENFORCE_SSL=false
       - QUEUE_NAME=happy_queue
       - DELETE_JOB_IMMEDIATELY=true
+  mongodb:
+    image: mongo:7.0
+    container_name: happysoup-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: happysoup_dev_2024
+      MONGO_INITDB_DATABASE: happysoup
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
