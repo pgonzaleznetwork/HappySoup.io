@@ -1,0 +1,215 @@
+@use '../_sass_variables' as *;
+
+@media screen and (min-width: $breakpoint) {
+    .layout-horizontal {
+        flex-direction: column;
+        width: 100%;
+
+        .layout-content {
+            .layout-breadcrumb {
+                display: flex;
+                margin-bottom: 1rem;
+            }
+        }
+        .layout-topbar {
+            width: auto;
+            background: transparent;
+            border: none;
+            padding: 1rem;
+            .topbar-left {
+                display: none;
+                .horizontal-logo {
+                    display: block;
+                    height: 2rem;
+                    cursor: pointer;
+                }
+
+                .menu-button {
+                    display: none;
+                }
+
+                .viewname {
+                    display: none;
+                }
+
+                .topbar-separator {
+                    display: block;
+                }
+
+                .layout-breadcrumb {
+                    display: none;
+                }
+            }
+
+            .topbar-right {
+                display: flex;
+                justify-content: flex-end;
+
+                .topbar-menu {
+                    .profile-item {
+                        > a {
+                            padding: 0;
+
+                            img {
+                                margin: 0;
+                            }
+                        }
+                        .profile-name {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+        .layout-content-wrapper .layout-topbar {
+            display: none;
+        }
+
+        .layout-sidebar {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+            flex-direction: row;
+            align-items: center;
+            position: relative;
+            box-shadow: none;
+            border: 0 none;
+            transition: none;
+            padding: 0 1rem;
+            border-radius: 0 0 1.5rem 1.5rem;
+            border-right: none;
+            border-bottom: var(--d-sidebar-border);
+
+            .layout-menu-container {
+                overflow: auto;
+                flex: 1;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+            }
+        }
+
+        .layout-content-wrapper {
+            .viewname {
+                padding-bottom: 1.5rem;
+                display: block;
+                font-weight: 600;
+            }
+        }
+
+        .layout-menu {
+            display: flex;
+            flex-wrap: nowrap;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            width: fit-content;
+            height: 100%;
+
+            ul {
+                display: none;
+            }
+
+            li.active-menuitem {
+                > ul {
+                    display: block;
+                }
+
+                > a {
+                    .layout-submenu-toggler {
+                        transform: rotate(-180deg);
+                    }
+                }
+            }
+
+            .layout-root-menuitem {
+                border-radius: var(--border-radius);
+
+                > .layout-menuitem-root-text {
+                    display: none;
+                }
+
+                > a {
+                    display: flex;
+                    align-items: center;
+                    padding: 0.75rem;
+                    border-radius: var(--border-radius);
+                    cursor: pointer;
+                    outline: none;
+                    transition: background-color var(--transition-duration);
+
+                    .layout-submenu-toggler {
+                        display: block;
+                        margin-left: auto;
+                        transition: transform 0.2s;
+                    }
+
+                    .layout-menuitem-icon {
+                        font-size: 1.25rem;
+                    }
+
+                    .layout-menuitem-text {
+                        font-size: 0.875rem;
+                        display: block;
+                        margin-left: 0.75rem;
+                        margin-right: 0.75rem;
+                        white-space: nowrap;
+                    }
+                }
+
+                > ul {
+                    position: absolute;
+                    top: calc(100% + 0.25rem);
+                    min-width: 15rem;
+                    background: var(--popover-background) !important;
+                    border: 1px solid var(--popover-border-color);
+                    box-shadow:
+                        0px 56px 16px 0px rgba(0, 0, 0, 0),
+                        0px 36px 14px 0px rgba(0, 0, 0, 0.01),
+                        0px 20px 12px 0px rgba(0, 0, 0, 0.02),
+                        0px 9px 9px 0px rgba(0, 0, 0, 0.03),
+                        0px 2px 5px 0px rgba(0, 0, 0, 0.04);
+                    border-radius: 1rem;
+                    padding: 0.5rem;
+                    overflow: auto;
+                    max-height: 20rem;
+                    .active-menuitem {
+                        background-color: transparent;
+                        > a {
+                            color: var(--popover-item-active-text-color);
+                            background-color: var(--popover-item-active-background-color);
+                        }
+                    }
+                    a {
+                        color: var(--popover-item-text-color);
+                        border-radius: 0.5rem;
+                        margin: 0.25rem 0;
+                        &:hover {
+                            background-color: var(--popover-item-hover-background-color);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .layout-sidebar-primary.layout-horizontal {
+        .layout-topbar .topbar-right .topbar-menu .app-config-button {
+            color: var(--p-surface-0);
+            &::after,
+            &::before {
+                border-color: var(--p-surface-0);
+            }
+        }
+    }
+    .layout-sidebar-dark.layout-horizontal {
+        .layout-topbar .topbar-right .topbar-menu .app-config-button {
+            color: var(--p-surface-0);
+            &::after,
+            &::before {
+                border-color: var(--p-surface-0);
+            }
+        }
+    }
+}

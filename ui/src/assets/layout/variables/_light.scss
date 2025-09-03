@@ -1,0 +1,12 @@
+:root {
+    --surface-ground: #ffffff;
+    --surface-card: var(--p-surface-50);
+    --popover-background: #ffffff;
+    --popover-border-color: var(--surface-border);
+    --popover-item-active-background-color:var(--p-surface-100);
+    --popover-item-hover-background-color:var(--p-content-hover-background);
+    --popover-item-text-color:var(--p-surface-500);
+    --popover-item-active-text-color:var(--p-surface-950);
+    --menu-bg-color: var(--p-primary-700);
+    --menu-bg-color-alt: var(--p-primary-900);
+}

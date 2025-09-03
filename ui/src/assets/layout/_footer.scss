@@ -1,0 +1,28 @@
+.layout-footer {
+    height: 4rem;
+    padding: 2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .footer-logo-container {
+        display: flex;
+        align-items: center;
+
+        img {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .footer-app-name {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            margin-left: 0.5rem;
+        }
+    }
+
+    .footer-copyright {
+        font-size: 0.875rem;
+        color: var(--text-muted-color);
+    }
+}

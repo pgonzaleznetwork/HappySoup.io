@@ -1,0 +1,132 @@
+@use '../_sass_variables' as *;
+
+@media screen and (min-width: $breakpoint) {
+    .layout-compact {
+        .layout-topbar {
+            .topbar-left {
+                .horizontal-logo {
+                    display: none;
+                }
+
+                .menu-button {
+                    display: none;
+                }
+
+                .topbar-separator {
+                    display: none;
+                }
+            }
+        }
+
+        .layout-sidebar {
+            width: 5rem;
+            overflow: visible;
+            z-index: 999;
+
+            .logo {
+                margin: 0;
+                justify-content: center;
+            }
+
+            .logo-image {
+                margin-right: 0;
+            }
+
+            .app-name {
+                display: none;
+            }
+
+            .layout-menu-container {
+                overflow: auto;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+            }
+        }
+
+        .layout-menu {
+            .menu-separator {
+                display: none;
+            }
+
+            ul {
+                display: none;
+            }
+
+            li.active-menuitem {
+                > ul {
+                    display: block;
+                }
+            }
+
+            .layout-root-menuitem {
+                margin-bottom: 1rem;
+                border-radius: var(--border-radius);
+
+                > .layout-menuitem-root-text {
+                    display: none;
+                }
+
+                > a {
+                    display: block;
+                    text-align: center;
+                    border-radius: var(--border-radius);
+                    padding: 0.5rem 0;
+                    cursor: pointer;
+                    outline: none;
+                    transition: background-color var(--transition-duration);
+
+                    .layout-submenu-toggler {
+                        display: none;
+                    }
+
+                    .layout-menuitem-icon {
+                        font-size: 1.25rem;
+                        margin-top: 4px;
+                    }
+
+                    .layout-menuitem-text {
+                        display: none;
+                    }
+                }
+
+                > ul {
+                    position: absolute;
+                    left: 5.5rem;
+                    top: 0;
+                    min-width: 15rem;
+                    background: var(--popover-background);
+                    border: 1px solid var(--popover-border-color);
+                    box-shadow:
+                        0px 56px 16px 0px rgba(0, 0, 0, 0),
+                        0px 36px 14px 0px rgba(0, 0, 0, 0.01),
+                        0px 20px 12px 0px rgba(0, 0, 0, 0.02),
+                        0px 9px 9px 0px rgba(0, 0, 0, 0.03),
+                        0px 2px 5px 0px rgba(0, 0, 0, 0.04);
+                    border-radius: 1rem;
+                    padding: 0.5rem;
+                    animation-duration: 0.4s;
+                    animation-timing-function: cubic-bezier(0.05, 0.74, 0.2, 0.99);
+                    max-height: 20rem;
+                    overflow: auto;
+                    .active-menuitem {
+                        background-color: transparent;
+                        > a {
+                            color: var(--popover-item-active-text-color);
+                            background-color: var(--popover-item-active-background-color);
+                        }
+                    }
+                    a {
+                        color: var(--popover-item-text-color);
+                        border-radius: 0.5rem;
+                        margin: 0.25rem 0;
+                        &:hover {
+                            background-color: var(--popover-item-hover-background-color);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

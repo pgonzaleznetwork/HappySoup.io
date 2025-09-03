@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+    .landing-container{
+        @apply px-6 w-full max-w-[62rem] mx-auto;
+    }
+    @screen md{
+        .landing-container{
+            @apply max-w-[70rem];
+        }
+    }
+    @screen xl{
+        .landing-container{
+            @apply max-w-[85rem];
+        }
+    }
+    .title-h1 {
+        @apply text-7xl font-semibold text-surface-900 dark:text-surface-0 text-center leading-tight;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv01' on, 'cv02' on, 'cv03' on, 'cv04' on, 'cv07' on, 'cv09' on, 'cv05' on, 'cv10' on, 'cv11' on;
+    }
+    .title-h2{
+        @apply font-semibold text-surface-950 dark:text-surface-0 text-center leading-none;
+        font-size: 4rem;
+        font-family: 'InterDisplay', sans-serif;
+    }
+    .title-h3{
+        @apply font-semibold text-surface-900 dark:text-surface-0 leading-tight text-center;
+        font-size: 3.5rem;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv07' on, 'cv01' on, 'cv02' on, 'cv03' on, 'cv04' on, 'cv09' on, 'cv05' on, 'cv10' on, 'cv11' on;
+    }
+    .title-h4{
+        @apply font-semibold text-surface-900 dark:text-surface-0 leading-tight text-center;
+        font-size: 2.85rem;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv01' on, 'cv02' on, 'cv03' on, 'cv04' on, 'cv07' on, 'cv09' on, 'cv05' on, 'cv10' on, 'cv11' on;
+    }
+    .title-h5{
+        @apply text-4xl text-center font-medium text-surface-950 dark:text-surface-0 leading-snug;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv01' on, 'cv02' on, 'cv03' on, 'cv04' on, 'cv07' on, 'cv09' on, 'cv05' on, 'cv10' on, 'cv11' on;
+    }
+    .title-h6{
+        @apply text-3xl text-center font-medium text-surface-950 dark:text-surface-0;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv01' on, 'cv02' on, 'cv03' on, 'cv04' on, 'cv07' on, 'cv09' on, 'cv05' on, 'cv10' on, 'cv11' on;
+    }
+    .title-h7{
+        @apply text-2xl text-center font-medium text-surface-950 dark:text-surface-0;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv09' on, 'cv03' on, 'cv02' on, 'dlig' on, 'cv06' on, 'cv01' on, 'liga' off, 'calt' off;
+    }
+    .body-large{
+        @apply text-xl text-center text-surface-500;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv09' on, 'cv03' on, 'cv02' on, 'dlig' on, 'cv06' on, 'cv01' on, 'liga' off, 'calt' off;
+    }
+
+    .body-medium{
+        @apply text-lg text-center text-surface-500;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv09' on, 'cv03' on, 'cv02' on, 'dlig' on, 'cv06' on, 'cv01' on, 'liga' off, 'calt' off;
+    }
+
+    .body-small{
+        @apply text-base text-center text-surface-500;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv09' on, 'cv03' on, 'cv02' on, 'dlig' on, 'cv06' on, 'cv01' on, 'liga' off, 'calt' off;
+    }
+    .body-xsmall{
+        @apply text-sm text-center text-surface-500;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv09' on, 'cv03' on, 'cv02' on, 'dlig' on, 'cv06' on, 'cv01' on, 'liga' off, 'calt' off;
+    }
+    .label-large{
+        @apply text-surface-950 dark:text-surface-0 font-medium text-xl;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv01' on, 'cv02' on, 'cv05' on, 'cv04' on, 'cv03' on, 'cv07' on, 'cv09' on, 'cv10' on, 'cv11' on;
+    }
+    .label-medium{
+        @apply text-surface-950 dark:text-surface-0 font-medium text-lg;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv11' on, 'cv10' on, 'cv09' on, 'cv07' on, 'cv05' on, 'cv04' on, 'cv03' on, 'cv02' on, 'cv01' on;
+    }
+    .label-small{
+        @apply text-surface-500 font-medium text-base text-center;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv11' on, 'cv10' on, 'cv09' on, 'cv07' on, 'cv05' on, 'cv04' on, 'cv03' on, 'cv02' on, 'cv01' on;
+    }
+    .label-xsmall{
+        @apply text-surface-500 font-medium text-sm text-center;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv01' on, 'cv02' on, 'cv03' on, 'cv04' on, 'cv07' on, 'cv11' on, 'cv09' on, 'cv10' on, 'cv05' on;
+    }
+    .paragraph-xsmall{
+        @apply text-sm text-center;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'ss11' on, 'cv09' on, 'liga' off, 'calt' off;
+    }
+    .badge{
+        @apply mx-auto body-small leading-normal text-surface-950 dark:text-surface-0 px-3.5 py-1 border border-surface-200 dark:border-surface-800 rounded-full w-fit;
+    }
+    .body-button{
+        @apply py-2 px-3.5 rounded-lg bg-primary-600 hover:bg-primary-500 text-surface-0 font-normal text-center transition-all;
+        width: 8.5rem;
+        font-feature-settings: 'cv11' on, 'cv10' on, 'cv09' on, 'cv07' on, 'cv05' on, 'cv04' on, 'cv03' on, 'cv02' on, 'cv01' on;
+    }
+    .button-button{
+        @apply w-full py-2 flex items-center justify-center gap-2 rounded-lg border border-surface-200 dark:border-surface-800 hover:bg-surface-100 dark:hover:bg-surface-800 transition-all text-center text-surface-700 dark:text-surface-200 font-medium leading-normal;
+        font-family: 'InterDisplay', sans-serif;
+        font-feature-settings: 'cv08' on, 'cv09' on, 'cv03' on, 'cv02' on, 'dlig' on, 'cv06' on, 'cv01' on, 'liga' off, 'calt' off;
+        box-shadow: 0px 1px 2px 0px rgba(18, 18, 23, 0.05);
+    }
+}

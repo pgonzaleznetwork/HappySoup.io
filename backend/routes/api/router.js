@@ -18,7 +18,8 @@ let corsOptions = {
     } else {
       callback(new Error(`${origin} is not configured for CORS. Please make sure that ${origin} is added to the CORS_DOMAIN envrionment variable`));
     }
-  }
+  },
+  credentials: true // Allow credentials (cookies, sessions) to be sent
 }
 
 const apiRouter = express.Router();
@@ -134,6 +135,88 @@ apiRouter.route('/oauthinfo/clientid')
     }
 );
 
+
+/********************** /auth ENDPOINTS ****************************************/
+
+apiRouter.route('/auth/user')
+
+.options(cors(corsOptions)) // Handle preflight requests
+
+.get(
+    cors(corsOptions),
+    sessionValidation.validateSessions,
+    async (req,res,next) => {
+
+        try {
+            console.log('[BACKEND] /auth/user endpoint called');
+            console.log('[BACKEND] Session exists:', !!req.session);
+            console.log('[BACKEND] Session identity exists:', !!req.session.identity);
+            console.log('[BACKEND] Session oauthInfo exists:', !!req.session.oauthInfo);
+
+            if(!req.session.identity){
+                console.log('[BACKEND] No identity in session, fetching from OAuth...');
+
+                let oauthInfo = req.session.oauthInfo;
+                
+                let json = await getIdentity(oauthInfo.id,oauthInfo.access_token);
+
+                let env = oauthInfo.id.includes('test.salesforce.com') ? 'Sandbox' : 'Production';
+    
+                req.session.identity = {
+                    username:json.username,
+                    name:json.display_name,
+                    orgId:json.organization_id,
+                    userId:json.user_id,
+                    url:oauthInfo.instance_url,
+                    env
+                }
+            }
+
+            // Format response for new UI auth store
+            const userResponse = {
+                user: {
+                    firstName: req.session.identity.name ? req.session.identity.name.split(' ')[0] : '',
+                    email: req.session.identity.username,
+                    lastLoginUsername: req.session.identity.username,
+                    orgId: req.session.identity.orgId,
+                    userId: req.session.identity.userId,
+                    instanceUrl: req.session.identity.url,
+                    environment: req.session.identity.env
+                }
+            };
+
+            console.log('[BACKEND] Returning user response:', userResponse);
+            res.status(200).json(userResponse);
+
+        } catch (error) {
+            console.error('[BACKEND] Error in /auth/user:', error);
+            next(error);
+        } 
+    }
+)
+
+apiRouter.route('/auth/logout')
+
+.options(cors(corsOptions)) // Handle preflight requests
+
+.post(
+    cors(corsOptions),
+    sessionValidation.validateSessions,
+    async (req,res,next) => {
+        try {
+            // Clear session
+            req.session.destroy((err) => {
+                if (err) {
+                    return next(err);
+                }
+                res.clearCookie('connect.sid');
+                res.status(200).json({ success: true });
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+)
 
 /********************** /identity ENDPOINT ****************************************/
 

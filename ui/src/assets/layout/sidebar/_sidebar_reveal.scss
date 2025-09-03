@@ -1,0 +1,209 @@
+@use '../_sass_variables' as *;
+
+@media screen and (min-width: $breakpoint) {
+    .layout-reveal {
+        .topbar-left {
+            .horizontal-logo {
+                display: none;
+            }
+
+            .menu-button {
+                display: none;
+            }
+
+            .topbar-separator {
+                display: none;
+            }
+        }
+
+        .layout-sidebar {
+            height: 100%;
+            top: 0;
+            transition: margin 0.3s cubic-bezier(0, 0, 0.2, 1);
+            margin-left: -12rem;
+            z-index: 999;
+
+            .sidebar-header {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 1rem;
+                padding: 1rem 0.5rem;
+                .logo {
+                    width: 100%;
+                    border: none;
+                    padding: 0;
+                    display: flex;
+                    justify-content: flex-end;
+                    margin: 0;
+
+                    .app-name {
+                        display: none;
+                    }
+                }
+
+                .layout-sidebar-anchor {
+                    display: none;
+                    flex-shrink: 0;
+                    width: 1.15rem;
+                    height: 1.15rem;
+                    border-radius: 50%;
+                    border: var(--d-menu-separator-border);
+                    border-width: 2px;
+                    background-color: transparent;
+                    outline: none;
+                    transition:
+                        background-color var(--transition-duration),
+                        transform 0.3s;
+                }
+            }
+            .layout-menu-container {
+                overflow: hidden;
+            }
+
+            .layout-menu {
+                .layout-root-menuitem {
+                    > .layout-menuitem-root-text {
+                        font-size: 0.75rem;
+                        text-transform: uppercase;
+                        font-weight: 500;
+                        padding: 0.5rem 0 0.5rem 0;
+                        opacity: 0;
+                        > span {
+                            margin-right: auto;
+                        }
+
+                        > .layout-menuitem-root-icon {
+                            display: block;
+                            margin-right: 0.125rem;
+                        }
+                    }
+                }
+
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    list-style-type: none;
+
+                    a {
+                        .layout-menuitem-text {
+                            order: 1;
+                            margin-right: auto;
+                        }
+
+                        .layout-submenu-toggler {
+                            order: 2;
+                            display: none;
+                            margin-right: 0.5rem;
+                        }
+
+                        .layout-menuitem-icon {
+                            order: 3;
+                            margin-right: 0;
+                            font-size: 1.25rem;
+                            width: auto;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.layout-sidebar-active {
+            .layout-sidebar {
+                margin-left: 0;
+                .layout-menu-container {
+                    overflow: auto;
+                }
+
+                .sidebar-header {
+                    justify-content: space-between;
+                    padding: 1rem;
+                    .logo {
+                        width: 100%;
+                        border: none;
+                        justify-content: flex-start;
+
+                        .app-name {
+                            display: inline-block;
+                        }
+                    }
+
+                    .layout-sidebar-anchor {
+                        display: flex;
+                        flex-shrink: 0;
+                    }
+                }
+
+                .layout-menu {
+                    .layout-root-menuitem {
+                        > .layout-menuitem-root-text {
+                            opacity: 1;
+                            > .layout-menuitem-root-icon {
+                                display: none;
+                            }
+                        }
+                    }
+
+                    ul {
+                        a {
+                            padding: 0.45rem 0.75rem;
+                            .layout-submenu-toggler {
+                                display: block;
+                            }
+                        }
+                        ul {
+                            overflow: hidden;
+                            border-radius: var(--border-radius);
+
+                            li {
+                                a {
+                                    padding-left: 2.5rem;
+                                }
+
+                                li {
+                                    a {
+                                        padding-left: 3rem;
+                                    }
+
+                                    li {
+                                        a {
+                                            padding-left: 3.5rem;
+                                        }
+
+                                        li {
+                                            a {
+                                                padding-left: 4rem;
+                                            }
+
+                                            li {
+                                                a {
+                                                    padding-left: 5.5rem;
+                                                }
+
+                                                li {
+                                                    a {
+                                                        padding-left: 5rem;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        &.layout-sidebar-anchored {
+            .sidebar-header {
+                .layout-sidebar-anchor {
+                    background-color: var(--primary-color);
+                    border: 2px solid var(--primary-color);
+                }
+            }
+        }
+    }
+}

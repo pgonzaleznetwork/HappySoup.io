@@ -1,0 +1,20 @@
+.layout-sidebar-primary {
+    --d-sidebar-bg-color: var(--menu-bg-color);
+    --d-sidebar-bg-color-alt: var(--menu-bg-color-alt);
+    --d-sidebar-border: 1px solid var(--surface-border);
+    --d-app-name-color: var(--p-surface-0);
+    --d-menu-separator-border: 1px solid rgba(255, 255, 255, 0.2);
+    --d-menuitem-root-text-color: rgba(255, 255, 255, 0.6);
+    --d-menuitem-text-color: rgba(255, 255, 255, 0.64);
+    --d-menuitem-hover-bg: rgba(255, 255, 255, 0.1);
+    --d-menuitem-active-bg: rgba(255, 255, 255, 0.1);
+    --d-menuitem-active-text-color: #ffffff;
+    --d-menuitem-focus-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.1);
+    --d-sidebar-border: 1px solid transparent;
+}
+
+:root[class*='app-dark'] .layout-sidebar-primary {
+    --d-sidebar-bg-color: var(--p-surface-950);
+    --d-sidebar-bg-color-alt: var(--p-surface-950);
+    --d-sidebar-border: 1px solid var(--p-surface-700);
+}

@@ -1,0 +1,24 @@
+.layout-wrapper {
+    height: 100vh;
+    display: flex;
+    transition: all 0.2s ease;
+}
+.layout-content-wrapper {
+    flex: 1;
+    height: 100%;
+    overflow: auto;
+    z-index: 9;
+    transition: all 0.2s ease;
+}
+.layout-content-wrapper-inside {
+    max-width: 1540px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+.layout-content {
+    padding: 2rem 2rem 2rem 2rem;
+    flex: 1 1 auto;
+    position: relative;
+}

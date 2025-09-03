@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "start": "docker-compose down --volumes && docker-compose up --build",
+    "start:compare": "echo 'Starting Docker services (backend + old UI on :3000) and new UI on :5173...' && docker-compose down --volumes && docker-compose up --build -d && cd ui && npm run start",
     "heroku-local": "(cd frontend && npm start) & export NODE_ENV=dev && heroku local",
     "debug": "node --inspect ./bin/www",
     "semantic-release": "semantic-release",
     "local": " parallelshell 'node ./bin/www' 'node ./services/worker.js' 'cd frontend && npm start' ",
+    "localv2": "parallelshell 'node ./bin/www' 'node ./services/worker.js' 'cd ui && npm run start' ",
     "commit": "git-cz",
     "update-api": "npm install sfdc-happy-api@latest sfdc-soup@latest",
     "ui": "cd frontend && npm run build && cd .. && code backend/server/public/index.html"

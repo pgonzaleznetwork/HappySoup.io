@@ -31,8 +31,9 @@ services:
       - SFDC_API_VERSION=49.0
       - SESSION_SECRET=whatever
       - PORT=3000
-      - CORS_DOMAINS=http://localhost,http://localhost:3000,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
+      - CORS_DOMAINS=http://localhost,http://localhost:3000,http://localhost:5173,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
       - ENFORCE_SSL=false
+      - USE_NEW_UI=true
       - QUEUE_NAME=happy_queue
       - DELETE_JOB_IMMEDIATELY=true
       - MONGODB_URL=mongodb://admin:happysoup_dev_2024@mongodb:27017/happysoup?authSource=admin
@@ -49,7 +50,7 @@ services:
       - SFDC_API_VERSION=49.0
       - SESSION_SECRET=whatever
       - PORT=3000
-      - CORS_DOMAINS=http://localhost,http://localhost:3000,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
+      - CORS_DOMAINS=http://localhost,http://localhost:3000,http://localhost:5173,https://sfdc-happy-soup.herokuapp.com,https://happysoup.io
       - ENFORCE_SSL=false
       - QUEUE_NAME=happy_queue
       - DELETE_JOB_IMMEDIATELY=true

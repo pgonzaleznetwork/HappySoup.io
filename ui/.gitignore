@@ -1,0 +1,41 @@
+# node_modules
+node_modules/
+
+# production
+dist/
+build/
+
+# local env files
+.env.local
+.env.*.local
+
+# Vite cache
+.vite/
+
+# Log files
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# coverage
+coverage/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Output from build tools
+*.log
+
+# ESLint cache
+.eslintcache

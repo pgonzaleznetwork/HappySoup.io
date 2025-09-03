@@ -1,0 +1,12 @@
+:root[class*='app-dark'] {
+    --surface-ground: var(--p-surface-950);
+    --surface-card: var(--p-surface-900);
+    --popover-background: var(--p-surface-900);
+    --popover-border-color: var(--surface-border);
+    --popover-item-active-background-color:var(--p-surface-800);
+    --popover-item-hover-background-color:var(--p-content-hover-background);
+    --popover-item-text-color:var(--p-surface-400);
+    --popover-item-active-text-color:var(--p-surface-0);
+    --menu-bg-color: color-mix(in srgb, var(--p-primary-500), transparent 95%);
+    --menu-bg-color-alt: var(--p-surface-950);
+}

@@ -1,0 +1,165 @@
+@use '../_sass_variables' as *;
+
+.layout-sidebar {
+    border-right: var(--d-sidebar-border);
+    background: var(--d-sidebar-bg-color);
+    background-image: linear-gradient(135deg, var(--d-sidebar-bg-color), var(--d-sidebar-bg-color-alt));
+    height: 100%;
+    z-index: 10;
+    .sidebar-header {
+        .layout-sidebar-anchor {
+            display: none;
+        }
+    }
+    .app-name {
+        color: var(--d-app-name-color);
+    }
+
+    .layout-menu {
+        .menu-separator {
+            height: 1px;
+            width: 100%;
+            background: transparent;
+        }
+
+        li {
+            &.active-menuitem {
+                > a {
+                    color: var(--d-menuitem-active-text-color);
+                }
+            }
+
+            a {
+                color: var(--d-menuitem-text-color);
+
+                &:hover {
+                    background: var(--d-menuitem-hover-bg);
+                }
+            }
+        }
+
+        .layout-root-menuitem {
+            .layout-menuitem-root-text {
+                color: var(--d-menuitem-root-text-color);
+            }
+
+            > ul {
+                z-index: 1;
+                > li.active-menuitem {
+                    background: var(--d-menuitem-active-bg);
+                }
+            }
+        }
+    }
+}
+.app-dark .layout-sidebar-primary {
+    &::before {
+        content: '';
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background-image: radial-gradient(circle at top left, color-mix(in srgb, var(--p-primary-950) 60%, transparent 40%) 0%, transparent 50%);
+        width: 60rem;
+        height: 100%;
+        z-index: 9;
+        pointer-events: none;
+    }
+}
+@media screen and (min-width: $breakpoint) {
+    .layout-horizontal {
+        .layout-topbar {
+            background: var(--d-sidebar-bg-color);
+            color: var(--d-menuitem-text-color);
+
+            .topbar-separator {
+                border-left: var(--d-menu-separator-border);
+            }
+
+            .topbar-menu {
+                > li {
+                    &.right-sidebar-item {
+                        > a {
+                            background: transparent;
+                            color: var(--d-menuitem-text-color);
+
+                            &:hover {
+                                background: var(--d-menuitem-hover-bg);
+                            }
+
+                            &:focus {
+                                box-shadow: var(--d-menuitem-focus-shadow);
+                            }
+                        }
+                    }
+
+                    > a {
+                        color: var(--d-menuitem-text-color);
+
+                        &:hover {
+                            background: var(--d-menuitem-hover-bg);
+                        }
+
+                        &:focus {
+                            box-shadow: var(--d-menuitem-focus-shadow);
+                        }
+
+                        .topbar-badge {
+                            background: var(--primary-color);
+                            color: var(--primary-contrast-color);
+                        }
+                    }
+
+                    > ul {
+                        &.notifications-menu {
+                            .notification-detail {
+                                color: var(--d-menuitem-root-text-color);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .layout-sidebar {
+            background-image: none;
+
+            .layout-menu {
+                .layout-root-menuitem {
+                    > ul {
+                        background: var(--d-sidebar-bg-color);
+                        background-image: linear-gradient(180deg, var(--d-sidebar-bg-color) 10%, var(--d-sidebar-bg-color-alt) 100%);
+                    }
+                }
+
+                ul {
+                    a {
+                        &.active-route {
+                            background: var(--d-menuitem-active-bg);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .app-dark {
+        .layout-sidebar-primary {
+            .layout-sidebar {
+                background: transparent;
+                background-image: none;
+                border: none;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: ($breakpoint - 1)) {
+    .layout-sidebar {
+        .layout-menu {
+            .layout-root-menuitem {
+                &.active-menuitem {
+                    background: transparent;
+                }
+            }
+        }
+    }
+}
