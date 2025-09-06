@@ -5,7 +5,6 @@ import OrgRegistration from '@/components/auth/OrgRegistration.vue';
 import { ref, computed, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useMutation } from '@tanstack/vue-query';
-import FeatureList from '@/components/ui/features/FeatureList.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useClipboard } from '@vueuse/core';
 import Message from 'primevue/message';
@@ -78,6 +77,34 @@ const processUrlParams = () => {
     // For now, we'll keep it simple and just show the login form
 };
 
+// Testimonials data
+const testimonials = [
+    {
+        comment: `"Other tools pivoted to DevOps. HappySoup stayed true to impact analysis and keeping Salesforce orgs clean."`,
+        name: 'Jamie Seyler',
+        title: 'Senior Salesforce Administrator',
+        linkedinUrl: 'https://linkedin.com/in/jamieseyler'
+    },
+    {
+        comment: `"HappySoup is my first step for dependency analysis. We've embedded it into our work estimation process."`,
+        name: 'Chris Pearson',
+        title: 'CRM Engineering Director',
+        linkedinUrl: 'https://linkedin.com/in/chrispearson'
+    },
+    {
+        comment: `"HappySoup's impact analysis provides a clear, organized and exportable view of dependencies - I highly recommend it for Salesforce professionals."`,
+        name: 'Gidi Abramovich',
+        title: 'Salesforce Solutions Architect',
+        linkedinUrl: 'https://linkedin.com/in/gidiabramovich'
+    },
+    {
+        comment: `"HappySoup comes in after you have looked everywhere else. You have checked the code, the flows, what's impacted, the default logs, your custom logs, and still something is missing. Fear not, HappySoup will find it."`,
+        name: 'Luke Buthman',
+        title: 'Senior Salesforce Developer',
+        linkedinUrl: 'https://linkedin.com/in/lukebuthman'
+    }
+];
+
 onBeforeMount(async () => {
     // Process URL parameters first
     processUrlParams();
@@ -124,39 +151,20 @@ onBeforeMount(async () => {
                     </div>
 
                     <!-- Title -->
-                    <h5 class="title-h5 text-center lg:text-left mb-4">Enter HappySoup.io</h5>
+                    <h5 class="title-h5 text-center lg:text-left mb-2">HappySoup.io</h5>
+
+                    <!-- Community Edition Badge -->
+                    <div class="text-center lg:text-left mb-4">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                            <i class="pi pi-globe mr-1.5 text-blue-600" style="font-size: 10px;"></i>
+                            Community Edition
+                        </span>
+                    </div>
 
                     <!-- Subtitle -->
                     <p class="body-medium text-center lg:text-left text-slate-600 mb-6">Don't break your Salesforce org, drink a happy soup instead</p>
                     
-                    <!-- Welcome Message -->
-                    <div v-if="lastLoginData" class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <div class="text-green-800">
-                            <div class="flex items-center mb-3">
-                                <i class="pi pi-user mr-2" />
-                                <span class="text-base">Welcome, {{ lastLoginData.firstName }} ({{ lastLoginData.email }})</span>
-                            </div>
-                            
-                            <div class="flex items-center justify-between text-sm">
-                                <span class="text-gray-600">You last logged in with username:</span>
-                                <div class="flex items-center gap-2">
-                                    <span class="font-medium text-gray-800">{{ lastLoginData.username }}</span>
-                                    <button 
-                                        @click="copy(lastLoginData.originalUsername)"
-                                        :class="[
-                                            'transition-colors p-1 rounded',
-                                            copied ? 'text-green-600' : 'text-gray-400 hover:text-green-600'
-                                        ]"
-                                        type="button"
-                                        :title="copied ? 'Copied!' : 'Copy full username'"
-                                        v-if="clipboardSupported"
-                                    >
-                                        <i :class="copied ? 'pi pi-check text-xs' : 'pi pi-copy text-xs'" />
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
 
                     <!-- Divider -->
                     <div class="border-t border-gray-200 mb-8" />
@@ -176,7 +184,33 @@ onBeforeMount(async () => {
                 </div>
             </div>
             <div class="hidden lg:flex w-1/2 h-full bg-slate-100 flex-col justify-center">
-                <FeatureList />
+                <div class="bg-surface-50 dark:bg-surface-950 p-8 lg:p-20 h-full overflow-y-auto">
+                    <div class="flex flex-col items-center gap-8 h-full justify-center">
+                        <div class="flex flex-col items-center gap-4">
+                            <h1 class="text-4xl font-medium text-surface-900 dark:text-surface-0 leading-tight text-center">Trusted by Salesforce professionals</h1>
+                        </div>
+
+                        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 max-w-4xl">
+                            <div v-for="testimonial in testimonials" :key="testimonial.name" class="rounded-xl shadow-sm p-6 flex flex-col gap-3" style="background-color: #eef2ff;">
+                                <div class="flex items-center gap-2">
+                                    <i v-for="n in 5" :key="n" class="pi pi-star-fill text-xl! leading-normal! text-yellow-500" />
+                                </div>
+                                <p class="text-base text-surface-700 dark:text-surface-0/70 leading-normal flex-1">{{ testimonial.comment }}</p>
+                                <div class="flex items-center gap-2">
+                                    <div class="flex flex-col">
+                                        <h3 class="text-base font-medium text-surface-900 dark:text-surface-0 leading-tight">{{ testimonial.name }}</h3>
+                                        <p class="text-sm text-surface-500 dark:text-surface-400 leading-tight">{{ testimonial.title }}</p>
+                                    </div>
+                                    <a :href="testimonial.linkedinUrl" target="_blank" rel="noopener noreferrer" class="shrink-0">
+                                        <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center hover:bg-blue-700 transition-colors">
+                                            <i class="pi pi-linkedin text-white text-xs"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>

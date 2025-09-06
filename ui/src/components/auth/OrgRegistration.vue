@@ -180,7 +180,7 @@ defineExpose({ resetForm });
             <label class="text-sm text-gray-600">
                 I agree to the HappySoup.io 
                 <a href="https://github.com/pgonzaleznetwork/sfdc-happy-soup#privacy-policy" target="_blank" class="text-blue-600 hover:text-blue-800 underline">Privacy Policy</a>
-                <span class="text-xs text-gray-500">(last updated Sept 1, 2025)</span>
+                <span class="text-xs text-gray-500"> (last updated Sept 1, 2025)</span>
             </label>
         </div>
 
