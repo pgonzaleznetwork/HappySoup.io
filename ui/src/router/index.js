@@ -38,8 +38,8 @@ const routes = [
                 path: 'usage',
                 name: 'usage',
                 meta: {
-                    breadcrumb: ['Impact Analysis', 'Migration Success'],
-                    title: 'OAuth Success - New UI'
+                    breadcrumb: ['Impact Analysis', 'Where is this used'],
+                    title: 'Impact Analysis'
                 },
                 component: () => import('@/views/impact-analysis/UsagePage.vue')
             }
@@ -66,30 +66,30 @@ const router = createRouter({
 // Add navigation guard to update document title
 router.beforeEach(async (to, from, next) => {
     console.log(`[ROUTER] Navigating from ${from.path} to ${to.path}`);
-    
+
     // Set document title based on route meta title or fallback to default
     document.title = to.meta.title ? `${to.meta.title} | HappySoup` : 'HappySoup';
-    
+
     // Auth check for protected routes
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+    const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
     console.log(`[ROUTER] Route ${to.path} requiresAuth:`, requiresAuth);
-    
+
     if (requiresAuth) {
         const auth = useAuthStore();
         console.log(`[ROUTER] Auth state - isLoaded: ${auth.isLoaded}, isLoading: ${auth.isLoading}, isAuthenticated: ${auth.isAuthenticated}`);
-        
+
         if (!auth.isLoaded && !auth.isLoading) {
             console.log('[ROUTER] Fetching session...');
             await auth.fetchSession();
         }
-        
+
         console.log(`[ROUTER] After session check - isAuthenticated: ${auth.isAuthenticated}`);
         if (!auth.isAuthenticated) {
             console.log('[ROUTER] Not authenticated, redirecting to login');
             return next({ name: 'login' });
         }
     }
-    
+
     console.log('[ROUTER] Allowing navigation to:', to.path);
     next();
 });

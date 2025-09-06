@@ -1,7 +1,7 @@
 <script setup>
 import { ref, markRaw } from 'vue';
 import AppMenuItem from './AppMenuItem.vue';
-import { PhMagnifyingGlass } from "@phosphor-icons/vue";
+import { PhMagnifyingGlass } from '@phosphor-icons/vue';
 
 const model = ref([
     {

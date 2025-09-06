@@ -35,10 +35,8 @@ const goBack = () => {
                     </template>
                     <template #form>
                         <HSFormLayout>
-                            <p class="body-large mt-3.5 text-center lg:text-left text-slate-600">
-                                Oops! The page you're looking for doesn't exist. It might have been moved, deleted, or you entered the wrong URL.
-                            </p>
-                            
+                            <p class="body-large mt-3.5 text-center lg:text-left text-slate-600">Oops! The page you're looking for doesn't exist. It might have been moved, deleted, or you entered the wrong URL.</p>
+
                             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
                                 <h6 class="font-semibold text-blue-900 mb-2">What can you do?</h6>
                                 <ul class="text-blue-800 space-y-1">
@@ -48,20 +46,10 @@ const goBack = () => {
                                     <li>• Contact support if you believe this is an error</li>
                                 </ul>
                             </div>
-                            
+
                             <div class="flex flex-col sm:flex-row gap-4 mt-8">
-                                <Button 
-                                    @click="goBack" 
-                                    class="flex-1" 
-                                    label="Go Back" 
-                                    severity="secondary" 
-                                    outlined 
-                                />
-                                <Button 
-                                    @click="goHome" 
-                                    class="flex-1" 
-                                    label="Return Home" 
-                                />
+                                <Button @click="goBack" class="flex-1" label="Go Back" severity="secondary" outlined />
+                                <Button @click="goHome" class="flex-1" label="Return Home" />
                             </div>
                         </HSFormLayout>
                     </template>

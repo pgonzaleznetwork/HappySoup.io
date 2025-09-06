@@ -1,5 +1,5 @@
 <script setup>
-import HappySoupSvg from './happy_soup_transparent_bg.svg?url'
+import HappySoupSvg from './happy_soup_transparent_bg.svg?url';
 
 defineProps({
     className: {
@@ -22,11 +22,5 @@ defineProps({
 </script>
 
 <template>
-    <img 
-        :src="HappySoupSvg"
-        :class="[className, reverseTheme ? 'filter brightness-0 invert dark:brightness-100 dark:invert-0' : '']"
-        :width="width" 
-        :height="height"
-        alt="Happy Soup Logo"
-    />
+    <img :src="HappySoupSvg" :class="[className, reverseTheme ? 'filter brightness-0 invert dark:brightness-100 dark:invert-0' : '']" :width="width" :height="height" alt="Happy Soup Logo" />
 </template>

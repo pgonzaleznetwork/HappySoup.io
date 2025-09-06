@@ -4,8 +4,11 @@
     "private": true,
     "scripts": {
         "start": "vite",
+        "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
+        "kill-ports": "lsof -ti:5173,5174,5175,5176 | xargs kill -9 2>/dev/null || true",
+        "start:clean": "npm run kill-ports && vite",
         "lint": "eslint --ext \".js,.vue\" --ignore-path .gitignore . --cache",
         "lint:fix": "eslint --fix --ext \".js,.vue\" ",
         "format": "prettier --write \"**/*.{js,vue,d.ts}\" --cache",

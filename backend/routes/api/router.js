@@ -29,6 +29,8 @@ apiRouter.use(parser.json());
 
 apiRouter.route('/metadata')
 
+.options(cors(corsOptions)) // Handle preflight requests
+
 .get(
     cors(corsOptions),
     (req,res,next) => {
@@ -85,6 +87,8 @@ apiRouter.route('/workflows')
 /********************** /usage ENDPOINT ****************************************/
 
 apiRouter.route('/usage')
+
+.options(cors(corsOptions)) // Handle preflight requests
 
 .post(
     cors(corsOptions),
@@ -302,6 +306,8 @@ async function getIdentity(url,token){
 }
 
 apiRouter.route('/job/:id')
+
+.options(cors(corsOptions)) // Handle preflight requests
 
 .get(
     cors(corsOptions),

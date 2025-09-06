@@ -1,5 +1,15 @@
 # Migration Lessons Learned: Frontend to New UI
 
+You are looking at the source code of the fullstack app HappySoup.io. This is a monorepo, where @frontend/ is the vue js frontend, and @backend/ is the express API, worker queue, etc.
+
+The current frontend is build on raw vue and with custom css and bulma css. I want to migrate this to a modern setup with vue/vite and tailwind css. The functionality should be the same, but new look and feel and better experience.
+
+Fortunately, we don't need to start from sctracth. The @ui/ contains an entire vite/vue project that we should be able to drop in as a replacement, it's fully decoupled, just like the @frontend/ is (i.e it's just a frontend sending API calls, no templating, etc).
+
+The @ui/ contains all the tailwind configuration and everything to get started. In fact, I already have some pages there like a log in page, org switcher, etc. Spend some time reviewing it.
+
+What we want to do is to slowly migrate every view and component from @frontend/ into @ui/ , starting with the login page. To be clear @frontend/ is the source of truth in terms of business logic, behaviour and UI controls. Our job is simply to re-write the same with the new css (tailwind) and any primevue primitives (the new UI uses more primevue than the first one). We should use the backend API as a contract, but also the current vue logic should be preserved as is.
+
 ## Overview
 
 This document captures the lessons learned from migrating the login page from the old `@frontend/` (Vue 3 + Bulma) to the new `@ui/` (Vite + Vue 3 + Tailwind + PrimeVue 4) setup.

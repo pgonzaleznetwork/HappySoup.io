@@ -36,13 +36,10 @@ function onAnchorToggle() {
             <router-link :to="{ name: 'impact-analysis' }" class="logo">
                 <span class="app-name title-h7">HappySoup</span>
             </router-link>
-            <i 
+            <i
                 v-show="layoutState.sidebarActive || layoutState.anchored"
                 v-tooltip.bottom="layoutState.anchored ? 'Close menu' : 'Lock menu'"
-                :class="[
-                    'sidebar-lock',
-                    layoutState.anchored ? 'pi pi-lock' : 'pi pi-lock-open'
-                ]"
+                :class="['sidebar-lock', layoutState.anchored ? 'pi pi-lock' : 'pi pi-lock-open']"
                 @click="onAnchorToggle"
             />
         </div>

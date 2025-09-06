@@ -18,4 +18,3 @@ defineProps({
         </slot>
     </div>
 </template>
-

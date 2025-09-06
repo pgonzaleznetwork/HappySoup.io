@@ -30,11 +30,11 @@ onBeforeUnmount(() => {
 });
 
 onMounted(() => {
-  // Check for pending toast messages when the layout mounts
-  const pendingToast = toastStore.consumePendingToast();
-  if (pendingToast) {
-    toast.add(pendingToast);
-  }
+    // Check for pending toast messages when the layout mounts
+    const pendingToast = toastStore.consumePendingToast();
+    if (pendingToast) {
+        toast.add(pendingToast);
+    }
 });
 
 const containerClass = computed(() => {

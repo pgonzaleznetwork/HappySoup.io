@@ -1,26 +1,26 @@
 <script setup>
 const features = [
     {
-        title: "Find where your fields are being used",
-        description: "See exactly where standard and custom fields show up across your org - in page layouts, formulas, workflows, apex code, and more. No more guessing what breaks when you change a field.",
-        icon: "pi-search"
+        title: 'Find where your fields are being used',
+        description: 'See exactly where standard and custom fields show up across your org - in page layouts, formulas, workflows, apex code, and more. No more guessing what breaks when you change a field.',
+        icon: 'pi-search'
     },
     {
-        title: "Track usage of any metadata type",
+        title: 'Track usage of any metadata type',
         description: "Beyond fields, see where email templates, custom settings, validation rules, and other metadata are referenced. Perfect for cleanup projects and understanding your org's complexity.",
-        icon: "pi-sitemap"
+        icon: 'pi-sitemap'
     },
     {
-        title: "Export workflows ready for Flow conversion",
-        description: "Get all your workflows exported in a format that makes converting to Flows much easier. Save hours of manual work when modernizing your automation.",
-        icon: "pi-download"
+        title: 'Export workflows ready for Flow conversion',
+        description: 'Get all your workflows exported in a format that makes converting to Flows much easier. Save hours of manual work when modernizing your automation.',
+        icon: 'pi-download'
     },
     {
-        title: "Create deployment boundaries",
-        description: "Figure out exactly what metadata needs to be deployed together. Essential for scratch orgs, change sets, and understanding what depends on what in your org.",
-        icon: "pi-box"
+        title: 'Create deployment boundaries',
+        description: 'Figure out exactly what metadata needs to be deployed together. Essential for scratch orgs, change sets, and understanding what depends on what in your org.',
+        icon: 'pi-box'
     }
-]
+];
 </script>
 
 <template>
@@ -41,4 +41,4 @@ const features = [
             </div>
         </div>
     </div>
-</template> 
+</template>

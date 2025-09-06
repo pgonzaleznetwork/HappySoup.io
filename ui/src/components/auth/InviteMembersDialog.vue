@@ -46,11 +46,11 @@ const { mutate: sendInviteMutation, isPending } = useMutation({
     },
     onError: (error) => {
         console.error('Failed to send invites:', error);
-        toast.add({ 
-            severity: 'error', 
-            summary: 'Error', 
-            detail: 'Failed to send invites. Please try again.', 
-            life: 5000 
+        toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to send invites. Please try again.',
+            life: 5000
         });
     }
 });
@@ -77,26 +77,18 @@ const example = `Pablo <pablo@HappySoup.com>`;
 const explanationEnd = ` work just fine.`;
 </script>
 <template>
-    <Dialog 
-        v-model:visible="dialogVisible" 
-        modal 
-        :style="{ width: '40rem' }"
-        @hide="resetForm"
-    >
+    <Dialog v-model:visible="dialogVisible" modal :style="{ width: '40rem' }" @hide="resetForm">
         <template #header> <span class="font-medium">Invite Members</span> </template>
         <div class="flex items-center gap-2 mb-8">
             <span class="text-surface-500 dark:text-surface-400">
-                {{ explanation }}<span class="bg-surface-100 dark:bg-surface-800 px-1.5 py-0.5 rounded font-mono text-sm">{{ example }}</span>{{ explanationEnd }}
+                {{ explanation }}<span class="bg-surface-100 dark:bg-surface-800 px-1.5 py-0.5 rounded font-mono text-sm">{{ example }}</span
+                >{{ explanationEnd }}
             </span>
         </div>
         <HSFormLayout>
             <HSFormField label="Email addresses">
                 <template #input>
-                    <EmailTagInput 
-                        v-model="emails"
-                        @emailAdded="(email) => console.log('Email added:', email)"
-                        @emailRemoved="(email) => console.log('Email removed:', email)"
-                    />
+                    <EmailTagInput v-model="emails" @emailAdded="(email) => console.log('Email added:', email)" @emailRemoved="(email) => console.log('Email removed:', email)" />
                 </template>
             </HSFormField>
             <HSFormField label="Role">
@@ -122,13 +114,7 @@ const explanationEnd = ` work just fine.`;
             </HSFormField>
         </HSFormLayout>
         <template #footer>
-            <Button 
-                label="Send Invite" 
-                @click="sendInvite" 
-                :disabled="!emails.length || isPending"
-                :loading="isPending"
-                autofocus 
-            />
+            <Button label="Send Invite" @click="sendInvite" :disabled="!emails.length || isPending" :loading="isPending" autofocus />
         </template>
     </Dialog>
 </template>

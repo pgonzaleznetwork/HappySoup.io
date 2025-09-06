@@ -168,7 +168,13 @@ const logout = async () => {
                 </li>
 
                 <li class="right-sidebar-item">
-                    <OrgSwitcher @invite-members="() => { showInviteDialog = true; }" />
+                    <OrgSwitcher
+                        @invite-members="
+                            () => {
+                                showInviteDialog = true;
+                            }
+                        "
+                    />
                 </li>
             </ul>
         </div>

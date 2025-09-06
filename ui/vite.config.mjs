@@ -32,6 +32,7 @@ export default defineConfig({
     server: {
         port: 5173,
         host: true, // Allow external connections
-        cors: true
+        cors: true,
+        strictPort: true // Fail if port is already in use instead of trying another port
     }
 });

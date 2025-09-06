@@ -9,12 +9,12 @@ import axios from 'axios';
  */
 function maskEmail(email) {
     if (!email || !email.includes('@')) return email;
-    
+
     const [localPart, domain] = email.split('@');
     if (localPart.length <= 2) {
         return `${localPart[0]}***@${domain}`;
     }
-    
+
     return `${localPart.substring(0, 2)}***@${domain}`;
 }
 
@@ -26,11 +26,11 @@ function maskEmail(email) {
  */
 function maskUsername(username) {
     if (!username) return username;
-    
+
     // Special handling for email-like usernames
     if (username.includes('@')) {
         const [localPart, domain] = username.split('@');
-        
+
         // Show first few chars of local part
         let maskedLocal;
         if (localPart.length <= 3) {
@@ -40,7 +40,7 @@ function maskUsername(username) {
         } else {
             maskedLocal = `${localPart.substring(0, 4)}**`;
         }
-        
+
         // Show first few chars of domain
         let maskedDomain;
         if (domain.length <= 6) {
@@ -48,28 +48,28 @@ function maskUsername(username) {
         } else {
             maskedDomain = `**${domain.substring(domain.length - 4)}`;
         }
-        
+
         return `${maskedLocal}@${maskedDomain}`;
     }
-    
+
     // Regular username handling (non-email)
     const length = username.length;
-    
+
     // Very short usernames - show first char only
     if (length <= 3) {
         return `${username[0]}***`;
     }
-    
+
     // Short usernames (4-8 chars) - show first 2 and last 1
     if (length <= 8) {
         return `${username.substring(0, 2)}***${username.substring(length - 1)}`;
     }
-    
+
     // Medium usernames (9-15 chars) - show first 3 and last 2
     if (length <= 15) {
         return `${username.substring(0, 3)}***${username.substring(length - 2)}`;
     }
-    
+
     // Long usernames (16+ chars) - show first 4 and last 3
     return `${username.substring(0, 4)}***${username.substring(length - 3)}`;
 }
@@ -94,13 +94,13 @@ export const useAuthStore = defineStore('auth', () => {
             user.value = response.data.user;
             isLoaded.value = true;
             console.log('[AUTH] User set successfully:', user.value);
-            
+
             // Store masked user data in localStorage for login page welcome message
             if (user.value.lastLoginUsername && user.value.email && user.value.firstName) {
                 localStorage.setItem('happysoup-last-login-username', maskUsername(user.value.lastLoginUsername));
                 localStorage.setItem('happysoup-user-email', maskEmail(user.value.email));
                 localStorage.setItem('happysoup-user-firstname', user.value.firstName);
-                
+
                 // Store the original username separately for copy functionality
                 // This is still a security consideration, but provides the UX benefit
                 localStorage.setItem('happysoup-original-username', user.value.lastLoginUsername);
@@ -119,7 +119,7 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/logout`);
             user.value = null;
-            
+
             // Keep localStorage data for welcome message on next login page visit
             // Data will be updated when user logs in again
         } catch (error) {

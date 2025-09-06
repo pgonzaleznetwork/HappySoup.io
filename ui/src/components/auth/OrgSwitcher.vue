@@ -83,7 +83,7 @@ async function logout() {
             <div class="flex flex-col items-start gap-2 w-full">
                 <div class="flex items-center justify-between w-full px-3">
                     <div class="text-sm font-semibold text-surface-500 dark:text-surface-400">Connected Salesforce Orgs</div>
-                    <Button 
+                    <Button
                         @click="showAddOrgDialog = true"
                         v-tooltip.left="{
                             value: 'Add new org',
@@ -91,7 +91,7 @@ async function logout() {
                                 text: '!text-xs !px-2 !py-1'
                             }
                         }"
-                        severity="secondary" 
+                        severity="secondary"
                         text
                         size="small"
                         class="!p-1.5"
@@ -102,23 +102,17 @@ async function logout() {
                     </Button>
                 </div>
                 <div v-if="connectedOrgs.length > 0" class="flex flex-col gap-1 w-full">
-                    <div 
-                        v-for="org in connectedOrgs" 
-                        :key="org.orgId"
-                        class="flex items-center py-2 px-3 gap-3 rounded-lg text-surface-700 dark:text-surface-200 text-sm"
-                    >
+                    <div v-for="org in connectedOrgs" :key="org.orgId" class="flex items-center py-2 px-3 gap-3 rounded-lg text-surface-700 dark:text-surface-200 text-sm">
                         <PhBuildingOffice :size="16" class="text-surface-500 dark:text-surface-400" />
                         <div class="flex flex-col flex-1 min-w-0">
                             <span class="font-medium truncate">{{ org.username }}</span>
                             <span class="text-xs text-surface-500 dark:text-surface-400 truncate">{{ org.instanceUrl.replace('https://', '') }}</span>
-                                    </div>
-        </div>
+                        </div>
+                    </div>
 
-        <AddOrgDialog v-model="showAddOrgDialog" />
-    </div>
-                <div v-else class="text-sm text-surface-500 dark:text-surface-400 px-3 py-2 italic">
-                    No orgs connected yet
+                    <AddOrgDialog v-model="showAddOrgDialog" />
                 </div>
+                <div v-else class="text-sm text-surface-500 dark:text-surface-400 px-3 py-2 italic">No orgs connected yet</div>
                 <Divider type="dashed" class="w-full" />
             </div>
 

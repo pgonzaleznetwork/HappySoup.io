@@ -11,7 +11,7 @@ import Skeleton from 'primevue/skeleton';
             <div class="p-6 border-b border-gray-200">
                 <Skeleton width="8rem" height="2rem" />
             </div>
-            
+
             <!-- Navigation items -->
             <div class="flex-1 p-4 space-y-2">
                 <div v-for="i in 6" :key="i" class="flex items-center space-x-3 p-3">
@@ -19,7 +19,7 @@ import Skeleton from 'primevue/skeleton';
                     <Skeleton width="6rem" height="1rem" />
                 </div>
             </div>
-            
+
             <!-- Bottom section -->
             <div class="p-4 border-t border-gray-200">
                 <div class="flex items-center space-x-3 p-3">
@@ -31,7 +31,7 @@ import Skeleton from 'primevue/skeleton';
                 </div>
             </div>
         </div>
-        
+
         <!-- Main content -->
         <div class="flex-1 flex flex-col">
             <!-- Top navigation bar -->
@@ -39,7 +39,7 @@ import Skeleton from 'primevue/skeleton';
                 <div class="flex items-center justify-between">
                     <!-- Page title -->
                     <Skeleton width="8rem" height="1.5rem" />
-                    
+
                     <!-- Right side - user menu and settings -->
                     <div class="flex items-center space-x-4">
                         <!-- Settings button -->
@@ -49,7 +49,7 @@ import Skeleton from 'primevue/skeleton';
                     </div>
                 </div>
             </div>
-            
+
             <!-- Main dashboard content -->
             <div class="flex-1 p-6">
                 <!-- Stats cards row -->
@@ -63,7 +63,7 @@ import Skeleton from 'primevue/skeleton';
                         <Skeleton width="6rem" height="1rem" />
                     </div>
                 </div>
-                
+
                 <!-- Main content area -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Large chart/content area -->
@@ -74,7 +74,7 @@ import Skeleton from 'primevue/skeleton';
                         </div>
                         <Skeleton width="100%" height="20rem" />
                     </div>
-                    
+
                     <!-- Side panel -->
                     <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                         <Skeleton width="6rem" height="1.5rem" class="mb-6" />
@@ -92,4 +92,4 @@ import Skeleton from 'primevue/skeleton';
             </div>
         </div>
     </div>
-</template> 
+</template>

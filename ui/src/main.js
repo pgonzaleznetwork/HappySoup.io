@@ -16,27 +16,27 @@ import '@/assets/styles.scss';
 // Configure axios defaults
 axios.defaults.withCredentials = true;
 
-if(['staging', 'production'].includes(import.meta.env.VITE_NODE_ENV)) {
-  H.init(import.meta.env.VITE_HIGHLIGHT_PROJECT_ID, {
-    environment: import.meta.env.VITE_NODE_ENV,
-    version: 'commit:abcdefg12345',
-    networkRecording: {
-      enabled: true,
-      recordHeadersAndBody: true
-    }
-  });
+if (['staging', 'production'].includes(import.meta.env.VITE_NODE_ENV)) {
+    H.init(import.meta.env.VITE_HIGHLIGHT_PROJECT_ID, {
+        environment: import.meta.env.VITE_NODE_ENV,
+        version: 'commit:abcdefg12345',
+        networkRecording: {
+            enabled: true,
+            recordHeadersAndBody: true
+        }
+    });
 }
 
 const app = createApp(App);
 
 // Create a Vue Query client
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: false,
-    },
-  },
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+            retry: false
+        }
+    }
 });
 
 app.use(router);
